@@ -63,7 +63,7 @@ export class MemStorage implements IStorage {
     const adminUser: User = {
       id: "admin-user-1",
       username: "admin",
-      password: "$2b$10$zKuFCQipOr6KbF.8wxS7/.z3p3EXlTdFjXl9e6Lxv7RzVpFQVqTR6", // "admin123" hashed
+      password: "$2b$10$iS57iqUbq7J.OMoe.GK2neN28m0UbQFFIGgYmEysYzXw3XjK6B18S", // "admin123" hashed
       email: "admin@optombazar.uz",
       phone: "+998901234567",
       role: "admin",

@@ -101,68 +101,56 @@ export default function AllCategoriesPage() {
           </div>
         </div>
 
-        {/* Categories Grid - More compact */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        {/* Categories Grid - Ultra compact for 12 items */}
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-3">
           {mainCategories.map((category) => {
             const children = getCategoryChildren(category.id);
             const IconComponent = getIconComponent(category.icon);
             
             return (
-              <Card key={category.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader className="pb-2 pt-4 px-4">
-                  <CardTitle className="flex flex-col items-center gap-2 text-center">
-                    <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                      <IconComponent className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+              <Card key={category.id} className="hover:shadow-lg transition-shadow h-40">
+                <CardHeader className="pb-1 pt-2 px-2">
+                  <CardTitle className="flex flex-col items-center gap-1 text-center">
+                    <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      <IconComponent className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-sm leading-tight">
+                      <h3 className="font-semibold text-xs leading-tight line-clamp-2 h-8">
                         {language === 'uz' ? category.nameUz : category.nameRu}
                       </h3>
-                      {(category.descriptionUz || category.descriptionRu) && (
-                        <p className="text-xs text-gray-600 dark:text-gray-400 font-normal mt-1 line-clamp-2">
-                          {language === 'uz' ? category.descriptionUz : category.descriptionRu}
-                        </p>
-                      )}
                     </div>
                   </CardTitle>
                 </CardHeader>
                 
-                <CardContent className="space-y-2 px-4 pb-4">
+                <CardContent className="space-y-1 px-2 pb-2">
                   {children.length > 0 ? (
                     <>
-                      <div className="flex items-center justify-center mb-2">
-                        <Badge variant="secondary" className="text-xs">
-                          {children.length} {language === 'uz' ? 'ichki' : 'под'}
+                      <div className="flex items-center justify-center mb-1">
+                        <Badge variant="secondary" className="text-[10px] px-1 py-0">
+                          {children.length}
                         </Badge>
                       </div>
                       
-                      <div className="space-y-1 max-h-24 overflow-y-auto text-center">
-                        {children.slice(0, 3).map((child) => (
-                          <Link 
-                            key={child.id} 
-                            href={`/catalog?category=${child.slug}`}
-                          >
-                            <div className="text-xs text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer truncate">
-                              {language === 'uz' ? child.nameUz : child.nameRu}
-                            </div>
-                          </Link>
-                        ))}
-                        {children.length > 3 && (
-                          <div className="text-xs text-gray-400">+{children.length - 3} {language === 'uz' ? 'yana' : 'ещё'}</div>
-                        )}
+                      <div className="text-center">
+                        <div className="text-[10px] text-gray-600 dark:text-gray-400 line-clamp-1">
+                          {children.slice(0, 1).map((child) => (
+                            language === 'uz' ? child.nameUz : child.nameRu
+                          )).join('')}
+                          {children.length > 1 && ' +' + (children.length - 1)}
+                        </div>
                       </div>
                       
                       <Link href={`/catalog?category=${category.slug}`}>
-                        <Button variant="outline" size="sm" className="w-full mt-2 text-xs h-7">
-                          {language === 'uz' ? 'Ko\'rish' : 'Смотреть'} →
+                        <Button variant="outline" size="sm" className="w-full mt-1 text-[10px] h-5">
+                          {language === 'uz' ? 'Ko\'rish' : 'См.'} →
                         </Button>
                       </Link>
                     </>
                   ) : (
-                    <div className="py-2">
-                      <Link href={`/catalog?category=${category.slug}`}>
-                        <Button variant="default" size="sm" className="w-full text-xs h-7">
-                          {language === 'uz' ? 'Ko\'rish' : 'Смотреть'} →
+                    <div className="py-1 flex-1 flex items-end">
+                      <Link href={`/catalog?category=${category.slug}`} className="w-full">
+                        <Button variant="default" size="sm" className="w-full text-[10px] h-5">
+                          {language === 'uz' ? 'Ko\'rish' : 'См.'} →
                         </Button>
                       </Link>
                     </div>

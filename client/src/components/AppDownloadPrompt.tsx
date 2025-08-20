@@ -17,12 +17,12 @@ export function AppDownloadPrompt() {
       return;
     }
 
-    // Test uchun 30 soniya (30,000 ms) timer o'rnatish
+    // 5 minut (300,000 ms) timer o'rnatish
     const timer = setTimeout(() => {
       if (!isDismissed) {
         setShowPrompt(true);
       }
-    }, 30000); // 30 soniya - test uchun
+    }, 300000); // 5 minut
 
     return () => clearTimeout(timer);
   }, [isDismissed]);

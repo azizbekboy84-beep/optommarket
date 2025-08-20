@@ -153,6 +153,9 @@ export function Header() {
               </form>
             </div>
 
+            {/* Theme Toggle */}
+            <ThemeToggle />
+
             {/* Language Selector */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

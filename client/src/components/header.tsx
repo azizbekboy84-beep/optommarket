@@ -20,7 +20,7 @@ export function Header() {
   return (
     <header className="hidden md:block sticky top-0 z-50">
       {/* Top Bar */}
-      <div className="bg-primary text-primary-foreground">
+      <div className="bg-slate-100 text-slate-800 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-10 text-sm">
             {/* Phone */}
@@ -33,7 +33,7 @@ export function Header() {
             <div className="flex items-center gap-4">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-8 text-primary-foreground hover:bg-primary-foreground/10">
+                  <Button variant="ghost" size="sm" className="h-8 text-slate-700 hover:bg-slate-200">
                     <Globe className="h-4 w-4 mr-1" />
                     {language === 'uz' ? '🇺🇿 O\'zbek' : '🇷🇺 Русский'}
                     <ChevronDown className="h-3 w-3 ml-1" />

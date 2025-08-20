@@ -1,0 +1,75 @@
+KEYINGI BOSQICH: INTERFEYSNI TO'LIQ TUZATISH VA MODERNIZATSIYA QILISH
+Ajoyib, oldingi bosqichda interfeysni yaxshilashga harakat qildik, lekin bir nechta muhim kamchiliklar paydo bo'ldi. Endi barcha bu xatolarni tuzatamiz va sayt dizaynini professional darajaga olib chiqamiz.
+
+Loyiha mazmuni (Kontekst):
+Maqsadimiz — ham mobil, ham web versiyada foydalanuvchi uchun uzluksiz, qulay va vizual chiroyli tajriba yaratish. Biz mobil qurilmalar uchun to'liq (tepa va pastki) navigatsiya ramkasini yaratamiz, web versiyadagi rang xatolarini tuzatamiz va yo'qolgan elementlarni joyiga qaytaramiz.
+
+Aniq qadamlar:
+
+1-QISM: MOBIL INTERFEYSNI TO'LIQ QAYTA QURISH (MOBILE-FIRST YONDASHUVI)
+
+Yangi Mobil Tepa Menyusini Yaratish (MobileTopNav.tsx):
+
+client/src-components papkasida MobileTopNav.tsx nomli yangi komponent yarat.
+
+Bu komponent faqat mobil ekranlarda (md:hidden) ko'rinadigan bo'lsin.
+
+Uni ekranning yuqori qismiga yopishgan (fixed top-0 w-full), orqa foni oq (bg-background), pastida soya (shadow-md) va boshqa elementlardan yuqorida turadigan (z-40) qilib yarat.
+
+Ichida uchta asosiy elementni chiroyli joylashtir:
+
+Chapda: Logotip.
+
+O'rtada: Qidiruv ikonkasini joylashtir. Bosilganda, qidiruv maydoni ochiladigan qil.
+
+O'ngda: Tilni o'zgartirish ikonkasini (masalan, globus) joylashtir.
+
+Asosiy Kontent Uchun Joy Ajratish:
+
+Asosiy layout faylingizda (App.tsx yoki Layout.tsx), asosiy kontent bloki (<main> yoki <div>) uchun yuqoridan va pastdan bo'sh joy (padding) qo'shing. Masalan: className="pt-16 pb-16". Bu kontentning doimiy ko'rinib turadigan tepa va pastki menyular ostida qolib ketishining oldini oladi.
+
+2-QISM: WEB VERSIYADAGI RANG XATOSINI TUZATISH
+
+Header.tsx faylini tahrirlash:
+
+Web versiya uchun ishlatiladigan Header.tsx faylini och.
+
+Yuqori lentani (Top Bar) toping. Uning orqa foni oq (bg-background yoki shunga o'xshash).
+
+O'sha lentadagi matnlarning rangini (text-primary-foreground yoki shunga o'xshash oq rang) aniq to'q rangga (text-slate-800 yoki text-foreground) o'zgartiring. Bu "oq fonga oq yozuv" muammosini hal qiladi.
+
+3-QISM: YO'QOLGAN CHATBOTNI QAYTARISH
+
+AIChatWidget.tsx faylini tahrirlash:
+
+Chat vidjeti komponentini oching.
+
+Uning asosiy div elementiga yuqori z-index qiymatini bering (masalan, className="z-50"). Bu uning hamma narsadan, hatto yangi menyulardan ham ustun turishini ta'minlaydi.
+
+Undan mobil qurilmalarda yashiradigan (hidden yoki md:hidden) klasslarni olib tashlang. Chatbot barcha qurilmalarda ko'rinishi kerak.
+
+4-QISM: YAKUNIY INTEGRATSIYA
+
+Asosiy Layout Faylini Yangilash (App.tsx yoki Layout.tsx):
+
+Endi bu fayl quyidagi komponentlarni chaqirishi kerak:
+
+<MobileTopNav /> (faqat mobilda ko'rinadi)
+
+<Header /> (faqat webda ko'rinadi)
+
+Asosiy kontent (<Outlet /> yoki children)
+
+<MobileBottomNav /> (faqat mobilda ko'rinadi)
+
+<AIChatWidget /> (hamma joyda ko'rinadi)
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Mobil qurilmalarda endi ham tepada (logo, qidiruv bilan), ham pastda (ikonkalar bilan) doimiy ko'rinib turadigan menyular bormi?
+
+Web versiyadagi oq fondagi oq yozuv xatosi tuzatildimi?
+
+AI Chat vidjeti endi barcha qurilmalarda ko'rinib turibdimi?
+
+Sahifani pastga aylantirganda asosiy kontent tepa va pastki menyular ostida qolib ketmayaptimi?

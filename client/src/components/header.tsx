@@ -40,8 +40,8 @@ export function Header() {
             </Link>
           </div>
 
-          {/* Main Navigation */}
-          <nav className="flex items-center space-x-8">
+          {/* Main Navigation - Hidden on mobile */}
+          <nav className="hidden md:flex items-center space-x-8">
             <Link href="/catalog" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
               {language === 'uz' ? 'Katalog' : 'Каталог'}
             </Link>
@@ -54,16 +54,16 @@ export function Header() {
           </nav>
 
           {/* Right Section */}
-          <div className="flex items-center gap-4">
-            {/* Search Bar */}
-            <div className="flex-1 max-w-md">
+          <div className="flex items-center gap-2 md:gap-4">
+            {/* Search Bar - Responsive width */}
+            <div className="flex-1 max-w-xs md:max-w-md">
               <form onSubmit={handleSearch} className="flex">
                 <Input
                   type="text"
                   placeholder={language === 'uz' ? 'Qidiruv...' : 'Поиск...'}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-1"
+                  className="flex-1 text-sm"
                 />
                 <Button
                   type="submit"
@@ -74,18 +74,6 @@ export function Header() {
                 </Button>
               </form>
             </div>
-
-            {/* Cart */}
-            <Link href="/cart">
-              <Button variant="outline" size="sm" className="relative">
-                <ShoppingCart className="h-4 w-4" />
-                {itemCount > 0 && (
-                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
-                    {itemCount}
-                  </Badge>
-                )}
-              </Button>
-            </Link>
 
             {/* Language Selector */}
             <DropdownMenu>
@@ -104,54 +92,68 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* User Menu */}
-            {isAuthenticated ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm">
+            {/* Cart - Hidden on mobile */}
+            <Link href="/cart" className="hidden md:block">
+              <Button variant="outline" size="sm" className="relative">
+                <ShoppingCart className="h-4 w-4" />
+                {itemCount > 0 && (
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                    {itemCount}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
+
+            {/* User Menu - Hidden on mobile */}
+            <div className="hidden md:block">
+              {isAuthenticated ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      <User className="h-4 w-4 mr-1" />
+                      {user?.username}
+                      <ChevronDown className="h-3 w-3 ml-1" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile">
+                        <User className="mr-2 h-4 w-4" />
+                        {language === 'uz' ? 'Profil' : 'Профиль'}
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/orders">
+                        <ShoppingCart className="mr-2 h-4 w-4" />
+                        {language === 'uz' ? 'Buyurtmalar' : 'Заказы'}
+                      </Link>
+                    </DropdownMenuItem>
+                    {user?.role === 'admin' && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <Link href="/admin">
+                            <Settings className="mr-2 h-4 w-4" />
+                            {language === 'uz' ? 'Admin panel' : 'Админ панель'}
+                          </Link>
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={logout}>
+                      {language === 'uz' ? 'Chiqish' : 'Выйти'}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Link href="/login">
+                  <Button size="sm">
                     <User className="h-4 w-4 mr-1" />
-                    {user?.username}
-                    <ChevronDown className="h-3 w-3 ml-1" />
+                    {language === 'uz' ? 'Kirish' : 'Войти'}
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile">
-                      <User className="mr-2 h-4 w-4" />
-                      {language === 'uz' ? 'Profil' : 'Профиль'}
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/orders">
-                      <ShoppingCart className="mr-2 h-4 w-4" />
-                      {language === 'uz' ? 'Buyurtmalar' : 'Заказы'}
-                    </Link>
-                  </DropdownMenuItem>
-                  {user?.role === 'admin' && (
-                    <>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem asChild>
-                        <Link href="/admin">
-                          <Settings className="mr-2 h-4 w-4" />
-                          {language === 'uz' ? 'Admin panel' : 'Админ панель'}
-                        </Link>
-                      </DropdownMenuItem>
-                    </>
-                  )}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={logout}>
-                    {language === 'uz' ? 'Chiqish' : 'Выйти'}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <Link href="/login">
-                <Button size="sm">
-                  <User className="h-4 w-4 mr-1" />
-                  {language === 'uz' ? 'Kirish' : 'Войти'}
-                </Button>
-              </Link>
-            )}
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </div>

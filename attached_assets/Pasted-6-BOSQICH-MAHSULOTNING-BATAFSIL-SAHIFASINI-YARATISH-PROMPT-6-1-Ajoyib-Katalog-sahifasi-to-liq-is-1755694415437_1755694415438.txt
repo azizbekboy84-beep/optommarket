@@ -1,0 +1,42 @@
+6-BOSQICH: MAHSULOTNING BATAFSIL SAHIFASINI YARATISH (PROMPT 6.1)
+Ajoyib! Katalog sahifasi to'liq ishlamoqda.
+
+Loyiha mazmuni: Endi foydalanuvchi katalogdagi biror mahsulotga qiziqib, uning ustiga bosganda, o'sha mahsulot haqida hamma ma'lumotni (katta rasmlari, to'liq tavsifi, narxi va hokazo) ko'ra oladigan alohida sahifa yaratishimiz kerak. Bu onlayn do'konning eng muhim sahifalaridan biridir.
+
+Aniq qadamlar:
+
+Frontend - Marshrutlash (Routing) Sozlamalari:
+
+client/src/App.tsx (yoki marshrutlar uchun mas'ul faylda) dinamik marshrutni sozla. Foydalanuvchi /products/:slug manziliga kirganda, ProductDetailsPage.tsx komponenti ochilishi kerak. (:slug - bu mahsulotning noyob identifikatori).
+
+Frontend - ProductCardni Interaktiv Qilish:
+
+client/src/components/ProductCard.tsx faylini o'zgartir. Butun kartochkani bosiladigan (<Link> yoki <a> tegi bilan) qil. Bosilganda, u o'sha mahsulotning batafsil sahifasiga, ya'ni /products/${product.slug} manziliga olib borsin.
+
+Frontend - Maxsus Hook Yaratish (useProductBySlug):
+
+client/src/hooks/useProductBySlug.ts nomli yangi fayl yarat.
+
+Unda TanStack Query yordamida GET /api/products/:slug endpoint'idan bitta mahsulot ma'lumotini olib keladigan useProductBySlug nomli hook yarat. Bu hook o'ziga slug parametrini qabul qilsin.
+
+Frontend - Mahsulot Sahifasini Yasash:
+
+client/src/pages/ProductDetailsPage.tsx faylini to'liq ishlab chiq.
+
+Sahifa URL'idan slugni olib, useProductBySlug hook'i yordamida mahsulot ma'lumotlarini yukla.
+
+Sahifani ikki qismga ajrat:
+
+Chap tomon: Mahsulotning katta rasmi va uning ostida kichik qo'shimcha rasmlar galereyasi.
+
+O'ng tomon: Mahsulot nomi, narxi, to'liq tavsifi (description), miqdorni tanlash uchun +/- tugmalari va "Savatga qo'shish" tugmasi.
+
+Ma'lumotlar yuklanayotganda "Yuklanmoqda..." xabarini ko'rsat.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Katalogdagi mahsulot kartochkasini bosganda, /products/:slug manziliga to'g'ri o'tish bo'lyaptimi?
+
+ProductDetailsPage.tsx sahifasi ochilyaptimi va u backend'dan to'g'ri mahsulot ma'lumotlarini yuklayaptimi?
+
+Sahifada mahsulotning rasmlari, nomi, narxi va tavsifi to'g'ri ko'rsatilyaptimi?

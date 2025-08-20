@@ -17,7 +17,7 @@ export interface Product {
   slug: string;
   isActive: boolean;
   isFeatured: boolean;
-  createdAt: Date;
+  createdAt: Date | null;
 }
 
 export function useProducts(categoryId?: string, search?: string) {

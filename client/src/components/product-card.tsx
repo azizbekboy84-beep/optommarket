@@ -1,3 +1,4 @@
+import { Link } from 'wouter';
 import { useLanguage } from './language-provider';
 import { Product } from '@shared/schema';
 import { Button } from '@/components/ui/button';
@@ -22,26 +23,29 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
     outOfStock: 'text-red-800 bg-red-100'
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (onAddToCart) {
       onAddToCart(product);
     }
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl hover:shadow-lg transition-all group" data-testid={`card-product-${product.id}`}>
-      {product.images && product.images.length > 0 && (
-        <img 
-          src={product.images[0]} 
-          alt={name} 
-          className="w-full h-48 object-cover rounded-t-xl"
-          data-testid={`img-product-${product.id}`}
-        />
-      )}
-      <div className="p-6">
-        <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-primary transition-colors" data-testid={`text-product-name-${product.id}`}>
-          {name}
-        </h3>
+    <Link href={`/products/${product.slug}`}>
+      <div className="bg-white border border-gray-200 rounded-xl hover:shadow-lg transition-all group cursor-pointer" data-testid={`card-product-${product.id}`}>
+        {product.images && product.images.length > 0 && (
+          <img 
+            src={product.images[0]} 
+            alt={name} 
+            className="w-full h-48 object-cover rounded-t-xl"
+            data-testid={`img-product-${product.id}`}
+          />
+        )}
+        <div className="p-6">
+          <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-primary transition-colors" data-testid={`text-product-name-${product.id}`}>
+            {name}
+          </h3>
         {description && (
           <p className="text-sm text-gray-600 mb-3" data-testid={`text-product-description-${product.id}`}>
             {description}
@@ -68,7 +72,8 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         >
           {t('addToCart')}
         </Button>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }

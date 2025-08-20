@@ -10,6 +10,7 @@ import Products from "@/pages/products";
 import Contact from "@/pages/contact";
 import Catalog from "@/pages/catalog";
 import CategoryDetail from "@/pages/category-detail";
+import ProductDetailsPage from "@/pages/ProductDetailsPage";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -21,6 +22,9 @@ function Router() {
       <Route path="/catalog" component={Catalog} />
       <Route path="/category/:slug">
         {(params) => <CategoryDetail params={params} />}
+      </Route>
+      <Route path="/products/:slug">
+        {(params) => <ProductDetailsPage />}
       </Route>
       <Route path="/contact" component={Contact} />
       <Route component={NotFound} />

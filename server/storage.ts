@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type Category, type InsertCategory, type Product, type InsertProduct, type Order, type InsertOrder, type OrderItem, type InsertOrderItem, type CartItem, type InsertCartItem, type BlogPost, type InsertBlogPost, type ChatMessage, type InsertChatMessage } from "@shared/schema";
+import { type User, type InsertUser, type Category, type InsertCategory, type Product, type InsertProduct, type Order, type InsertOrder, type OrderItem, type InsertOrderItem, type CartItem, type InsertCartItem, type BlogPost, type InsertBlogPost, type ChatMessage, type InsertChatMessage, type UserActivity, type InsertUserActivity } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -56,6 +56,17 @@ export interface IStorage {
   getChatHistory(sessionId: string): Promise<ChatMessage[]>;
   saveChatMessage(chatMessage: InsertChatMessage): Promise<ChatMessage>;
   updateChatResponse(messageId: string, response: string): Promise<ChatMessage | undefined>;
+  
+  // User Activities (Analytics)
+  logUserActivity?(activity: InsertUserActivity): Promise<UserActivity | undefined>;
+  getUserActivities?(filters?: {
+    userId?: string;
+    sessionId?: string;
+    activityType?: string;
+    dateFrom?: Date;
+    dateTo?: Date;
+    limit?: number;
+  }): Promise<UserActivity[]>;
 }
 
 export class MemStorage implements IStorage {
@@ -67,6 +78,7 @@ export class MemStorage implements IStorage {
   private orderItems: Map<string, OrderItem>;
   private blogPosts: Map<string, BlogPost>;
   private chatMessages: Map<string, ChatMessage>;
+  private userActivities: Map<string, UserActivity>;
 
   constructor() {
     this.users = new Map();
@@ -77,6 +89,7 @@ export class MemStorage implements IStorage {
     this.orderItems = new Map();
     this.blogPosts = new Map();
     this.chatMessages = new Map();
+    this.userActivities = new Map();
     this.seedData();
   }
 
@@ -638,6 +651,69 @@ export class MemStorage implements IStorage {
 
     this.chatMessages.set(messageId, updatedMessage);
     return updatedMessage;
+  }
+
+  // User Activities implementation
+  async logUserActivity(insertActivity: InsertUserActivity): Promise<UserActivity | undefined> {
+    const id = randomUUID();
+    const activity: UserActivity = {
+      ...insertActivity,
+      id,
+      userId: insertActivity.userId || null,
+      targetId: insertActivity.targetId || null,
+      targetType: insertActivity.targetType || null,
+      metadata: insertActivity.metadata || null,
+      ipAddress: insertActivity.ipAddress || null,
+      userAgent: insertActivity.userAgent || null,
+      timestamp: new Date(),
+    };
+    this.userActivities.set(id, activity);
+    return activity;
+  }
+
+  async getUserActivities(filters?: {
+    userId?: string;
+    sessionId?: string;
+    activityType?: string;
+    dateFrom?: Date;
+    dateTo?: Date;
+    limit?: number;
+  }): Promise<UserActivity[]> {
+    let activities = Array.from(this.userActivities.values());
+
+    if (filters) {
+      if (filters.userId) {
+        activities = activities.filter(activity => activity.userId === filters.userId);
+      }
+      if (filters.sessionId) {
+        activities = activities.filter(activity => activity.sessionId === filters.sessionId);
+      }
+      if (filters.activityType) {
+        activities = activities.filter(activity => activity.activityType === filters.activityType);
+      }
+      if (filters.dateFrom) {
+        activities = activities.filter(activity => 
+          new Date(activity.timestamp || '') >= filters.dateFrom!
+        );
+      }
+      if (filters.dateTo) {
+        activities = activities.filter(activity => 
+          new Date(activity.timestamp || '') <= filters.dateTo!
+        );
+      }
+    }
+
+    // Sort by timestamp descending (most recent first)
+    activities.sort((a, b) => 
+      new Date(b.timestamp || '').getTime() - new Date(a.timestamp || '').getTime()
+    );
+
+    // Apply limit if specified
+    if (filters?.limit) {
+      activities = activities.slice(0, filters.limit);
+    }
+
+    return activities;
   }
 }
 

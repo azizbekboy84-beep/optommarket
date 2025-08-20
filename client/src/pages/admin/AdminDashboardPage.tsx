@@ -112,9 +112,11 @@ export default function AdminDashboardPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button className="w-full" disabled>
-                Tez orada...
-              </Button>
+              <Link href="/admin/reports">
+                <Button className="w-full">
+                  Hisobotlarni ko'rish
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         </div>

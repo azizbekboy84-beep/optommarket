@@ -27,6 +27,7 @@ import AdminOrdersPage from "@/pages/admin/AdminOrdersPage";
 import AdminBlogPage from "@/pages/admin/AdminBlogPage";
 import AdminCategoriesPage from "@/pages/admin/AdminCategoriesPage";
 import AdminSEOPage from "@/pages/admin/AdminSEOPage";
+import ReportsPage from "@/pages/admin/ReportsPage";
 import BlogPage from "@/pages/BlogPage";
 import BlogPostPage from "@/pages/BlogPostPage";
 import SearchPage from "@/pages/SearchPage";
@@ -100,6 +101,13 @@ function Router() {
         {() => (
           <AdminRoute>
             <AdminSEOPage />
+          </AdminRoute>
+        )}
+      </Route>
+      <Route path="/admin/reports">
+        {() => (
+          <AdminRoute>
+            <ReportsPage />
           </AdminRoute>
         )}
       </Route>

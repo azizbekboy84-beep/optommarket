@@ -183,3 +183,25 @@ export const insertChatMessageSchema = createInsertSchema(chatMessages).omit({
 
 export type ChatMessage = typeof chatMessages.$inferSelect;
 export type InsertChatMessage = z.infer<typeof insertChatMessageSchema>;
+
+// User Activities for Analytics
+export const userActivities = pgTable("user_activities", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id"), // Optional - null for guests
+  sessionId: text("session_id").notNull(), // Always track session
+  activityType: text("activity_type").notNull(), // product_view, add_to_cart, remove_from_cart, checkout_start, order_placed, search, login, register, page_view
+  targetId: varchar("target_id"), // Related object ID (product_id, category_id, etc.)
+  targetType: text("target_type"), // product, category, order, page, etc.
+  metadata: json("metadata").$type<Record<string, any>>(), // Additional data like search query, quantity, etc.
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  timestamp: timestamp("timestamp").defaultNow(),
+});
+
+export const insertUserActivitySchema = createInsertSchema(userActivities).omit({
+  id: true,
+  timestamp: true,
+});
+
+export type UserActivity = typeof userActivities.$inferSelect;
+export type InsertUserActivity = z.infer<typeof insertUserActivitySchema>;

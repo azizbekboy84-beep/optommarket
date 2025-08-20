@@ -7,6 +7,8 @@ import { DatabaseStorage } from "./database-storage";
 import { insertProductSchema, insertCategorySchema, insertOrderSchema, insertCartItemSchema, insertUserSchema, insertBlogPostSchema, insertChatMessageSchema } from "@shared/schema";
 import { adminAuth } from "./middleware/adminAuth";
 import { registerAITestRoutes } from "./routes/ai-test";
+import { ActivityLogger } from "./utils/activityLogger";
+import { registerReportsRoutes } from "./routes/admin/reports";
 
 // Extend Express Request type for session
 declare module 'express-session' {
@@ -94,6 +96,9 @@ ${userMessage}`;
 export async function registerRoutes(app: Express, customStorage?: any): Promise<Server> {
   // Storage instance ni ishlatish (agar berilgan bo'lsa)
   const activeStorage = customStorage || storage;
+  
+  // Initialize activity logger
+  const activityLogger = new ActivityLogger(activeStorage);
   // Authentication endpoints
   app.post("/api/auth/register", async (req, res) => {
     try {
@@ -862,6 +867,9 @@ export async function registerRoutes(app: Express, customStorage?: any): Promise
 
   // AI test routes qo'shish
   registerAITestRoutes(app, activeStorage);
+  
+  // Register admin reports routes
+  registerReportsRoutes(app, activeStorage);
 
   const httpServer = createServer(app);
   return httpServer;

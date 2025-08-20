@@ -1,0 +1,57 @@
+FOYDALANUVCHILAR FAOLLIGINI TAHLIL QILISH VA HISOBOTLAR TIZIMI
+Loyiha mazmuni: Foydalanuvchilar xatti-harakatlarini kuzatish, tahlil qilish va administrator uchun foydali hisobotlar yaratish orqali platforma rivojlanishini kuzatish va qarorlar qabul qilishni osonlashtirish.
+
+Aniq vazifalar:
+
+1-QISM: FOYDALANUVCHI HARAKATLARINI KUZATISH INFRASTRUKTURASINI YARATISH
+
+Faoliyat Jurnalini (Activity Log) Baza Jadvalini Yaratish (shared/schema.ts):
+user_activities jadvalini yarating:
+id (varchar, primaryKey)
+user_id (varchar, users jadvaliga ishora, ixtiyoriy – mehmonlar uchun null bo'lishi mumkin)
+session_id (text – mehmonlar uchun)
+activity_type (text – masalan, "product_view", "add_to_cart", "remove_from_cart", "checkout_start", "order_placed", "search", "login", "register", "page_view")
+target_id (varchar – faoliyat qaysi obyektga tegishli bo'lsa, uning ID'si, masalan, mahsulot ID)
+target_type (text – "product", "category", "order", "page" va hokazo)
+metadata (jsonb – qo'shimcha ma'lumotlar, masalan, qidiruv so'rovi, savatdagi miqdor)
+ip_address (text)
+user_agent (text)
+timestamp (timestamp, default: now())
+Faoliyatni Kuzatish Middleware/Helper Yaratish (server/middleware/activityLogger.ts yoki server/utils/activityLogger.ts):
+Foydalanuvchi harakatlarini (mahsulot ko'rish, savatga qo'shish, buyurtma berish, sahifa ochish) aniqlash va ularni user_activities jadvaliga saqlash uchun umumiy funksiya/logika yozing.
+Foydalanuvchi tizimga kirgan yoki mehmon ekanligini aniqlang va mos ravishda user_id yoki session_id ni saqlang.
+IP manzil va user-agent ma'lumotlarini ham saqlang (maxfiylik talablari hisobga olinishi kerak).
+Asosiy Harakatlarni Kuzatishga Ulash:
+GET /api/products/:id – Mahsulot ko'rilganda faoliyat yozib qo'yish.
+POST /api/cart – Savatga qo'shilganda faoliyat yozib qo'yish.
+POST /api/orders – Buyurtma berilganda faoliyat yozib qo'yish.
+GET /api/search – Qidiruv amalga oshirilganda faoliyat yozib qo'yish.
+POST /api/auth/login – Tizimga kirilganda faoliyat yozib qo'yish.
+Boshqa muhim sahifalar (/catalog, /blog) ochilganda ham faoliyat yozish (masalan, page_view).
+2-QISM: ADMIN PANEL UCHUN HISOBOTLAR API'SINI YARATISH
+
+Hisobotlar API Endpoint'larini Yaratish (server/routes/admin/reports.ts):
+/api/admin/reports/summary – Umumiy statistika (jami foydalanuvchilar, buyurtmalar soni, jami foyda, eng ommabop mahsulotlar).
+/api/admin/reports/user-activity – Foydalanuvchilar faolligi (kunlik/haftalik/oylik tashriflar, ro'yxatdan o'tishlar).
+/api/admin/reports/sales – Sotishlar hisoboti (sana bo'yicha, mahsulot bo'yicha, kategoriya bo'yicha).
+/api/admin/reports/popular-products – Eng ko'p ko'rilgan, savatga qo'shilgan, sotilgan mahsulotlar.
+/api/admin/reports/search-terms – Eng ko'p qidiriladigan so'zlar.
+Ma'lumotlarni Aggregatsiya Qilish:
+Yuqoridagi endpoint'lar user_activities va boshqa jadvallardan (orders, products) ma'lumotlarni to'plash, guruhlash (GROUP BY) va hisoblash (COUNT, SUM) orqali tayyor hisobotlar qaytarishi kerak.
+3-QISM: ADMIN PANEL INTERFEYSINI YARATISH
+
+Hisobotlar Sahifasini Yaratish (client/src/pages/admin/ReportsPage.tsx):
+Admin panel menyusiga "Hisobotlar" bandini qo'shing.
+ReportsPage komponentini yarating.
+Hisobot Komponentlarini Yaratish:
+Har bir hisobot turi uchun alohida komponent yarating yoki bitta sahifada turli xil grafik va jadvallar ko'rinishida ko'rsating.
+Foydalanish: Chart.js, Recharts yoki boshqa grafik kutubxonalaridan foydalaning.
+Umumiy statistika: Raqamlar kartochkasi ko'rinishida (Total Users, Total Orders, Revenue).
+Faoliyat grafiklari: Kunlik/haftalik foydalanuvchilar soni, buyurtmalar soni.
+Eng ommabop mahsulotlar: Jadval ko'rinishida.
+Qidiruv so'rovlari: Jadval ko'rinishida.
+Filtrlash Imkoniyatini Qo'shish:
+Hisobotlarni sana oralig'i, kategoriya, mahsulot yoki boshqa parametrlar bo'yicha filtrlash imkonini berish.
+4-QISM: (IXTIYORIY) MAXSUS TASHQI ANALITIKA INTEGRATSIYASI
+
+Platformaga Google Analytics, Plausible yoki boshqa tashqi analitika vositalarini integratsiya qilish imkonini beruvchi sozlamalarni qo'shish (admin panel orqali API kalitlarni kiritish).

@@ -13,7 +13,7 @@ import { Search } from 'lucide-react';
 export default function Products() {
   const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState('name');
 
   // Get category from URL params if available
@@ -30,10 +30,18 @@ export default function Products() {
   });
 
   const { data: products = [], isLoading } = useQuery<Product[]>({
-    queryKey: ['/api/products', { 
-      search: searchQuery || undefined,
-      categoryId: selectedCategory || undefined 
-    }],
+    queryKey: ['/api/products', searchQuery, selectedCategory],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      if (searchQuery) params.set('search', searchQuery);
+      if (selectedCategory && selectedCategory !== 'all') params.set('categoryId', selectedCategory);
+      
+      const response = await fetch(`/api/products?${params.toString()}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch products');
+      }
+      return response.json();
+    },
   });
 
   const handleSearch = () => {
@@ -94,7 +102,7 @@ export default function Products() {
                   <SelectValue placeholder="Kategoriya tanlang" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="" data-testid="option-all-categories">Barcha kategoriyalar</SelectItem>
+                  <SelectItem value="all" data-testid="option-all-categories">Barcha kategoriyalar</SelectItem>
                   {categories.map((category) => (
                     <SelectItem key={category.id} value={category.id} data-testid={`option-category-${category.id}`}>
                       {category.nameUz}

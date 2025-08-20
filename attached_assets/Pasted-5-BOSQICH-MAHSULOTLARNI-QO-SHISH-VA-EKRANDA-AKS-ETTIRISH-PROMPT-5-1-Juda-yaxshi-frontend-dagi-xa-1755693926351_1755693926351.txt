@@ -1,0 +1,52 @@
+5-BOSQICH: MAHSULOTLARNI QO'SHISH VA EKRANDA AKS ETTIRISH (PROMPT 5.1)
+Juda yaxshi, frontend'dagi xatolik tuzatildi va endi dinamik kategoriyalarimiz bor.
+
+Loyiha mazmuni: Endi saytga "jon" kiritamiz. Foydalanuvchi biror kategoriyani tanlaganida, u bo'sh sahifani emas, balki aynan o'sha kategoriyaga tegishli mahsulotlar ro'yxatini ko'rishi kerak. Buning uchun biz ma'lumotlar bazasiga bir nechta test mahsulotlarini qo'shamiz, ularni olib kelish uchun API'ni yangilaymiz va frontend'da chiroyli ProductCard komponenti yordamida bu mahsulotlarni foydalanuvchiga ko'rsatamiz.
+
+Aniq qadamlar:
+
+Backend - Mahsulotlar Qo'shish (Seeding):
+
+server/seed-products.ts nomli yangi fayl yarat.
+
+Bu skript bazadagi mavjud kategoriyalardan tasodifiy 15-20 tasini tanlab, ularga bog'langan holda test mahsulotlarini products jadvaliga qo'shsin.
+
+Har bir mahsulotda nameUz, nameRu, price, slug, categoryId va images (placeholder.co saytidan olingan 2-3 ta rasm URL'i) bo'lishi shart.
+
+package.json fayliga "db:seed:products": "tsx server/seed-products.ts" skriptini qo'sh va uni bir marta ishga tushirib, bazani mahsulotlar bilan to'ldir.
+
+Backend - Mahsulotlar API'sini Yangilash:
+
+server/index.ts (yoki routes.ts) faylidagi GET /api/products endpoint'ini o'zgartir. Endi u soxta ma'lumot o'rniga, bazadagi haqiqiy mahsulotlarni qaytarsin.
+
+Bu endpoint'ga filtr qo'sh: agar so'rov GET /api/products?categoryId=... ko'rinishida kelsa, faqat o'sha kategoriyadagi mahsulotlarni qaytarsin. Agar categoryId berilmasa, barcha mahsulotlarni qaytarsin.
+
+Frontend - Mahsulotlar Uchun Hook Yaratish:
+
+client/src/hooks/useProducts.ts nomli fayl yarat.
+
+Unda TanStack Query yordamida /api/products endpoint'idan ma'lumot oladigan useProducts nomli hook yarat. Bu hook o'ziga ixtiyoriy categoryId parametrini qabul qilsin va uni API so'roviga qo'shib yuborsin.
+
+Frontend - ProductCard Komponentini Yaratish:
+
+client/src/components/ProductCard.tsx faylini yarat.
+
+Bu komponent mahsulotning rasmini, nomini (o'zbekcha/ruscha), narxini va "Savatga qo'shish" tugmasini chiroyli dizaynda ko'rsatib tursin (shadcn/ui Card komponentidan foydalan).
+
+Frontend - Mahsulotlarni Ekranga Chiqarish:
+
+client/src/pages/CatalogPage.tsx faylini och.
+
+Kategoriyalarni filtrlaydigan <Select> menyusi ostida mahsulotlar uchun grid (setka) layout yarat.
+
+useProducts hook'idan foydalanib, mahsulotlarni yukla va ularni ProductCard komponenti yordamida grid ichida ko'rsat.
+
+Filtrdagi kategoriya o'zgarganda, useProducts hook'iga yangi categoryId ni yuborib, mahsulotlar ro'yxati avtomatik yangilanishini ta'minla.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Ma'lumotlar bazasiga test mahsulotlari muvaffaqiyatli qo'shildimi?
+
+GET /api/products endpoint'i endi categoryId bo'yicha filtrlashni qo'llab-quvvatlayaptimi?
+
+CatalogPage.tsx sahifasida mahsulotlar ko'rsatilyaptimi va kategoriya filtri to'g'ri ishlayaptimi?

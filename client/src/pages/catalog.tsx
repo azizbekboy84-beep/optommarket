@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { useCategories } from '@/hooks/useCategories';
+import { useProducts } from '@/hooks/useProducts';
 import { useLanguage } from '@/components/language-provider';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { ProductCard } from '@/components/product-card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Product } from '@shared/schema';
 import { Search, ChevronRight } from 'lucide-react';
 
 export default function Catalog() {
@@ -17,21 +16,7 @@ export default function Catalog() {
   const [sortBy, setSortBy] = useState('name');
 
   const { data: categories = [], isLoading: categoriesLoading } = useCategories();
-
-  const { data: products = [], isLoading } = useQuery<Product[]>({
-    queryKey: ['/api/products', searchQuery, selectedCategory],
-    queryFn: async () => {
-      const params = new URLSearchParams();
-      if (searchQuery) params.set('search', searchQuery);
-      if (selectedCategory && selectedCategory !== 'all') params.set('categoryId', selectedCategory);
-      
-      const response = await fetch(`/api/products?${params.toString()}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch products');
-      }
-      return response.json();
-    },
-  });
+  const { data: products = [], isLoading } = useProducts(selectedCategory, searchQuery);
 
   const sortedProducts = [...products].sort((a, b) => {
     switch (sortBy) {

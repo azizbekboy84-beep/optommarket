@@ -1,0 +1,43 @@
+QORONG'U/YORUG' REJIMNI O'ZGARTIRISH FUNKSIYASINI QO'SHISH
+Ajoyib, saytimizning dizayni ancha yaxshilandi. Endi unga zamonaviy veb-saytlarning muhim funksiyasi — mavzuni (theme) o'zgartirish imkoniyatini qo'shamiz.
+
+Loyiha mazmuni (Kontekst):
+Bizning loyihamizda qorong'u rejim uchun Tailwind CSS sozlamalari allaqachon mavjud. Lekin foydalanuvchi bu rejimlarni o'zi tanlay olmaydi. Maqsadimiz — foydalanuvchiga sayt mavzusini yorug' va qorong'u rejimlar o'rtasida osongina o'zgartirish imkonini beradigan qulay tugma (toggle) yaratish.
+
+Aniq qadamlar:
+
+Kerakli Kutubxonani O'rnatish:
+
+client papkasiga o'tib, mavzuni boshqarish uchun eng mashhur kutubxonalardan biri bo'lgan next-themesni o'rnat: npm install next-themes.
+
+Mavzu Boshqaruvchisini (Theme Provider) Yaratish:
+
+client/src/components/ThemeProvider.tsx nomli yangi fayl yarating.
+
+Bu faylda next-themes kutubxonasidan ThemeProviderni import qilib, uni butun ilovani o'rab turadigan qilib sozlang. Bu bizga istalgan komponentdan joriy mavzuni bilish va o'zgartirish imkonini beradi.
+
+Yaratilgan ThemeProviderni client/src/main.tsx (yoki App.tsx) faylida butun ilovaning eng yuqori qismiga o'rab qo'ying.
+
+Rejimni O'zgartirish Tugmasini (ThemeToggle) Yaratish:
+
+client/src/components/ThemeToggle.tsx nomli yangi komponent yarating.
+
+Bu komponentda shadcn/uining Button va DropdownMenu komponentlaridan foydalaning.
+
+Tugma sifatida Quyosh (Sun) va Oy (Moon) ikonkalari (lucide-reactdan) ko'rinib tursin. Joriy rejimga qarab tegishli ikona ko'rinishi kerak.
+
+Tugma bosilganda, ochiladigan menyuda "Yorug'", "Qorong'u" va "Tizim" (System) variantlari chiqsin.
+
+next-themes kutubxonasining useTheme hook'idan foydalanib, tanlangan variantga mos ravishda sayt mavzusini o'zgartiring.
+
+Tugmani Headerga Joylashtirish:
+
+Yaratilgan ThemeToggle komponentini client/src/components/Header.tsx faylidagi asosiy qismga (Main Bar), boshqa ikonalar (Savat, Profil) yoniga chiroyli qilib joylashtiring.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Headerda Quyosh/Oy ikonkalari bilan yangi tugma paydo bo'ldimi?
+
+Bu tugma bosilganda, mavzuni "Yorug'", "Qorong'u" va "Tizim" rejimlari o'rtasida muvaffaqiyatli o'zgartira olyaptimi?
+
+Saytning barcha qismlari (matnlar, fonlar, tugmalar) tanlangan rejimga mos ravishda o'z rangini to'g'ri o'zgartiryaptimi?

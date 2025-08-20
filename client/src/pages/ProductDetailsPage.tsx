@@ -20,6 +20,17 @@ export default function ProductDetailsPage() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [showVideoModal, setShowVideoModal] = useState(false);
 
+  // YouTube video handling functions
+  const getYouTubeId = (url: string) => {
+    if (!url) return null;
+    const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+    return match ? match[1] : null;
+  };
+
+  const isYouTubeVideo = (url: string) => {
+    return getYouTubeId(url) !== null;
+  };
+
   const { data: product, isLoading, error } = useProductBySlug(slug || '');
 
   if (isLoading) {
@@ -185,23 +196,48 @@ export default function ProductDetailsPage() {
                 <Dialog open={showVideoModal} onOpenChange={setShowVideoModal}>
                   <DialogTrigger asChild>
                     <button
-                      className="w-20 h-20 bg-gray-900 rounded-xl flex items-center justify-center border-2 border-border hover:border-primary/50 transition-all"
+                      className="w-20 h-20 bg-gray-900 rounded-xl flex items-center justify-center border-2 border-border hover:border-primary/50 transition-all relative overflow-hidden"
                       data-testid="video-thumbnail"
                     >
-                      <Play className="w-8 h-8 text-white" />
+                      {isYouTubeVideo((product as any).videoUrl) ? (
+                        <>
+                          <img 
+                            src={`https://img.youtube.com/vi/${getYouTubeId((product as any).videoUrl)}/0.jpg`}
+                            alt="Video thumbnail"
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                            <Play className="w-6 h-6 text-white" />
+                          </div>
+                        </>
+                      ) : (
+                        <Play className="w-8 h-8 text-white" />
+                      )}
                     </button>
                   </DialogTrigger>
                   <DialogContent className="max-w-4xl w-full">
                     <DialogTitle className="text-foreground">Mahsulot videosi</DialogTitle>
                     <div className="aspect-video">
-                      <video
-                        src={(product as any).videoUrl}
-                        controls
-                        className="w-full h-full rounded-lg"
-                        data-testid="product-video"
-                      >
-                        Brauzeringiz video formatini qo'llab-quvvatlamaydi.
-                      </video>
+                      {isYouTubeVideo((product as any).videoUrl) ? (
+                        <iframe
+                          src={`https://www.youtube.com/embed/${getYouTubeId((product as any).videoUrl)}?autoplay=1&rel=0`}
+                          title="Product Video"
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          className="w-full h-full rounded-lg"
+                          data-testid="youtube-video"
+                        />
+                      ) : (
+                        <video
+                          src={(product as any).videoUrl}
+                          controls
+                          className="w-full h-full rounded-lg"
+                          data-testid="product-video"
+                        >
+                          Brauzeringiz video formatini qo'llab-quvvatlamaydi.
+                        </video>
+                      )}
                     </div>
                   </DialogContent>
                 </Dialog>

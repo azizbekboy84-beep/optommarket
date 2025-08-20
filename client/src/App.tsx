@@ -31,6 +31,7 @@ import BlogPostPage from "@/pages/BlogPostPage";
 import SearchPage from "@/pages/SearchPage";
 import NotFound from "@/pages/not-found";
 import { AIChatWidget } from "@/components/AIChatWidget";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
 
 function Router() {
   return (
@@ -111,6 +112,7 @@ function App() {
               <Toaster />
               <Router />
               <AIChatWidget />
+              <MobileBottomNav />
             </TooltipProvider>
           </CartProvider>
         </AuthProvider>

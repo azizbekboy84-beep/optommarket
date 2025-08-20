@@ -1,0 +1,63 @@
+KEYINGI BOSQICH: INTERFEYSNI TO'LIQ MODERNIZATSIYA QILISH (DESKTOP VA MOBIL)
+Ajoyib, loyihamiz funksional jihatdan deyarli tayyor. Endi uning dizaynini professional darajaga olib chiqamiz va foydalanuvchi tajribasini (UX) keskin yaxshilaymiz.
+
+Loyiha mazmuni (Kontekst):
+Hozirgi Header (yuqori qism) web-versiyada tartibsiz ko'rinmoqda. Mobil versiyada esa bizga zamonaviy va qulay navigatsiya kerak. Maqsadimiz — har qanday qurilmada chiroyli va ishlatishga oson bo'lgan, toza interfeys yaratish.
+
+Aniq qadamlar:
+
+1-QISM: DESKTOP UCHUN HEADERNI TO'LIQ QAYTA QURISH
+
+client/src/components/Header.tsx faylini to'liq qayta yoz:
+
+Header komponentini faqat katta ekranlarda (md: va undan yuqori) ko'rinadigan qil (className="hidden md:block").
+
+Uni ikki qavatli strukturaga keltir:
+
+Yuqori Lenta (Top Bar): Orqa foni to'q (bg-primary), matnlari oq (text-primary-foreground) bo'lgan ingichka lenta yarat. Chap tomonida telefon raqami, o'ng tomonida esa bayroq ikonalari bilan bezatilgan til tanlash menyusi bo'lsin.
+
+Asosiy Qism (Main Bar): Orqa foni oq (bg-background) va pastida soya (shadow-md) bo'lsin. Barcha elementlarni vertikal markazda tekisla.
+
+Chapda: Logotip.
+
+Markazda: Asosiy menyu havolalari ("Katalog", "Blog", "Aloqa").
+
+O'ngda: Chiroyli qidiruv maydoni, Savat va Profil ikonalari. Barcha elementlar orasida yetarlicha bo'sh joy (gap-4) qoldir.
+
+2-QISM: MOBIL QURILMALAR UCHUN ALOHIDA PASTKI MENYU YARATISH
+
+Yangi Komponent Yaratish (client/src/components/MobileBottomNav.tsx):
+
+Bu komponent faqat mobil ekranlarda (md:hidden) ko'rinadigan bo'lsin.
+
+Uni ekranning pastki qismiga yopishgan (fixed bottom-0 w-full), orqa foni oq (bg-background) va yuqorisida soya (shadow-t-lg) bo'lgan qilib yarat.
+
+Ichida siz yuborgan namunadagi kabi 5 ta asosiy havola bo'lsin. Har bir havola ikonkasi (lucide-react dan) va uning ostida nomi bo'lsin:
+
+Bosh sahifa (Home ikonka) -> /
+
+Katalog (Grid yoki Compass ikonka) -> /catalog
+
+Savat (ShoppingCart ikonka) -> /cart
+
+Saralangan (Heart ikonka) -> /wishlist (kelajak uchun)
+
+Kabinet (User ikonka) -> /profile
+
+3-QISM: IKKALA KOMPONENTNI ILOVAGA INTEGRATSIYA QILISH
+
+client/src/App.tsx (yoki asosiy layout faylini) tahrirla:
+
+Sahifaning asosiy tarkibi (children yoki <Outlet>) oldidan qayta ishlangan <Header /> komponentini chaqir.
+
+Sahifaning eng oxirida yangi yaratilgan <MobileBottomNav /> komponentini chaqir.
+
+Tailwind CSSning responsive klasslari (hidden, md:block, md:hidden) qaysi qurilmada qaysi menyu ko'rinishini avtomatik boshqaradi.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Desktop versiyadagi Header endi tartibli va ikki qavatli ko'rinishga keldimi?
+
+Mobil qurilmalarda eski Header yashirilib, uning o'rniga ekranning pastki qismida yangi, 5 ta ikonka bilan ishlaydigan menyu paydo bo'ldimi?
+
+Ikkala versiya ham vizual jihatdan toza, zamonaviy va ishlatishga qulaymi?

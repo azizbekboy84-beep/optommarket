@@ -161,7 +161,7 @@ export function AIChatWidget() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 z-50 w-80 h-96 bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col">
+        <div className="fixed bottom-6 right-6 z-50 w-96 sm:w-80 xs:w-72 h-[520px] bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col max-w-[calc(100vw-3rem)]">
           {/* Header */}
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-blue-600 to-red-500 text-white rounded-t-lg">
             <CardTitle className="text-sm font-medium">
@@ -178,8 +178,8 @@ export function AIChatWidget() {
           </CardHeader>
 
           {/* Messages */}
-          <CardContent className="flex-1 p-0">
-            <ScrollArea className="h-full px-4 py-2">
+          <CardContent className="flex-1 p-0 overflow-hidden">
+            <ScrollArea className="h-full px-4 py-3 max-h-[380px]">
               {messages.length === 0 && (
                 <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
                   <Bot className="h-8 w-8 mb-2" />
@@ -194,7 +194,7 @@ export function AIChatWidget() {
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex items-start gap-2 mb-4 ${
+                  className={`flex items-start gap-3 mb-6 ${
                     message.isUser ? 'justify-end' : 'justify-start'
                   }`}
                 >
@@ -205,13 +205,15 @@ export function AIChatWidget() {
                   )}
                   
                   <div
-                    className={`max-w-[70%] p-3 rounded-lg text-sm ${
+                    className={`max-w-[85%] p-3 rounded-lg text-sm leading-[1.5] ${
                       message.isUser
                         ? 'bg-gradient-to-r from-blue-600 to-red-500 text-white'
-                        : 'bg-gray-100 text-gray-900'
+                        : 'bg-gray-100 text-gray-800 border border-gray-200'
                     }`}
                   >
-                    {message.message}
+                    <div className="whitespace-pre-wrap break-words font-medium">
+                      {message.message}
+                    </div>
                   </div>
                   
                   {message.isUser && (
@@ -239,7 +241,7 @@ export function AIChatWidget() {
           </CardContent>
 
           {/* Input */}
-          <div className="p-4 border-t border-gray-200">
+          <div className="p-4 border-t border-gray-200 bg-gray-50 mt-auto">
             <form onSubmit={handleSendMessage} className="flex gap-2">
               <Input
                 value={inputMessage}
@@ -250,15 +252,19 @@ export function AIChatWidget() {
                     : 'Напишите ваш вопрос...'
                 }
                 disabled={chatMutation.isPending}
-                className="flex-1"
+                className="flex-1 text-sm"
               />
               <Button
                 type="submit"
                 size="sm"
                 disabled={!inputMessage.trim() || chatMutation.isPending}
-                className="bg-gradient-to-r from-blue-600 to-red-500 hover:from-red-500 hover:to-blue-600"
+                className="bg-gradient-to-r from-blue-600 to-red-500 hover:from-red-500 hover:to-blue-600 px-3"
               >
-                <Send className="h-4 w-4" />
+                {chatMutation.isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4" />
+                )}
               </Button>
             </form>
           </div>

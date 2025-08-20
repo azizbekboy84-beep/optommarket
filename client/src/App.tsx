@@ -112,9 +112,8 @@ function App() {
           <CartProvider>
             <TooltipProvider>
               <Toaster />
-              <MobileTopNav />
               <Header />
-              <main className="pt-14 pb-20 md:pt-0 md:pb-0">
+              <main className="pb-20 md:pb-0">
                 <Router />
               </main>
               <MobileBottomNav />

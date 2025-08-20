@@ -1,0 +1,63 @@
+MAHSULOT SAHIFASINI TO'LIQ QAYTA ISHLASH VA GLOBAL DIZAYNNI TUZATISH
+Ajoyib, loyihamiz rivojlanmoqda, lekin hozir mahsulot sahifasida va saytning boshqa qismlarida bir nechta jiddiy dizayn va funksionallik muammolari mavjud. Endi bularning barchasini tuzatamiz.
+
+Loyiha mazmuni (Kontekst):
+Maqsadimiz — mahsulot sahifasini (ProductDetailsPage) to'liq qayta ishlab chiqib, uni zamonaviy, ma'lumotlarga boy va foydalanuvchi uchun maksimal darajada qulay qilish. Shuningdek, butun sayt bo'ylab (ham foydalanuvchi qismida, ham admin panelda) uchrayotgan ranglar bilan bog'liq xatoliklarni bartaraf etish.
+
+Aniq qadamlar:
+
+1-QISM: BACKEND VA BAZANI YANGI FUNKSIYALARGA MOSLASHTIRISH
+
+Baza Sxemasini Kengaytirish (shared/schema.ts):
+
+products jadvalini ochib, images ustunini text().array() (matn massivi) qilib o'zgartiring, bu 3 tagacha rasm URL'ini saqlash imkonini beradi.
+
+Xuddi shu jadvalga yangi video_url (text, ixtiyoriy) nomli ustun qo'shing.
+
+Admin Panelini Yangilash (Backend va Frontend):
+
+AdminProductsPage.tsx sahifasidagi mahsulot qo'shish/tahrirlash formasini o'zgartiring:
+
+Endi u 3 ta alohida rasm URL'i va 1 ta video URL'i uchun maydonlarga ega bo'lsin.
+
+/api/admin/products endpoint'larini bu yangi ma'lumotlarni qabul qila oladigan qilib yangilang.
+
+2-QISM: MAHSULOT SAHIFASINI (ProductDetailsPage.tsx) TO'LIQ QAYTA QURISH
+
+Rasmlar Galereyasi:
+
+Sahifaning chap tomonida zamonaviy rasmlar galereyasini yarating. Yuqorida katta, asosiy rasm, uning ostida esa 3 ta kichik rasm va video uchun joy bo'lsin. Kichik rasm bosilganda, asosiy rasm o'zgarishi kerak. Video ikonasi bosilganda, video o'ynatiladigan modal oyna ochilsin.
+
+Ma'lumotlar va Boshqaruv Qismi (O'ng tomon):
+
+Navigatsiya: Eng yuqorida "← Katalogga qaytish" nomli aniq ko'rinib turadigan havola qo'shing.
+
+Sarlavhalar: "Tavsif", "Xususiyatlari" kabi barcha sarlavhalarning rangini aniq to'q (text-foreground) qiling.
+
+Miqdorni Boshqarish:
+
++ va - tugmalarini kattaroq va bosishga qulay qiling.
+
+O'rtadagi miqdor ko'rsatilgan joyni to'liq funksional <Input type="number"> maydoniga aylantiring. Foydalanuvchi endi bu yerga klaviatura orqali 1000 kabi katta sonlarni ham bemalol yoza olishi kerak.
+
+"Savatga qo'shish" Tugmasi:
+
+Bu tugmani katta, yorqin va aniq ko'rinadigan qiling. Saytning asosiy rangidan (bg-primary) foydalaning va matn rangini oq (text-primary-foreground) qiling.
+
+3-QISM: GLOBAL RANG XATOLARINI TUZATISH
+
+Asosiy Stil Faylini Tahrirlash (globals.css yoki index.css):
+
+body tegi uchun standart matn rangini (color) saytning asosiy to'q rangiga (--foreground o'zgaruvchisidan foydalanib) o'rnating.
+
+Bu "oq fonga oq yozuv" muammosini butun sayt bo'ylab, jumladan Admin Panelida ham hal qilishi kerak. Barcha komponentlar endi standart holatda to'g'ri matn rangini meros qilib oladi.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Admin endi har bir mahsulot uchun 3 tagacha rasm va video qo'sha olyaptimi?
+
+Mahsulot sahifasidagi galereya yangi rasm va videolar bilan ishlayaptimi?
+
+Miqdorni kiritish maydoni endi klaviatura orqali o'zgartirishga imkon beryaptimi va "Savatga qo'shish" tugmasi aniq ko'rinib turibdimi?
+
+Butun sayt bo'ylab (ham foydalanuvchi qismida, ham admin panelda) oq fondagi ko'rinmas matnlar muammosi to'liq hal qilindimi?

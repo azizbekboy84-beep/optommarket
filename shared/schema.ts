@@ -40,6 +40,7 @@ export const products = pgTable("products", {
   unit: text("unit").notNull(), // kg, piece, box, etc.
   specifications: json("specifications").$type<Record<string, string>>(),
   images: text("images").array(),
+  videoUrl: text("video_url"),
   slug: text("slug").notNull().unique(),
   isActive: boolean("is_active").default(true),
   isFeatured: boolean("is_featured").default(false),

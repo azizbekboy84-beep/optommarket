@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useCategories } from '@/hooks/useCategories';
 import { useLanguage } from '@/components/language-provider';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { ProductCard } from '@/components/product-card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Product, Category } from '@shared/schema';
-import { Search } from 'lucide-react';
+import { Product } from '@shared/schema';
+import { Search, ChevronRight } from 'lucide-react';
 
 export default function Catalog() {
   const { t, language } = useLanguage();
@@ -15,9 +16,7 @@ export default function Catalog() {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [sortBy, setSortBy] = useState('name');
 
-  const { data: categories = [] } = useQuery<Category[]>({
-    queryKey: ['/api/categories'],
-  });
+  const { data: categories = [], isLoading: categoriesLoading } = useCategories();
 
   const { data: products = [], isLoading } = useQuery<Product[]>({
     queryKey: ['/api/products', { 

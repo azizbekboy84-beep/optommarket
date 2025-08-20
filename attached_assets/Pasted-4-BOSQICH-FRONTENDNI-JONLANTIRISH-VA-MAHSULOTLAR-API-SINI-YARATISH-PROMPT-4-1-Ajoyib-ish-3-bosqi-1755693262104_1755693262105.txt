@@ -1,0 +1,40 @@
+4-BOSQICH: FRONTENDNI JONLANTIRISH VA MAHSULOTLAR API'SINI YARATISH (PROMPT 4.1)
+Ajoyib ish! 3-bosqich muvaffaqiyatli yakunlandi. Backend endi bizga kerakli kategoriya ma'lumotlarini ierarxik shaklda taqdim etmoqda.
+
+Loyiha mazmuni: Endi bizning vazifamiz backend'dagi bu "jonli" ma'lumotlarni foydalanuvchi ko'radigan qismda (frontend) aks ettirish. Biz saytning asosiy navigatsiyasini (Header menyusi) va Katalog sahifasini statik ma'lumotlardan to'liq dinamik holatga o'tkazamiz. Shuningdek, mahsulotlar uchun ham API yaratib, keyingi qadamga zamin tayyorlaymiz.
+
+Aniq qadamlar:
+
+Frontend'da Ma'lumotlarni Qabul Qilishni Sozlash (TanStack Query):
+
+client papkasiga o'tib, ma'lumotlarni serverdan samarali yuklash va keshlash uchun TanStack Query kutubxonasini o'rnat: npm install @tanstack/react-query.
+
+client/src/main.tsx (yoki App.tsx) faylida QueryClientProvider ni sozlab, butun ilovani u bilan o'rab qo'y.
+
+Kategoriyalarni Frontend'ga Yuklash (useCategories Hook):
+
+client/src/hooks papkasini yarat va uning ichida useCategories.ts nomli fayl yarat.
+
+Bu faylda TanStack Queryning useQuery hook'idan foydalanib, /api/categories endpoint'idan barcha kategoriyalarni ierarxik shaklda olib keladigan useCategories nomli maxsus hook yarat.
+
+Frontend Komponentlarini Dinamik Qilish:
+
+Header: client/src/components/Header.tsx faylini och. U yerdagi statik "Kategoriyalar" menyusini o'chirib, o'rniga useCategories hook'idan kelgan ma'lumotlardan faqat asosiy (eng yuqori darajadagi) kategoriyalarni chiqaradigan dinamik menyu yarat.
+
+Katalog sahifasi: client/src/pages/CatalogPage.tsx faylini och. Bu sahifada useCategories hook'idan olingan barcha kategoriyalarni o'zining ichki kategoriyalari bilan birga ierarxik (daraxtsimon) ro'yxat shaklida chiroyli qilib ko'rsat.
+
+Mahsulotlar Uchun API Endpoint'larini Yaratish (Backend):
+
+server/index.ts (yoki server/routes.ts) fayliga products uchun yangi endpoint'lar qo'sh:
+
+GET /api/products: Hozircha test uchun bir nechta (5-6 ta) soxta mahsulot ma'lumotini JSON formatida qaytarsin. Har bir mahsulotda id, nameUz, nameRu, price, slug, categoryId va images (rasmlar massivi) bo'lsin.
+
+GET /api/products/:slug: Belgilangan slug bo'yicha bitta mahsulot ma'lumotini qaytarsin.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Frontend'ga TanStack Query o'rnatildimi va useCategories hook'i yaratildimi?
+
+Header.tsx va CatalogPage.tsx endi ma'lumotlarni /api/categories'dan dinamik tarzda ko'rsatyaptimi?
+
+Backend'da mahsulotlar uchun yangi (GET /api/products va GET /api/products/:slug) endpoint'lar yaratildimi va ular test ma'lumotlarini qaytaryaptimi?

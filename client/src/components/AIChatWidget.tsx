@@ -152,7 +152,7 @@ export function AIChatWidget() {
           <Button
             onClick={() => setIsOpen(true)}
             size="lg"
-            className="rounded-full h-14 w-14 bg-gradient-to-r from-blue-600 to-red-500 hover:from-red-500 hover:to-blue-600 shadow-lg hover:shadow-xl transition-all duration-300"
+            className="rounded-full h-14 w-14 bg-gradient-to-r from-blue-600 to-red-500 hover:from-red-500 hover:to-blue-600 shadow-lg hover:shadow-xl transition-all duration-300 ml-[4px] mr-[4px] pt-[5px] pb-[5px] pl-[31px] pr-[31px]"
           >
             <MessageCircle className="h-6 w-6" />
           </Button>

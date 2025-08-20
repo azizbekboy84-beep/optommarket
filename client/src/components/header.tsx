@@ -27,9 +27,9 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-black dark:bg-black shadow-lg">
+    <header className="sticky top-0 z-40 bg-card dark:bg-card border-b shadow-lg">
       {/* Top Bar */}
-      <div className="bg-black text-white py-2 hidden md:block">
+      <div className="bg-primary text-primary-foreground py-2 hidden md:block">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center text-sm">
             {/* Contact Info */}
@@ -105,7 +105,7 @@ export function Header() {
       </div>
       
       {/* Main Header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-black dark:bg-black">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
@@ -120,13 +120,13 @@ export function Header() {
 
           {/* Main Navigation - Hidden on mobile */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/catalog" className="text-white hover:text-blue-400 font-medium transition-colors">
+            <Link href="/catalog" className="text-foreground hover:text-accent font-medium transition-colors">
               {language === 'uz' ? 'Katalog' : 'Каталог'}
             </Link>
-            <Link href="/blog" className="text-white hover:text-blue-400 font-medium transition-colors">
+            <Link href="/blog" className="text-foreground hover:text-accent font-medium transition-colors">
               {language === 'uz' ? 'Blog' : 'Блог'}
             </Link>
-            <Link href="/contact" className="text-white hover:text-blue-400 font-medium transition-colors">
+            <Link href="/contact" className="text-foreground hover:text-accent font-medium transition-colors">
               {language === 'uz' ? 'Aloqa' : 'Контакты'}
             </Link>
           </nav>
@@ -159,7 +159,7 @@ export function Header() {
             {/* Language Selector */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/10">
+                <Button variant="outline" size="sm">
                   {language === 'uz' ? '🇺🇿 Uz' : '🇷🇺 Ru'}
                 </Button>
               </DropdownMenuTrigger>

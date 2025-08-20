@@ -47,7 +47,7 @@ export function Header() {
               }} className="flex">
                 <Input
                   type="text"
-                  placeholder="Qidiruv..."
+                  placeholder={language === 'uz' ? 'Qidiruv...' : 'Поиск...'}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="flex-1 pr-10"

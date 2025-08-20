@@ -1,267 +1,180 @@
-import { useQuery } from '@tanstack/react-query';
-import { useRoute } from 'wouter';
-import { Header } from '../components/header';
-import { Footer } from '../components/footer';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
-import { Button } from '../components/ui/button';
-import { Link } from 'wouter';
-import { Search, Package, FileText, Calendar, User, ArrowRight } from 'lucide-react';
-import { Product, BlogPost } from '@shared/schema';
-import { useLanguage } from '../components/language-provider';
+import { useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import { useLanguage } from "@/components/language-provider";
+import { ProductCard } from "@/components/product-card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { Product, BlogPost } from "@shared/schema";
 
-interface SearchResults {
+interface SearchResult {
   products: Product[];
   blogPosts: BlogPost[];
 }
 
 export default function SearchPage() {
-  const [, params] = useRoute('/search');
-  const searchParams = new URLSearchParams(window.location.search);
-  const query = searchParams.get('q') || '';
-  const { language } = useLanguage();
+  const [location, navigate] = useLocation();
+  const { language, t } = useLanguage();
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Fetch search results
-  const { data: results, isLoading, error } = useQuery<SearchResults>({
-    queryKey: ['search', query],
-    queryFn: async () => {
-      if (!query.trim()) {
-        return { products: [], blogPosts: [] };
-      }
-      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-      if (!response.ok) {
-        throw new Error('Qidiruvda xatolik');
-      }
-      return response.json();
-    },
-    enabled: !!query.trim(),
+  // Extract search query from URL
+  const urlParams = new URLSearchParams(location.split('?')[1] || '');
+  const query = urlParams.get('q') || '';
+
+  const { data: searchResults, isLoading, error } = useQuery<SearchResult>({
+    queryKey: ['/api/search', query],
+    enabled: !!query,
   });
 
-  const totalResults = (results?.products?.length || 0) + (results?.blogPosts?.length || 0);
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const BlogPostCard = ({ post }: { post: SearchResult['blogPosts'][0] }) => (
+    <Card className="cursor-pointer hover:shadow-md transition-shadow">
+      <CardHeader>
+        <CardTitle className="text-lg">{post.title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {post.imageUrl && (
+          <img
+            src={post.imageUrl}
+            alt={post.title}
+            className="w-full h-40 object-cover rounded-md mb-4"
+          />
+        )}
+        <p className="text-sm text-muted-foreground line-clamp-3">
+          {post.content.substring(0, 150)}...
+        </p>
+        <p className="text-xs text-muted-foreground mt-2">
+          {new Date(post.createdAt || '').toLocaleDateString(language === 'uz' ? 'uz-UZ' : 'ru-RU')}
+        </p>
+      </CardContent>
+    </Card>
+  );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-      <Header />
-      
-      <div className="py-12">
-        <div className="max-w-7xl mx-auto px-4">
-          {/* Search Header */}
-          <div className="mb-8">
-            <div className="flex items-center gap-3 mb-4">
-              <Search className="h-8 w-8 text-blue-600" />
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-                Qidiruv natijalari
-              </h1>
+    <div className="container mx-auto px-4 py-8">
+      {/* Search form */}
+      <form onSubmit={handleSearch} className="mb-8">
+        <div className="flex gap-2 max-w-md mx-auto">
+          <Input
+            type="text"
+            placeholder={language === 'uz' ? 'Qidirish...' : 'Поиск...'}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="flex-1"
+          />
+          <Button type="submit" size="icon">
+            <Search className="h-4 w-4" />
+          </Button>
+        </div>
+      </form>
+
+      {query && (
+        <div>
+          <h1 className="text-2xl font-bold mb-6">
+            {language === 'uz' ? `Qidiruv natijalari: "${query}"` : `Результаты поиска: "${query}"`}
+          </h1>
+
+          {isLoading && (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin" />
+              <span className="ml-2">
+                {language === 'uz' ? 'Qidirilmoqda...' : 'Идет поиск...'}
+              </span>
             </div>
-            {query && (
-              <div className="bg-white rounded-lg p-4 shadow-sm border">
-                <p className="text-lg text-gray-700">
-                  <span className="font-medium">Qidiruv so'zi:</span> "{query}"
-                </p>
-                {!isLoading && (
-                  <p className="text-sm text-gray-500 mt-1">
-                    {totalResults > 0 
-                      ? `${totalResults} ta natija topildi`
-                      : 'Hech narsa topilmadi'
-                    }
+          )}
+
+          {error && (
+            <div className="text-center py-12">
+              <p className="text-red-500">
+                {language === 'uz' ? 'Qidirishda xatolik yuz berdi' : 'Произошла ошибка при поиске'}
+              </p>
+            </div>
+          )}
+
+          {searchResults && !isLoading && (
+            <div className="space-y-8">
+              {/* Products section */}
+              <section>
+                <h2 className="text-xl font-semibold mb-4">
+                  {language === 'uz' ? 'Topilgan mahsulotlar' : 'Найденные товары'}
+                  {searchResults.products.length > 0 && (
+                    <span className="text-muted-foreground ml-2">
+                      ({searchResults.products.length})
+                    </span>
+                  )}
+                </h2>
+                
+                {searchResults.products.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {searchResults.products.map((product) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground">
+                    {language === 'uz' ? 'Mahsulotlar topilmadi' : 'Товары не найдены'}
                   </p>
                 )}
-              </div>
-            )}
-          </div>
+              </section>
 
-          {/* Loading State */}
-          {isLoading && (
-            <div className="text-center py-16">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="mt-4 text-gray-500">Qidirilmoqda...</p>
-            </div>
-          )}
-
-          {/* Error State */}
-          {error && (
-            <div className="text-center py-16">
-              <div className="text-red-400 mb-4">
-                <Search className="h-16 w-16 mx-auto" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Qidiruvda xatolik
-              </h3>
-              <p className="text-gray-500">
-                Qidiruv jarayonida xatolik yuz berdi. Iltimos, qayta urinib ko'ring.
-              </p>
-            </div>
-          )}
-
-          {/* No Query */}
-          {!query.trim() && !isLoading && (
-            <div className="text-center py-16">
-              <div className="text-gray-400 mb-4">
-                <Search className="h-16 w-16 mx-auto" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Qidiruv so'zini kiriting
-              </h3>
-              <p className="text-gray-500">
-                Mahsulotlar va blog postlari orasidan qidirish uchun yuqoridagi qidiruv maydonidan foydalaning.
-              </p>
-            </div>
-          )}
-
-          {/* Search Results */}
-          {!isLoading && !error && query.trim() && results && (
-            <>
-              {totalResults === 0 ? (
-                <div className="text-center py-16">
-                  <div className="text-gray-400 mb-4">
-                    <Search className="h-16 w-16 mx-auto" />
+              {/* Blog posts section */}
+              <section>
+                <h2 className="text-xl font-semibold mb-4">
+                  {language === 'uz' ? 'Topilgan maqolalar' : 'Найденные статьи'}
+                  {searchResults.blogPosts.length > 0 && (
+                    <span className="text-muted-foreground ml-2">
+                      ({searchResults.blogPosts.length})
+                    </span>
+                  )}
+                </h2>
+                
+                {searchResults.blogPosts.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {searchResults.blogPosts.map((post) => (
+                      <BlogPostCard key={post.id} post={post} />
+                    ))}
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    Hech narsa topilmadi
-                  </h3>
-                  <p className="text-gray-500 mb-6">
-                    "{query}" so'zi bo'yicha hech qanday natija topilmadi. <br />
-                    Boshqa kalit so'zlar bilan qidirib ko'ring.
+                ) : (
+                  <p className="text-muted-foreground">
+                    {language === 'uz' ? 'Maqolalar topilmadi' : 'Статьи не найдены'}
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                    <Link href="/products">
-                      <Button variant="outline">
-                        <Package className="h-4 w-4 mr-2" />
-                        Barcha mahsulotlar
-                      </Button>
-                    </Link>
-                    <Link href="/blog">
-                      <Button variant="outline">
-                        <FileText className="h-4 w-4 mr-2" />
-                        Blog maqolalari
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-12">
-                  {/* Products Section */}
-                  {results.products && results.products.length > 0 && (
-                    <section>
-                      <div className="flex items-center gap-3 mb-6">
-                        <Package className="h-6 w-6 text-blue-600" />
-                        <h2 className="text-2xl font-bold text-gray-900">
-                          Topilgan mahsulotlar ({results.products.length})
-                        </h2>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {results.products.map((product) => (
-                          <Link key={product.id} href={`/products/${product.slug}`}>
-                            <Card className="h-full hover:shadow-xl transition-shadow duration-300 group cursor-pointer">
-                              {product.images && product.images[0] && (
-                                <div className="relative overflow-hidden rounded-t-lg">
-                                  <img 
-                                    src={product.images[0]} 
-                                    alt={language === 'uz' ? product.nameUz : product.nameRu}
-                                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                                  />
-                                </div>
-                              )}
-                              <CardHeader>
-                                <CardTitle className="group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
-                                  {language === 'uz' ? product.nameUz : product.nameRu}
-                                </CardTitle>
-                              </CardHeader>
-                              <CardContent>
-                                <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                                  {language === 'uz' ? product.descriptionUz : product.descriptionRu}
-                                </p>
-                                <div className="flex items-center justify-between mb-3">
-                                  <div>
-                                    <p className="text-lg font-bold text-green-600">
-                                      {Number(product.wholesalePrice).toLocaleString()} so'm
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                      Min: {product.minQuantity} {product.unit}
-                                    </p>
-                                  </div>
-                                  <Badge variant={(product.stockQuantity || 0) > 0 ? "default" : "secondary"}>
-                                    {(product.stockQuantity || 0) > 0 ? 'Mavjud' : 'Tugagan'}
-                                  </Badge>
-                                </div>
-                                <div className="flex items-center gap-1 text-blue-600 font-medium group-hover:gap-2 transition-all duration-300">
-                                  <span>Batafsil</span>
-                                  <ArrowRight className="h-4 w-4" />
-                                </div>
-                              </CardContent>
-                            </Card>
-                          </Link>
-                        ))}
-                      </div>
-                    </section>
-                  )}
+                )}
+              </section>
 
-                  {/* Blog Posts Section */}
-                  {results.blogPosts && results.blogPosts.length > 0 && (
-                    <section>
-                      <div className="flex items-center gap-3 mb-6">
-                        <FileText className="h-6 w-6 text-blue-600" />
-                        <h2 className="text-2xl font-bold text-gray-900">
-                          Topilgan maqolalar ({results.blogPosts.length})
-                        </h2>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {results.blogPosts.map((post) => (
-                          <Link key={post.id} href={`/blog/${post.slug}`}>
-                            <Card className="h-full hover:shadow-xl transition-shadow duration-300 group cursor-pointer overflow-hidden">
-                              {post.imageUrl && (
-                                <div className="relative overflow-hidden">
-                                  <img 
-                                    src={post.imageUrl} 
-                                    alt={post.title}
-                                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                                  />
-                                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
-                                </div>
-                              )}
-                              <CardHeader>
-                                <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                                  <Calendar className="h-4 w-4" />
-                                  <span>{new Date(post.createdAt!).toLocaleDateString('uz-UZ')}</span>
-                                  {post.isPublished && (
-                                    <Badge variant="default" className="ml-auto">
-                                      Chop etilgan
-                                    </Badge>
-                                  )}
-                                </div>
-                                <CardTitle className="group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
-                                  {post.title}
-                                </CardTitle>
-                              </CardHeader>
-                              <CardContent>
-                                <p className="text-gray-600 line-clamp-3 mb-4">
-                                  {post.content.substring(0, 150)}...
-                                </p>
-                                <div className="flex items-center justify-between">
-                                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                                    <User className="h-4 w-4" />
-                                    <span>OptomBazar</span>
-                                  </div>
-                                  <div className="flex items-center gap-1 text-blue-600 font-medium group-hover:gap-2 transition-all duration-300">
-                                    <span>O'qish</span>
-                                    <ArrowRight className="h-4 w-4" />
-                                  </div>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          </Link>
-                        ))}
-                      </div>
-                    </section>
-                  )}
+              {/* No results message */}
+              {searchResults.products.length === 0 && searchResults.blogPosts.length === 0 && (
+                <div className="text-center py-12">
+                  <p className="text-lg text-muted-foreground mb-2">
+                    {language === 'uz' ? 'Hech narsa topilmadi' : 'Ничего не найдено'}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {language === 'uz'
+                      ? 'Boshqa kalit so\'zlar bilan qayta urinib ko\'ring'
+                      : 'Попробуйте использовать другие ключевые слова'}
+                  </p>
                 </div>
               )}
-            </>
+            </div>
           )}
         </div>
-      </div>
+      )}
 
-      <Footer />
+      {!query && (
+        <div className="text-center py-12">
+          <Search className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+          <p className="text-lg text-muted-foreground">
+            {language === 'uz' ? 'Qidiruv so\'zini kiriting' : 'Введите поисковый запрос'}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

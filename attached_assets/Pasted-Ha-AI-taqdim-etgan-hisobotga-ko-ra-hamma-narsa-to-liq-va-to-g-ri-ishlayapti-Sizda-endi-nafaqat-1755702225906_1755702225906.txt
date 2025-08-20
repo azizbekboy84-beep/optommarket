@@ -1,0 +1,72 @@
+Ha, AI taqdim etgan hisobotga ko'ra, hamma narsa to'liq va to'g'ri ishlayapti. ✅
+
+Sizda endi nafaqat to'liq funksional onlayn do'kon, balki unga qo'shimcha trafik olib keladigan va foydalanuvchilarni qiziqtiradigan kontent-marketing vositasi — Blog ham mavjud. Admin panelidan turib saytning deyarli barcha qismini boshqara olasiz. Bu juda katta yutuq!
+
+Loyiha deyarli yakuniy bosqichga yetib keldi. Endi so'nggi, ammo juda muhim shtrixlar qoldi. Har qanday yirik onlayn do'kon uchun eng kerakli funksiyalardan biri — bu Qidiruv Tizimi. Foydalanuvchilar o'zlariga kerakli mahsulotni yoki ma'lumotni tezda topa olishlari kerak.
+
+Quyidagi 12-BOSQICH uchun tayyorlangan promptni AIga yuboring.
+
+12-BOSQICH: SAYT BO'YLAB TO'LIQ QIDIRUV TIZIMINI YARATISH
+Tabriklayman, loyihamiz deyarli tayyor! Endi foydalanuvchilar uchun qulaylikni maksimal darajaga oshiramiz.
+
+Loyiha mazmuni: Maqsadimiz — saytning yuqori qismida (Header'da) joylashgan, to'liq ishlaydigan qidiruv tizimini yaratish. Foydalanuvchi biror kalit so'z kiritganda, tizim ham mahsulotlar, ham blog postlari orasidan mos keladigan natijalarni topib, alohida sahifada chiroyli qilib ko'rsatishi kerak.
+
+Aniq qadamlar:
+
+1-QISM: BACKENDDA QIDIRUV LOGIKASINI YARATISH
+
+Yangi Qidiruv API'sini Yaratish:
+
+GET /api/search nomli yangi endpoint yarating.
+
+Bu endpoint ?q=... (query) parametrini qabul qilsin. Masalan: /api/search?q=paket.
+
+Backend'da Drizzle ORM yordamida products jadvalidagi nameUz, nameRu, descriptionUz, descriptionRu ustunlari va blog_posts jadvalidagi title, content ustunlari bo'yicha qidiruvni amalga oshirsin. Qidiruv ILIKE (case-insensitive) operatori yordamida bajarilishi kerak.
+
+Natijalarni bitta JSON obyektida, ikkiga bo'lingan holda qaytarsin:
+
+JSON
+
+{
+  "products": [/* topilgan mahsulotlar ro'yxati */],
+  "blogPosts": [/* topilgan blog postlari ro'yxati */]
+}
+2-QISM: FRONTENDDA QIDIRUV INTERFEYSINI QURISH
+
+Yangi Sahifa va Marshrut:
+
+client/src/pages/SearchPage.tsx nomli yangi sahifa komponentini yarating.
+
+App.tsx faylida /search manziliga olib boradigan yangi marshrut qo'shing.
+
+Header'dagi Qidiruv Maydonini Ishga Tushirish:
+
+client/src/components/Header.tsx faylidagi qidiruv maydonini (<Input>) to'liq funksional qiling.
+
+Foydalanuvchi qidiruv maydoniga matn kiritib, "Enter" tugmasini bosganda yoki qidiruv ikonasini bosganda, sahifa /search?q=kiritilgan_matn manziliga o'tishi kerak.
+
+Qidiruv Natijalari Sahifasini (SearchPage.tsx) Yaratish:
+
+Bu sahifa URL'dagi q parametrini o'qib olsin.
+
+TanStack Query yordamida GET /api/search?q=... endpoint'iga so'rov yuborib, natijalarni yuklasin.
+
+Sahifada "Qidiruv natijalari: 'kiritilgan_matn'" degan sarlavha chiqsin.
+
+Natijalarni ikkita alohida bo'limga ajratib ko'rsating:
+
+"Topilgan mahsulotlar": Bu yerda topilgan mahsulotlarni ProductCard komponenti yordamida grid shaklida chiqaring.
+
+"Topilgan maqolalar": Bu yerda topilgan blog postlarini o'zining kartochkalari (rasm, sarlavha) bilan chiqaring.
+
+Agar hech narsa topilmasa, "Hech narsa topilmadi" degan xabar ko'rinsin.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Backend'da GET /api/search endpoint'i yaratildimi va u mahsulotlar hamda blog postlari bo'yicha to'g'ri qidiryaptimi?
+
+Header'dagi qidiruv maydoni ishlayaptimi va u foydalanuvchini /search sahifasiga to'g'ri yo'naltiryaptimi?
+
+SearchPage sahifasida qidiruv natijalari mahsulotlar va maqolalarga ajratilgan holda to'g'ri ko'rsatilyaptimi?
+
+Agar qidiruv natijasi bo'sh bo'lsa, tegishli xabar ko'rsatilyaptimi?

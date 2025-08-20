@@ -165,41 +165,37 @@ export default function Home() {
           </div>
 
           {categoriesLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-8 animate-pulse" data-testid={`skeleton-category-${i}`}>
-                  <div className="w-20 h-20 mx-auto mb-6 bg-gray-200 rounded-3xl"></div>
-                  <div className="h-6 bg-gray-200 rounded mb-3 mx-auto w-32"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-4 mx-auto w-48"></div>
-                  <div className="h-8 bg-gray-200 rounded-full w-24 mx-auto"></div>
+            <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {[...Array(12)].map((_, i) => (
+                <div key={i} className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-3 animate-pulse h-32" data-testid={`skeleton-category-${i}`}>
+                  <div className="w-8 h-8 mx-auto mb-2 bg-gray-200 rounded-2xl"></div>
+                  <div className="h-3 bg-gray-200 rounded mb-2 mx-auto w-16"></div>
+                  <div className="h-5 bg-gray-200 rounded-full w-12 mx-auto mt-auto"></div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {categories.map((category, index) => {
-                const categoryIcons = ['📦', '🍽️', '📱', '👕', '🏠', '⚡'];
+            <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {categories.slice(0, 12).map((category, index) => {
+                const categoryIcons = ['📦', '🍽️', '📱', '👕', '🏠', '⚡', '🛠️', '🌿', '🎨', '📚', '🎵', '☕'];
                 const categoryIcon = categoryIcons[index] || '📦';
                 
                 return (
                   <div 
                     key={category.id}
-                    className="group bg-white dark:bg-gray-800 rounded-3xl p-8 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105 shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700"
+                    className="group bg-white dark:bg-gray-800 rounded-2xl p-3 hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:scale-105 shadow-md overflow-hidden border border-gray-100 dark:border-gray-700 h-32"
                     onClick={() => window.location.href = `/category/${category.slug}`}
                     data-testid={`category-card-${category.id}`}
                   >
-                    <div className="text-center">
-                      <div className="w-20 h-20 mx-auto mb-6 flex items-center justify-center text-6xl">
+                    <div className="text-center h-full flex flex-col justify-between">
+                      <div className="w-8 h-8 mx-auto mb-1 flex items-center justify-center text-2xl">
                         {categoryIcon}
                       </div>
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3" data-testid={`text-category-name-${category.id}`}>
+                      <h3 className="text-xs font-bold text-gray-900 dark:text-gray-100 mb-1 line-clamp-2 leading-tight" data-testid={`text-category-name-${category.id}`}>
                         {language === 'uz' ? category.nameUz : category.nameRu}
                       </h3>
-                      <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-6">
-                        Yuqori sifatli mahsulotlar eng yaxshi narxlarda
-                      </p>
-                      <div className="mt-6 -mx-8 -mb-8 p-4 bg-gradient-to-r from-blue-500 to-red-500">
-                        <span className="inline-flex items-center text-white font-medium">
+                      <div className="-mx-3 -mb-3 p-2 bg-gradient-to-r from-blue-500 to-red-500">
+                        <span className="inline-flex items-center text-white font-medium text-[10px]">
                           Ko'rish →
                         </span>
                       </div>

@@ -1,0 +1,52 @@
+DIZAYNNI OPTIMALLASHTIRISH VA YAKUNLASH (Yangilangan)
+Ajoyib, loyihamizning barcha funksiyalari ishlamoqda. Endi uning tashqi ko'rinishini professional darajaga olib chiqamiz va foydalanuvchi tajribasini (UX) yaxshilaymiz.
+
+Loyiha mazmuni: Saytning asosiy sahifasini zamonaviy, chiroyli va foydalanuvchiga qulay dizayn bilan ta'minlash. Biz elementlarni vizual jihatdan bog'laymiz, ranglarni optimallashtiramiz va umumiy kompozitsiyani yaxshilaymiz.
+
+Aniq qadamlar:
+
+1-QISM: ASOSIY SAHIFANI ZAMONAVIYLAŞTIRISH
+
+"Eng Arzon Narxlar", "Sifat Kafolati", "Tez Yetkazib Berish" kartochkalarini yangilash:
+Har bir kartochkaning ichida yangi, zamonaviy SVG ikonka qo'shing. Masalan:
+Eng Arzon Narxlar uchun — 💰 (pul belgisi).
+Sifat Kafolati uchun — ✅ (to'g'ri belgi).
+Tez Yetkazib Berish uchun — 🚚 (yetkazib berish avtomobili).
+Ikonkalarni katta, rangli (gradient) va aniq qilib yaratish kerak.
+Kartochkalar orasida yetarlicha bo'sh joy (gap-8) qoldiring.
+Kartochkalar soliq (shadow-md) bilan bezatilgan bo'lsin.
+Sarlavhalar (Eng Arzon Narxlar) bold va katta harflarda bo'lsin.
+Tavsif matnlari qisqa, qiziqarli va foydali bo'lsin.
+"Asosiy kategoriyalar" bo'limini yangilash:
+"Asosiy kategoriyalar" sarlavhasi bosh sahifaning markaziga, kartochkalar ostiga joylashtirilsin.
+Sarlavha katta, bold va oq rangda bo'lsin.
+Sarlavha ostidagi to'rtinchi qator kichikroq, oq rangda bo'lsin.
+Kategoriyalar kartochkalarining ikonkalari ham yangi, zamonaviy SVG ikonkalarga almashtirilsin. Masalan:
+Polietilen paketlar uchun — 📦 (paket).
+Bir martalik idishlar uchun — 🍽️ (ovqat).
+Elektronika uchun — 📱 (telefon).
+Kategoriyalar kartochkalarining orqa foni oq (bg-white) bo'lsin.
+Kategoriyalar kartochkalarining pastki qismi rangli (gradient) bo'lsin.
+"Biznes Hamkorimgiz Bo'lishga Tayormisiz?" bo'limini yangilash:
+Bu bo'lim saytning markaziga joylashtirilsin.
+Sarlavha katta, bold va oq rangda bo'lsin.
+Tavsif matni qisqa, qiziqarli va foydali bo'lsin.
+"Hoziroq Ro'yxatdan O'tish" tugmasi katta, rangli (primary) bo'lsin.
+"Bog'lanish" tugmasi oq rangda, rangli kontur bilan bo'lsin.
+Pastki panelda (Footer) yangilash:
+Logo oq rangda bo'lsin.
+"O'zbekiston uchun ishonchli optom bozor platformasi. Sizning..." matni kichik, oq rangda bo'lsin.
+"Tezkor Havolalar" va "Kategoriyalar" sarlavhalari oq rangda bo'lsin.
+"Aloqa Ma'lumotlari" sarlavhasi oq rangda bo'lsin.
+Telefon raqami va email manzili oq rangda bo'lsin.
+Pastki panel qora rangda (bg-black) bo'lsin.
+2-QISM: RANGLAR VA FONTLARNI OPTIMALLASHTIRISH
+
+Ranglar: Asosiy ranglar qizil, ko'k va oq bo'lsin.
+Fontlar: Matnlar sans-serif fontda (masalan, Inter, Roboto) bo'lsin.
+Rang kombinatsiyalari: Elementlar orasida rang kontrasti bor bo'lsin.
+3-QISM: FINAL TEKSHIRUV
+
+Sahifani barcha qurilmalarda (desktop, tablet, mobil) tekshiring.
+Elementlar bir-biriga to'g'ri tekislanib, bo'sh joylar borligiga ishonch hosil qiling.
+Gradient va soya effektlari vizual jihatdan chiroyli bo'lishi kerak.

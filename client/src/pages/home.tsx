@@ -33,36 +33,30 @@ export default function Home() {
   const features = [
     {
       icon: (
-        <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-        </svg>
+        <div className="text-6xl mb-2">💰</div>
       ),
       titleUz: "Eng Arzon Narxlar",
       titleRu: "Самые низкие цены",
-      descriptionUz: "To'g'ridan-to'g'ri ishlab chiqaruvchilardan xarid qiling va optom narxlaridan foydalaning",
-      descriptionRu: "Покупайте напрямую у производителей и пользуйтесь оптовыми ценами"
+      descriptionUz: "To'g'ridan-to'g'ri ishlab chiqaruvchilardan optom narxlarda xarid qiling",
+      descriptionRu: "Покупайте напрямую у производителей по оптовым ценам"
     },
     {
       icon: (
-        <svg className="w-8 h-8 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
+        <div className="text-6xl mb-2">✅</div>
       ),
       titleUz: "Sifat Kafolati",
       titleRu: "Гарантия качества",
-      descriptionUz: "Barcha mahsulotlar tekshirilgan va sifat sertifikatiga ega. 100% qoniqish kafolati",
-      descriptionRu: "Все товары проверены и имеют сертификат качества. 100% гарантия удовлетворения"
+      descriptionUz: "Barcha mahsulotlar sertifikatlangan va 100% sifat kafolati bilan",
+      descriptionRu: "Все товары сертифицированы и с гарантией качества 100%"
     },
     {
       icon: (
-        <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-        </svg>
+        <div className="text-6xl mb-2">🚚</div>
       ),
       titleUz: "Tez Yetkazib Berish",
       titleRu: "Быстрая доставка",
-      descriptionUz: "O'zbekiston bo'ylab 1-3 kun ichida yetkazib berish. Katta buyurtmalar uchun maxsus chegirmalar",
-      descriptionRu: "Доставка по Узбекистану в течение 1-3 дней. Специальные скидки на крупные заказы"
+      descriptionUz: "O'zbekiston bo'ylab 1-3 kun ichida tez va ishonchli yetkazib berish",
+      descriptionRu: "Быстрая и надежная доставка по Узбекистану за 1-3 дня"
     },
   ];
 
@@ -140,13 +134,11 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105" data-testid={`feature-${index}`}>
+              <div key={index} className="bg-white rounded-2xl p-10 shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105" data-testid={`feature-${index}`}>
                 <div className="mb-6 flex justify-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-red-500 rounded-2xl flex items-center justify-center">
-                    {feature.icon}
-                  </div>
+                  {feature.icon}
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4 text-center" data-testid={`text-feature-title-${index}`}>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center" data-testid={`text-feature-title-${index}`}>
                   {language === 'uz' ? feature.titleUz : feature.titleRu}
                 </h3>
                 <p className="text-gray-600 text-center leading-relaxed" data-testid={`text-feature-description-${index}`}>
@@ -159,13 +151,13 @@ export default function Home() {
       </section>
 
       {/* Categories Section */}
-      <section className="bg-white py-20">
+      <section className="bg-gradient-to-br from-blue-900 via-blue-800 to-red-800 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4" data-testid="text-categories-title">
+            <h2 className="text-4xl font-bold text-white mb-4" data-testid="text-categories-title">
               Asosiy kategoriyalar
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto" data-testid="text-categories-description">
+            <p className="text-xl text-white max-w-2xl mx-auto" data-testid="text-categories-description">
               Bizning eng mashhur mahsulot toifalarimiz bilan tanishing
             </p>
           </div>
@@ -183,33 +175,36 @@ export default function Home() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {categories.map((category) => (
-                <div 
-                  key={category.id}
-                  className="group bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-8 hover:from-blue-50 hover:to-indigo-100 transition-all duration-300 cursor-pointer transform hover:scale-105 shadow-lg hover:shadow-xl"
-                  onClick={() => window.location.href = `/category/${category.slug}`}
-                  data-testid={`category-card-${category.id}`}
-                >
-                  <div className="text-center">
-                    <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-blue-600 to-red-500 rounded-3xl flex items-center justify-center group-hover:from-red-500 group-hover:to-blue-600 transition-all duration-300">
-                      <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                      </svg>
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3" data-testid={`text-category-name-${category.id}`}>
-                      {language === 'uz' ? category.nameUz : category.nameRu}
-                    </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                      Yuqori sifatli mahsulotlar eng yaxshi narxlarda
-                    </p>
-                    <div className="mt-6">
-                      <span className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium group-hover:bg-red-100 group-hover:text-red-800 transition-colors">
-                        Ko'rish →
-                      </span>
+              {categories.map((category, index) => {
+                const categoryIcons = ['📦', '🍽️', '📱', '👕', '🏠', '⚡'];
+                const categoryIcon = categoryIcons[index] || '📦';
+                
+                return (
+                  <div 
+                    key={category.id}
+                    className="group bg-white rounded-3xl p-8 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105 shadow-lg overflow-hidden"
+                    onClick={() => window.location.href = `/category/${category.slug}`}
+                    data-testid={`category-card-${category.id}`}
+                  >
+                    <div className="text-center">
+                      <div className="w-20 h-20 mx-auto mb-6 flex items-center justify-center text-6xl">
+                        {categoryIcon}
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-3" data-testid={`text-category-name-${category.id}`}>
+                        {language === 'uz' ? category.nameUz : category.nameRu}
+                      </h3>
+                      <p className="text-gray-600 text-sm leading-relaxed mb-6">
+                        Yuqori sifatli mahsulotlar eng yaxshi narxlarda
+                      </p>
+                      <div className="mt-6 -mx-8 -mb-8 p-4 bg-gradient-to-r from-blue-500 to-red-500">
+                        <span className="inline-flex items-center text-white font-medium">
+                          Ko'rish →
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
 
@@ -301,21 +296,25 @@ export default function Home() {
       </section>
 
       {/* Contact CTA */}
-      <section className="bg-primary py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6" data-testid="text-cta-title">
-            {t('businessPartner')}
+      <section className="bg-gradient-to-br from-blue-900 via-blue-800 to-red-800 py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6" data-testid="text-cta-title">
+            Biznes Hamkorimgiz Bo'lishga Tayormisiz?
           </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto" data-testid="text-cta-description">
-            {t('ctaDescription')}
+          <p className="text-xl text-white mb-10 max-w-3xl mx-auto leading-relaxed" data-testid="text-cta-description">
+            Optombazar.uz platformasiga qo'shiling va o'z biznesingizni yangi bosqichga olib chiqing. Minglab mijozlarga yetib boring!
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-white text-primary hover:bg-gray-50" data-testid="button-register-now">
-              {t('registerNow')}
-            </Button>
-            <Button variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-primary" data-testid="button-contact-us">
-              {t('contactUs')}: +998 90 123 45 67
-            </Button>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <Link href="/register">
+              <Button size="lg" className="bg-white text-blue-900 hover:bg-gray-50 px-8 py-4 text-lg font-bold rounded-2xl" data-testid="button-register-now">
+                Hoziroq Ro'yxatdan O'tish
+              </Button>
+            </Link>
+            <Link href="/contact">
+              <Button variant="outline" size="lg" className="border-2 border-white text-white hover:bg-white hover:text-blue-900 px-8 py-4 text-lg font-bold rounded-2xl" data-testid="button-contact-us">
+                Bog'lanish
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

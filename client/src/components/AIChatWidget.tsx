@@ -147,7 +147,7 @@ export function AIChatWidget() {
   return (
     <>
       {/* Chat Toggle Button */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-24 right-6 z-50 md:bottom-6">
         {!isOpen && (
           <Button
             onClick={() => setIsOpen(true)}
@@ -161,7 +161,7 @@ export function AIChatWidget() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 z-50 w-96 sm:w-80 xs:w-72 h-[520px] bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col max-w-[calc(100vw-3rem)]">
+        <div className="fixed bottom-24 right-6 z-50 md:bottom-6 w-96 sm:w-80 xs:w-72 h-[520px] bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col max-w-[calc(100vw-3rem)]">
           {/* Header */}
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-blue-600 to-red-500 text-white rounded-t-lg">
             <CardTitle className="text-sm font-medium">

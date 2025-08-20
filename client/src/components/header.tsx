@@ -26,7 +26,7 @@ export function Header() {
   };
 
   return (
-    <header className="hidden md:block sticky top-0 z-40 bg-background shadow-md">
+    <header className="sticky top-0 z-40 bg-background shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}

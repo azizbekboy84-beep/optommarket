@@ -1,5 +1,6 @@
 import { Link } from 'wouter';
 import { useLanguage } from './language-provider';
+import { useCart } from '@/context/CartContext';
 import { Product } from '@shared/schema';
 import { Button } from '@/components/ui/button';
 
@@ -10,6 +11,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   const { language, t } = useLanguage();
+  const { addToCart } = useCart();
   
   const name = language === 'uz' ? product.nameUz : product.nameRu;
   const description = language === 'uz' ? product.descriptionUz : product.descriptionRu;
@@ -23,11 +25,17 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
     outOfStock: 'text-red-800 bg-red-100'
   };
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (onAddToCart) {
-      onAddToCart(product);
+    
+    try {
+      await addToCart(product.id, product.minQuantity || 1);
+      if (onAddToCart) {
+        onAddToCart(product);
+      }
+    } catch (error) {
+      console.error('Failed to add to cart:', error);
     }
   };
 

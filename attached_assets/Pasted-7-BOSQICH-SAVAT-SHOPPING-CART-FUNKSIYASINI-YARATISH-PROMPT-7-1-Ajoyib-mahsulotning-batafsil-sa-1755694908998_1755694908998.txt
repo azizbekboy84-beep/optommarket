@@ -1,0 +1,68 @@
+7-BOSQICH: SAVAT (SHOPPING CART) FUNKSIYASINI YARATISH (PROMPT 7.1)
+Ajoyib, mahsulotning batafsil sahifasi tayyor. Endi onlayn do'konning eng muhim qismiga o'tamiz.
+
+Loyiha mazmuni: Foydalanuvchi endi mahsulotlarni ko'ra oladi, endi esa ularni sotib olish uchun birinchi qadamni qo'yishi kerak — ya'ni, mahsulotni savatga qo'shishi lozim. Biz to'liq ishlaydigan savat tizimini yaratamiz: mahsulot qo'shish, miqdorini o'zgartirish, o'chirish va umumiy narxni hisoblash. Bu funksiya ro'yxatdan o'tmagan foydalanuvchilar uchun ham ishlashi kerak (session orqali).
+
+Aniq qadamlar:
+
+Backend - Baza Sxemasini Yangilash:
+
+shared/schema.ts fayliga yangi jadval qo'sh: cart_items.
+
+Unda quyidagi ustunlar bo'lsin: id, session_id (ro'yxatdan o'tmagan foydalanuvchilar uchun noyob identifikator), product_id (products jadvaliga ishora), quantity (soni).
+
+Backend - Savat Uchun To'liq API Endpoint'lar:
+
+server/index.ts (yoki routes.ts) faylida cart uchun to'liq CRUD operatsiyalarini yarating. Foydalanuvchini express-session orqali yaratilgan session_id bilan aniqlang.
+
+GET /api/cart: Joriy session uchun savatdagi barcha mahsulotlarni qaytarsin.
+
+POST /api/cart: Savatga yangi mahsulot qo'shsin (agar mahsulot allaqachon mavjud bo'lsa, sonini oshirsin). So'rov tanasida (body) productId va quantity keladi.
+
+PUT /api/cart/:itemId: Savatdagi ma'lum bir mahsulotning miqdorini yangilasin.
+
+DELETE /api/cart/:itemId: Savatdan mahsulotni o'chirsin.
+
+Frontend - Global Holat (State) Boshqaruvi (CartContext):
+
+client/src/context papkasini va uning ichida CartContext.tsx faylini yarating.
+
+Bu faylda React Context yarating. Bu Context butun ilovani savatdagi mahsulotlar (cartItems), ularni qayta yuklash funksiyasi (refetchCart) va savatga qo'shish amallari bilan ta'minlashi kerak.
+
+Bu Context Provider'ini App.tsx da butun ilovani o'rab qo'ying.
+
+Frontend - Savat Bilan Ishlash Uchun Hook'lar (useMutation):
+
+client/src/hooks/useCartMutations.ts nomli fayl yarating.
+
+Unda TanStack Queryning useMutation hook'idan foydalanib, quyidagi amallar uchun alohida hook'lar yarating: useAddToCart, useUpdateCartItem, useRemoveFromCart.
+
+Har bir muvaffaqiyatli mutatsiyadan so'ng (onSuccess), savat ma'lumotlarini yangilash uchun TanStack Queryning keshlangan so'rovini bekor qiling (queryClient.invalidateQueries).
+
+Frontend - Komponentlarni Funksional Qilish:
+
+"Savatga qo'shish" tugmasi: ProductDetailsPage.tsx va ProductCard.tsx komponentlaridagi "Savatga qo'shish" tugmasi endi useAddToCart hook'ini chaqirsin. Muvaffaqiyatli qo'shilganda foydalanuvchiga bildirishnoma (Toast) ko'rsating.
+
+Header: Header.tsx komponentidagi savat ikonkasi yonida savatdagi mahsulotlarning umumiy sonini ko'rsatadigan indikator (badge) paydo bo'lsin. Bu ma'lumotni CartContextdan oling.
+
+Frontend - Savat Sahifasini Yaratish (CartPage.tsx):
+
+client/src/pages/CartPage.tsx sahifasini to'liq ishlab chiqing.
+
+Bu sahifa CartContextdan olingan barcha mahsulotlarni ro'yxat shaklida ko'rsatsin.
+
+Har bir mahsulot uchun: rasm, nom, narx, miqdorni +/- tugmalari bilan o'zgartirish imkoniyati va o'chirish tugmasi bo'lsin. Bu tugmalar tegishli mutatsiya hook'larini chaqirishi kerak.
+
+Sahifaning pastki qismida barcha mahsulotlarning umumiy narxini hisoblab ko'rsating.
+
+"Buyurtma berish" tugmasini qo'shing (hozircha hech qayerga olib bormasa ham).
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Backend'da savat uchun barcha 4 ta API endpoint (GET, POST, PUT, DELETE) yaratildimi?
+
+Frontend'da "Savatga qo'shish" tugmasi endi ishlayaptimi va bosilganda mahsulot savatga tushyaptimi?
+
+Headerdagi savat ikonkasida mahsulotlar soni to'g'ri va real vaqtda yangilanib turibdimi?
+
+CartPage.tsx sahifasida savatdagi mahsulotlar to'g'ri ko'rsatilyaptimi va u yerda miqdorni o'zgartirish/o'chirish funksiyalari ishlayaptimi?

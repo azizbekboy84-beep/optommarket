@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type Category, type InsertCategory, type Product, type InsertProduct, type Order, type InsertOrder, type OrderItem, type InsertOrderItem } from "@shared/schema";
+import { type User, type InsertUser, type Category, type InsertCategory, type Product, type InsertProduct, type Order, type InsertOrder, type OrderItem, type InsertOrderItem, type CartItem, type InsertCartItem } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -21,6 +21,13 @@ export interface IStorage {
   createProduct(product: InsertProduct): Promise<Product>;
   searchProducts(query: string): Promise<Product[]>;
 
+  // Cart
+  getCartItems(sessionId: string): Promise<CartItem[]>;
+  addToCart(cartItem: InsertCartItem): Promise<CartItem>;
+  updateCartItem(id: string, quantity: number): Promise<CartItem | undefined>;
+  removeFromCart(id: string): Promise<boolean>;
+  clearCart(sessionId: string): Promise<boolean>;
+
   // Orders
   getOrders(userId?: string): Promise<Order[]>;
   getOrder(id: string): Promise<Order | undefined>;
@@ -33,6 +40,7 @@ export class MemStorage implements IStorage {
   private users: Map<string, User>;
   private categories: Map<string, Category>;
   private products: Map<string, Product>;
+  private cartItems: Map<string, CartItem>;
   private orders: Map<string, Order>;
   private orderItems: Map<string, OrderItem>;
 
@@ -40,6 +48,7 @@ export class MemStorage implements IStorage {
     this.users = new Map();
     this.categories = new Map();
     this.products = new Map();
+    this.cartItems = new Map();
     this.orders = new Map();
     this.orderItems = new Map();
     this.seedData();
@@ -322,6 +331,62 @@ export class MemStorage implements IStorage {
     const orderItem: OrderItem = { ...insertOrderItem, id };
     this.orderItems.set(id, orderItem);
     return orderItem;
+  }
+
+  // Cart methods
+  async getCartItems(sessionId: string): Promise<CartItem[]> {
+    return Array.from(this.cartItems.values()).filter(item => item.sessionId === sessionId);
+  }
+
+  async addToCart(insertCartItem: InsertCartItem): Promise<CartItem> {
+    // Check if item already exists in cart
+    const existingItems = Array.from(this.cartItems.values());
+    const existingItem = existingItems.find(
+      item => item.sessionId === insertCartItem.sessionId && item.productId === insertCartItem.productId
+    );
+
+    if (existingItem) {
+      // Update quantity if item exists
+      existingItem.quantity += insertCartItem.quantity;
+      this.cartItems.set(existingItem.id, existingItem);
+      return existingItem;
+    } else {
+      // Add new item
+      const id = randomUUID();
+      const cartItem: CartItem = { 
+        ...insertCartItem, 
+        id,
+        createdAt: new Date()
+      };
+      this.cartItems.set(id, cartItem);
+      return cartItem;
+    }
+  }
+
+  async updateCartItem(id: string, quantity: number): Promise<CartItem | undefined> {
+    const item = this.cartItems.get(id);
+    if (!item) return undefined;
+
+    if (quantity <= 0) {
+      this.cartItems.delete(id);
+      return undefined;
+    }
+
+    item.quantity = quantity;
+    this.cartItems.set(id, item);
+    return item;
+  }
+
+  async removeFromCart(id: string): Promise<boolean> {
+    return this.cartItems.delete(id);
+  }
+
+  async clearCart(sessionId: string): Promise<boolean> {
+    const itemsToDelete = Array.from(this.cartItems.values())
+      .filter(item => item.sessionId === sessionId);
+    
+    itemsToDelete.forEach(item => this.cartItems.delete(item.id));
+    return true;
   }
 }
 

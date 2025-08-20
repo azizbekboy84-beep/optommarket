@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useParams, Link } from 'wouter';
 import { useProductBySlug } from '@/hooks/useProductBySlug';
 import { useLanguage } from '@/components/language-provider';
+import { useCart } from '@/context/CartContext';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,7 @@ import { ChevronLeft, Minus, Plus, ShoppingCart, ArrowLeft } from 'lucide-react'
 export default function ProductDetailsPage() {
   const { slug } = useParams<{ slug: string }>();
   const { language, t } = useLanguage();
+  const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
@@ -103,9 +105,14 @@ export default function ProductDetailsPage() {
     }
   };
 
-  const handleAddToCart = () => {
-    // TODO: Implement add to cart functionality
-    console.log(`Adding ${quantity} of ${product.id} to cart`);
+  const handleAddToCart = async () => {
+    if (!product) return;
+    
+    try {
+      await addToCart(product.id, quantity);
+    } catch (error) {
+      console.error('Failed to add to cart:', error);
+    }
   };
 
   return (

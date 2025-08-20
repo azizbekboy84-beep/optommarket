@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertProductSchema, insertCategorySchema, insertOrderSchema } from "@shared/schema";
+import { insertProductSchema, insertCategorySchema, insertOrderSchema, insertCartItemSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Categories
@@ -92,6 +92,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Cart endpoints
+  app.get("/api/cart", async (req, res) => {
+    try {
+      const sessionId = req.headers['x-session-id'] as string || 'anonymous';
+      const cartItems = await storage.getCartItems(sessionId);
+      
+      // Populate with product details
+      const cartWithProducts = await Promise.all(
+        cartItems.map(async (item) => {
+          const product = await storage.getProduct(item.productId);
+          return {
+            ...item,
+            product
+          };
+        })
+      );
+      
+      res.json(cartWithProducts);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch cart" });
+    }
+  });
+
+  app.post("/api/cart", async (req, res) => {
+    try {
+      const sessionId = req.headers['x-session-id'] as string || 'anonymous';
+      const cartData = insertCartItemSchema.parse({
+        ...req.body,
+        sessionId
+      });
+      
+      const cartItem = await storage.addToCart(cartData);
+      res.status(201).json(cartItem);
+    } catch (error) {
+      res.status(400).json({ message: "Failed to add to cart", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  app.put("/api/cart/:itemId", async (req, res) => {
+    try {
+      const { quantity } = req.body;
+      if (!quantity || quantity <= 0) {
+        return res.status(400).json({ message: "Invalid quantity" });
+      }
+      
+      const updatedItem = await storage.updateCartItem(req.params.itemId, quantity);
+      if (!updatedItem) {
+        return res.status(404).json({ message: "Cart item not found" });
+      }
+      
+      res.json(updatedItem);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update cart item" });
+    }
+  });
+
+  app.delete("/api/cart/:itemId", async (req, res) => {
+    try {
+      const success = await storage.removeFromCart(req.params.itemId);
+      if (!success) {
+        return res.status(404).json({ message: "Cart item not found" });
+      }
+      
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to remove cart item" });
+    }
+  });
+
   // Orders
   app.post("/api/orders", async (req, res) => {
     try {
@@ -110,6 +179,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
         }
       }
+      
+      // Clear cart after successful order
+      const sessionId = req.headers['x-session-id'] as string || 'anonymous';
+      await storage.clearCart(sessionId);
       
       res.status(201).json(order);
     } catch (error) {

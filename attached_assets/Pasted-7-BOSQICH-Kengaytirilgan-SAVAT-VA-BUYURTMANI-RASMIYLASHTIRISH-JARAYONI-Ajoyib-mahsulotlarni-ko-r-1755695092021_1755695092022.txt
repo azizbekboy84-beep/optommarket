@@ -1,0 +1,87 @@
+7-BOSQICH (Kengaytirilgan): SAVAT VA BUYURTMANI RASMIYLASHTIRISH JARAYONI
+Ajoyib, mahsulotlarni ko'rish sahifasi tayyor. Endi xarid jarayonining asosiy qismini — savatdan tortib buyurtma berishgacha bo'lgan to'liq zanjirni yaratamiz.
+
+Loyiha mazmuni: Maqsadimiz — foydalanuvchiga mahsulotlarni savatga qo'shish, ularni ko'rib chiqish, miqdorini o'zgartirish va nihoyat, yetkazib berish ma'lumotlarini kiritib, buyurtmani rasmiylashtirish uchun qulay va uzluksiz jarayonni taqdim etish.
+
+Aniq qadamlar:
+
+1-QISM: BACKENDNI TAYYORLASH
+
+Baza Sxemasini Kengaytirish (shared/schema.ts):
+
+Loyihamizga quyidagi ikkita yangi jadval sxemasini qo'shing:
+
+cart_items: id, session_id (matn, ro'yxatdan o'tmagan foydalanuvchilar uchun), product_id, quantity (soni).
+
+orders: id, order_number (noyob raqam), status (matn, masalan, "yangi"), total_amount (umumiy summa), customer_info (JSON formatida: ism, telefon, manzil).
+
+To'liq Savat (Cart) API'sini Yaratish:
+
+server/routes.ts faylida express-session yordamida foydalanuvchi sessiyasini aniqlab, savat uchun to'liq CRUD (Create, Read, Update, Delete) endpoint'larini yarating:
+
+GET /api/cart: Joriy sessiya uchun savatdagi barcha mahsulotlarni qaytarsin.
+
+POST /api/cart: Savatga yangi mahsulot qo'shsin (agar mahsulot mavjud bo'lsa, sonini oshirsin).
+
+PUT /api/cart/:itemId: Savatdagi mahsulot miqdorini yangilasin.
+
+DELETE /api/cart/:itemId: Savatdan mahsulotni o'chirsin.
+
+Buyurtma (Order) API'sini Yaratish:
+
+POST /api/orders nomli yangi endpoint yarating.
+
+Bu endpoint frontend'dan kelgan savat ma'lumotlari va mijoz ma'lumotlari (ism, telefon, manzil) asosida orders jadvaliga yangi yozuv qo'shsin.
+
+Buyurtma muvaffaqiyatli yaratilgandan so'ng, joriy sessiya uchun savatni (cart_items) tozalab yuborsin.
+
+2-QISM: FRONTENDNI INTEGRATSIYA QILISH
+
+Global Savat Holati (CartContext):
+
+client/src/context/CartContext.tsx faylini yarating.
+
+Unda React Context yordamida savat ma'lumotlarini (cartItems) va savatni qayta yuklash funksiyasini (refetchCart) global holatda saqlang. Bu ma'lumotlarni butun ilova uchun dostup qiling.
+
+"Savatga qo'shish" Tugmasini Ishga Tushirish:
+
+ProductDetailsPage.tsx va ProductCard.tsx komponentlaridagi "Savatga qo'shish" tugmalarini TanStack Queryning useMutation hook'i yordamida POST /api/cart endpoint'iga ulang.
+
+Muvaffaqiyatli qo'shilgandan so'ng, CartContext orqali savat ma'lumotlarini yangilang va foydalanuvchiga "Mahsulot savatga qo'shildi!" degan bildirishnoma (Toast) ko'rsating.
+
+Header.tsx dagi savat ikonkasida mahsulotlar soni real vaqtda yangilanib tursin.
+
+Savat Sahifasini (CartPage.tsx) To'liq Ishlab Chiqish:
+
+Savatdagi mahsulotlar ro'yxatini, har birining rasmi, nomi, narxi bilan ko'rsating.
+
+Har bir mahsulot uchun miqdorni +/- tugmalari bilan o'zgartirish (PUT /api/cart/:itemId) va mahsulotni o'chirish (DELETE /api/cart/:itemId) funksiyalarini qo'shing.
+
+Sahifaning quyi qismida jami summani avtomatik hisoblab ko'rsating.
+
+"Buyurtma berish" tugmasini qo'shing va u /checkout sahifasiga yo'naltirsin.
+
+Buyurtma Sahifasini (CheckoutPage.tsx) Yaratish:
+
+client/src/pages/CheckoutPage.tsx sahifasini yarating.
+
+Bu sahifada yetkazib berish ma'lumotlarini kiritish uchun forma (Ism, Telefon raqam, Manzil) yarating. Formani react-hook-form va zod yordamida validatsiya qiling.
+
+"Buyurtmani tasdiqlash" tugmasini qo'shing. Bu tugma bosilganda forma ma'lumotlarini yig'ib, POST /api/orders endpoint'iga yuborsin. Muvaffaqiyatli bo'lsa, foydalanuvchini buyurtma tasdiqlangan sahifaga yo'naltiring.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Backend'da savat va buyurtma uchun barcha kerakli API endpoint'lar yaratildimi?
+
+"Savatga qo'shish" tugmasi bosilganda mahsulot savatga tushyaptimi va Headerdagi hisoblagich yangilanyaptimi?
+
+CartPage sahifasida miqdorni o'zgartirish va mahsulotni o'chirish funksiyalari to'g'ri ishlayaptimi?
+
+CheckoutPage sahifasidagi forma orqali buyurtma rasmiylashtirish jarayoni muvaffaqiyatli ishlayaptimi va buyurtma ma'lumotlar bazasiga saqlanyaptimi?
+
+
+
+
+
+
+

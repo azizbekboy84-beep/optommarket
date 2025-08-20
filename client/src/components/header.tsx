@@ -1,13 +1,16 @@
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { useLanguage } from './language-provider';
+import { useCart } from '@/context/CartContext';
 import { Link } from 'wouter';
 import { useCategories } from '@/hooks/useCategories';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ShoppingCart } from 'lucide-react';
 import logoImage from '@assets/optombazar logo_1755690917356.png';
 
 export function Header() {
   const { language, setLanguage, t } = useLanguage();
   const { data: categories = [], isLoading: categoriesLoading } = useCategories();
+  const { itemCount } = useCart();
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
@@ -78,8 +81,28 @@ export function Header() {
             </Link>
           </nav>
 
-          {/* Language Toggle & Actions */}
+          {/* Cart & Language Toggle & Actions */}
           <div className="flex items-center space-x-4">
+            {/* Cart Button */}
+            <Link href="/cart">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="relative"
+                data-testid="button-cart"
+              >
+                <ShoppingCart className="h-4 w-4" />
+                {itemCount > 0 && (
+                  <Badge 
+                    className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-red-500 text-white text-xs"
+                    data-testid="badge-cart-count"
+                  >
+                    {itemCount}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
+
             <div className="hidden sm:flex items-center space-x-2">
               <button
                 onClick={() => setLanguage('uz')}

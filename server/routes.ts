@@ -1,9 +1,121 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import bcrypt from "bcrypt";
 import { storage } from "./storage";
-import { insertProductSchema, insertCategorySchema, insertOrderSchema, insertCartItemSchema } from "@shared/schema";
+import { insertProductSchema, insertCategorySchema, insertOrderSchema, insertCartItemSchema, insertUserSchema } from "@shared/schema";
+
+// Extend Express Request type for session
+declare module 'express-session' {
+  interface SessionData {
+    userId?: string;
+  }
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Authentication endpoints
+  app.post("/api/auth/register", async (req, res) => {
+    try {
+      const { username, email, password, phone } = insertUserSchema.parse(req.body);
+      
+      // Check if user already exists
+      const existingUserByEmail = await storage.getUserByEmail(email);
+      if (existingUserByEmail) {
+        return res.status(400).json({ message: "User with this email already exists" });
+      }
+      
+      const existingUserByUsername = await storage.getUserByUsername(username);
+      if (existingUserByUsername) {
+        return res.status(400).json({ message: "Username already taken" });
+      }
+      
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+      
+      // Create user
+      const user = await storage.createUser({
+        username,
+        email,
+        password: hashedPassword,
+        phone: phone || null,
+        role: "customer"
+      });
+      
+      // Auto-login after registration
+      req.session.userId = user.id;
+      
+      // Return user without password
+      const { password: _, ...userWithoutPassword } = user;
+      res.status(201).json({ message: "User registered successfully", user: userWithoutPassword });
+    } catch (error) {
+      res.status(400).json({ message: "Registration failed", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+  
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      
+      if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required" });
+      }
+      
+      // Find user by email
+      const user = await storage.getUserByEmail(email);
+      if (!user) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+      
+      // Verify password
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+      
+      // Create session
+      req.session.userId = user.id;
+      
+      // Return user without password
+      const { password: _, ...userWithoutPassword } = user;
+      res.json({ message: "Login successful", user: userWithoutPassword });
+    } catch (error) {
+      res.status(500).json({ message: "Login failed", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+  
+  app.post("/api/auth/logout", async (req, res) => {
+    try {
+      req.session.destroy((err) => {
+        if (err) {
+          return res.status(500).json({ message: "Logout failed" });
+        }
+        res.clearCookie('connect.sid'); // Default session cookie name
+        res.json({ message: "Logout successful" });
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Logout failed" });
+    }
+  });
+  
+  app.get("/api/auth/me", async (req, res) => {
+    try {
+      if (!req.session.userId) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      const user = await storage.getUser(req.session.userId);
+      if (!user) {
+        req.session.userId = undefined; // Clear invalid session
+        return res.status(401).json({ message: "User not found" });
+      }
+      
+      // Return user without password
+      const { password: _, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get user info" });
+    }
+  });
+
   // Categories
   app.get("/api/categories", async (req, res) => {
     try {

@@ -1,0 +1,58 @@
+8-BOSQICH: FOYDALANUVCHI AUTENTIFIKATSIYASI (RO'YXATDAN O'TISH VA KIRISH)
+Bizning platformamiz hozirda mehmonlar uchun ajoyib ishlayapti. Endi esa foydalanuvchilarga doimiy akkaunt yaratish imkonini beramiz.
+
+Loyiha mazmuni: Maqsadimiz — to'liq va xavfsiz autentifikatsiya tizimini yaratish. Foydalanuvchilar ro'yxatdan o'tishi, o'z akkauntlariga kirishi va tizimdan chiqishi kerak. Tizimga kirgan foydalanuvchining savati uning akkauntiga bog'lanishi va kelajakda buyurtmalar tarixini ko'rishi uchun zamin yaratamiz.
+
+Aniq qadamlar:
+
+1-QISM: BACKENDNI SOZLASH
+
+Parolni Xeshlash (Hashing): Xavfsizlik uchun server papkasiga bcrypt kutubxonasini o'rnat (npm install bcrypt va @types/bcrypt).
+
+Baza Sxemasini Tasdiqlash: shared/schema.ts faylida users jadvali mavjudligiga va unda email, password (parolning xeshi uchun), name kabi ustunlar borligiga ishonch hosil qil.
+
+Autentifikatsiya API'sini Yaratish (server/routes.ts):
+
+POST /api/auth/register: Yangi foydalanuvchini qabul qilsin. Parolni bcrypt yordamida xeshlab, keyin bazaga saqlasin. Muvaffaqiyatli ro'yxatdan o'tgandan so'ng, foydalanuvchi uchun sessiya yaratsin (avtomatik tizimga kirgizsin).
+
+POST /api/auth/login: Foydalanuvchi email va password'ini qabul qilsin. Bazadagi xeshlangan parol bilan solishtirsin. Agar to'g'ri bo'lsa, yangi sessiya yaratsin.
+
+POST /api/auth/logout: Joriy foydalanuvchi sessiyasini tugatsin.
+
+GET /api/auth/me: Agar foydalanuvchi tizimga kirgan bo'lsa, uning ma'lumotlarini (paroldan tashqari) qaytarsin. Aks holda, null yoki xatolik qaytarsin.
+
+2-QISM: FRONTENDNI INTEGRATSIYA QILISH
+
+Global Autentifikatsiya Holati (AuthContext):
+
+client/src/context/AuthContext.tsx faylini yarating.
+
+Bu context foydalanuvchining tizimga kirgan yoki kirmaganligi (isAuthenticated), joriy foydalanuvchi ma'lumotlari (user) va tizimdan chiqish (logout) funksiyasi kabi ma'lumotlarni global holatda saqlasin.
+
+Ilova ilk bor yuklanganda GET /api/auth/me endpoint'iga so'rov yuborib, foydalanuvchining sessiyasi mavjud yoki yo'qligini tekshirsin.
+
+Ro'yxatdan O'tish va Kirish Sahifalarini Yaratish:
+
+client/src/pages/RegisterPage.tsx sahifasini yarating. Unda Ism, Email va Parol kiritiladigan forma bo'lsin. Forma yuborilganda POST /api/auth/register'ga so'rov jo'natsin.
+
+client/src/pages/LoginPage.tsx sahifasini yarating. Unda Email va Parol kiritiladigan forma bo'lsin. Forma yuborilganda POST /api/auth/login'ga so'rov jo'natsin.
+
+Ikkala sahifada ham muvaffaqiyatli amal bajarilgandan so'ng, foydalanuvchini Bosh sahifaga yo'naltiring.
+
+Header'ni Dinamik Qilish:
+
+client/src/components/Header.tsx komponentini AuthContext'dan foydalanadigan qilib o'zgartiring.
+
+Agar foydalanuvchi tizimga kirmagan bo'lsa, "Kirish" tugmasi ko'rinsin.
+
+Agar foydalanuvchi tizimga kirgan bo'lsa, uning ismi va "Chiqish" tugmasi ko'rinsin. "Chiqish" tugmasi POST /api/auth/logout'ni chaqirishi kerak.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Backend'da barcha 4 ta autentifikatsiya (register, login, logout, me) endpoint'lari yaratildimi va ular parol xeshlash bilan xavfsiz ishlayaptimi?
+
+Foydalanuvchi RegisterPage orqali muvaffaqiyatli ro'yxatdan o'ta olyaptimi?
+
+Ro'yxatdan o'tgan foydalanuvchi LoginPage orqali tizimga kira olyaptimi?
+
+Headerdagi tugmalar foydalanuvchining tizimga kirgan yoki kirmaganligiga qarab to'g'ri o'zgaryaptimi va "Chiqish" tugmasi ishlayaptimi?

@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from './language-provider';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 import { Link } from 'wouter';
 import { useCategories } from '@/hooks/useCategories';
 import { ChevronDown, ShoppingCart } from 'lucide-react';
@@ -11,6 +12,7 @@ export function Header() {
   const { language, setLanguage, t } = useLanguage();
   const { data: categories = [], isLoading: categoriesLoading } = useCategories();
   const { itemCount } = useCart();
+  const { user, isAuthenticated, logout } = useAuth();
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
@@ -127,9 +129,40 @@ export function Header() {
                 RU
               </button>
             </div>
-            <Button className="bg-gradient-to-r from-blue-600 to-red-500 text-white hover:from-red-500 hover:to-blue-600 transition-all duration-300" data-testid="button-login">
-              Kirish
-            </Button>
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-3">
+                <span className="text-sm text-gray-700">Salom, {user?.username}!</span>
+                <Button 
+                  onClick={logout}
+                  variant="outline"
+                  size="sm"
+                  data-testid="button-logout"
+                >
+                  Chiqish
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Link href="/login">
+                  <Button 
+                    variant="outline"
+                    size="sm"
+                    data-testid="button-login"
+                  >
+                    Kirish
+                  </Button>
+                </Link>
+                <Link href="/register">
+                  <Button 
+                    className="bg-gradient-to-r from-blue-600 to-red-500 text-white hover:from-red-500 hover:to-blue-600 transition-all duration-300"
+                    size="sm"
+                    data-testid="button-register"
+                  >
+                    Ro'yxatdan o'tish
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>

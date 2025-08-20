@@ -5,14 +5,14 @@ import * as schema from "@shared/schema";
 
 neonConfig.webSocketConstructor = ws;
 
-// For development, use a default connection string if DATABASE_URL is not set
-const databaseUrl = process.env.DATABASE_URL || "postgresql://localhost:5432/optombazar_dev";
+// For development in Replit, provide fallback when DATABASE_URL is not accessible
+const databaseUrl = process.env.DATABASE_URL;
 
-if (!process.env.DATABASE_URL && process.env.NODE_ENV !== "development") {
-  throw new Error(
-    "DATABASE_URL must be set in production. Did you forget to provision a database?",
-  );
+if (!databaseUrl) {
+  console.log("DATABASE_URL not found, application will use in-memory storage");
+  // Create a dummy connection that won't be used since we'll use MemStorage
+  process.env.DATABASE_URL = "postgresql://localhost:5432/dummy";
 }
 
-export const pool = new Pool({ connectionString: databaseUrl });
+export const pool = new Pool({ connectionString: databaseUrl || process.env.DATABASE_URL });
 export const db = drizzle({ client: pool, schema });

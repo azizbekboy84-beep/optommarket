@@ -1,11 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useLanguage } from './language-provider';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { Link } from 'wouter';
 import { useCategories } from '@/hooks/useCategories';
-import { ChevronDown, ShoppingCart } from 'lucide-react';
+import { ChevronDown, ShoppingCart, User } from 'lucide-react';
 import logoImage from '@assets/optombazar logo_1755690917356.png';
 
 export function Header() {
@@ -130,17 +131,32 @@ export function Header() {
               </button>
             </div>
             {isAuthenticated ? (
-              <div className="flex items-center space-x-3">
-                <span className="text-sm text-gray-700">Salom, {user?.username}!</span>
-                <Button 
-                  onClick={logout}
-                  variant="outline"
-                  size="sm"
-                  data-testid="button-logout"
-                >
-                  Chiqish
-                </Button>
-              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex items-center gap-2"
+                    data-testid="button-user-menu"
+                  >
+                    <User className="h-4 w-4" />
+                    {user?.username}
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile" className="cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      Mening akkauntim
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={logout} className="cursor-pointer">
+                    Chiqish
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <div className="flex items-center space-x-2">
                 <Link href="/login">

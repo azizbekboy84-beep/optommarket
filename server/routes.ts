@@ -276,7 +276,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Orders
   app.post("/api/orders", async (req, res) => {
     try {
-      const orderData = insertOrderSchema.parse(req.body);
+      // Associate order with logged-in user if authenticated
+      const userId = req.session.userId || req.body.userId;
+      const orderData = insertOrderSchema.parse({
+        ...req.body,
+        userId: userId || 'anonymous'
+      });
       const order = await storage.createOrder(orderData);
       
       // Add order items if provided
@@ -299,6 +304,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(201).json(order);
     } catch (error) {
       res.status(400).json({ message: "Failed to create order", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  // Protected endpoint: Get orders for authenticated user only
+  app.get("/api/my-orders", async (req, res) => {
+    try {
+      // Check if user is authenticated
+      if (!req.session.userId) {
+        return res.status(401).json({ message: "Ruxsat yo'q. Tizimga kirish talab qilinadi." });
+      }
+      
+      const orders = await storage.getOrders(req.session.userId);
+      
+      // Populate each order with its items
+      const ordersWithItems = await Promise.all(
+        orders.map(async (order) => {
+          const items = await storage.getOrderItems(order.id);
+          
+          // Populate items with product details
+          const itemsWithProducts = await Promise.all(
+            items.map(async (item) => {
+              const product = await storage.getProduct(item.productId);
+              return {
+                ...item,
+                product
+              };
+            })
+          );
+          
+          return {
+            ...order,
+            items: itemsWithProducts
+          };
+        })
+      );
+      
+      res.json(ordersWithItems);
+    } catch (error) {
+      res.status(500).json({ message: "Buyurtmalar tarixini olishda xatolik" });
     }
   });
 

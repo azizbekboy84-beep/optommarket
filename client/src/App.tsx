@@ -17,6 +17,8 @@ import CartPage from "@/pages/CartPage";
 import CheckoutPage from "@/pages/CheckoutPage";
 import RegisterPage from "@/pages/RegisterPage";
 import LoginPage from "@/pages/LoginPage";
+import ProfilePage from "@/pages/ProfilePage";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -36,6 +38,13 @@ function Router() {
       <Route path="/checkout" component={CheckoutPage} />
       <Route path="/register" component={RegisterPage} />
       <Route path="/login" component={LoginPage} />
+      <Route path="/profile">
+        {() => (
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        )}
+      </Route>
       <Route path="/contact" component={Contact} />
       <Route component={NotFound} />
     </Switch>

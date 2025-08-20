@@ -1,0 +1,60 @@
+9-BOSQICH: SHAXSIY KABINET VA BUYURTMALAR TARIXI
+Juda yaxshi, autentifikatsiya tizimi to'liq ishlamoqda. Endi foydalanuvchilarga o'z akkauntlaridan foydalanish uchun sabab beramiz.
+
+Loyiha mazmuni: Maqsadimiz — tizimga kirgan har bir foydalanuvchi uchun shaxsiy kabinet (profil sahifasi) yaratish. Bu sahifada foydalanuvchi o'z ma'lumotlarini va eng muhimi, platformada qilgan barcha buyurtmalari tarixini ko'ra olishi kerak. Bu bizning platformamizga bo'lgan ishonchni va uning qulayligini oshiradi.
+
+Aniq qadamlar:
+
+1-QISM: BACKENDNI YANGILASH
+
+Buyurtma Yaratishni O'zgartirish:
+
+POST /api/orders endpoint'ini tahrirla. Endi u buyurtma yaratishdan oldin foydalanuvchi tizimga kirganligini (req.user mavjudligini) tekshirsin.
+
+Agar foydalanuvchi tizimga kirgan bo'lsa, yangi yaratilgan buyurtmani orders jadvalidagi user_id ustuni orqali o'sha foydalanuvchiga bog'lab qo'y. Agar mehmon bo'lsa, user_id bo'sh qoladi.
+
+Yangi Himoyalangan API Yaratish:
+
+GET /api/my-orders nomli yangi endpoint yarat.
+
+Bu endpoint himoyalangan bo'lishi kerak: faqat tizimga kirgan foydalanuvchilar unga kira olsin. Agar mehmon kirishga urinsa, "Ruxsat yo'q" (401 Unauthorized) xatosini qaytarsin.
+
+Muvaffaqiyatli so'rovda, u joriy foydalanuvchiga tegishli bo'lgan barcha buyurtmalarni bazadan topib, qaytarsin.
+
+2-QISM: FRONTENDNI YARATISH
+
+Yangi Sahifa va Marshrut Yaratish:
+
+client/src/pages/ProfilePage.tsx nomli yangi sahifa komponentini yarat.
+
+App.tsx faylida /profile manziliga olib boradigan yangi marshrut (route) qo'sh.
+
+Himoyalangan Marshrut Komponentini Yaratish (ProtectedRoute):
+
+client/src/components/ProtectedRoute.tsx nomli yangi komponent yarat.
+
+Bu komponent AuthContext yordamida foydalanuvchi tizimga kirganligini tekshirsin. Agar kirgan bo'lsa, unga berilgan sahifani (children) ko'rsatsin. Aks holda, foydalanuvchini avtomatik ravishda /login sahifasiga yo'naltirib yuborsin (redirect qilsin).
+
+App.tsx dagi /profile marshrutini shu ProtectedRoute komponenti bilan o'rab qo'y.
+
+Profil Sahifasini Ishlab Chiqish (ProfilePage.tsx):
+
+Sahifaning yuqori qismida AuthContextdan olingan foydalanuvchi ma'lumotlarini (ism, email) ko'rsat.
+
+TanStack Query yordamida GET /api/my-orders endpoint'idan foydalanuvchining buyurtmalar tarixini yukla.
+
+Buyurtmalar ro'yxatini jadval shaklida chiroyli qilib ko'rsat. Har bir qatorda: Buyurtma raqami, Sanasi, Jami summa va Holati (Status) bo'lsin.
+
+Navigatsiyani Yangilash:
+
+Header.tsx komponentida, foydalanuvchi tizimga kirganida chiqadigan menyuga "Mening akkauntim" nomli yangi band qo'sh. Bu band /profile sahifasiga olib borsin.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Tizimga kirgan foydalanuvchi buyurtma berganda, o'sha buyurtma uning user_id siga bog'lanyaptimi?
+
+GET /api/my-orders endpoint'i faqat tizimga kirgan foydalanuvchilar uchun ishlayaptimi va ularning to'g'ri buyurtmalarini qaytaryaptimi?
+
+Tizimga kirmagan foydalanuvchi /profile manziliga kirishga uringanda, u avtomatik /login sahifasiga yo'naltirilyaptimi?
+
+ProfilePage sahifasida foydalanuvchining shaxsiy ma'lumotlari va uning barcha buyurtmalari tarixi to'g'ri ko'rsatilyaptimi?

@@ -47,11 +47,11 @@ export function Header() {
             <div className="flex items-center space-x-4">
               {/* Social Media */}
               <div className="flex items-center space-x-3">
-                <a href="https://facebook.com/optombazar" target="_blank" rel="noopener noreferrer" 
+                <a href="https://www.facebook.com/profile.php?id=61556254109850&locale=ru_RU" target="_blank" rel="noopener noreferrer" 
                    className="hover:text-blue-200 transition-colors">
                   <Facebook className="h-4 w-4" />
                 </a>
-                <a href="https://instagram.com/optombazar" target="_blank" rel="noopener noreferrer"
+                <a href="https://www.instagram.com/optombazar_uz/" target="_blank" rel="noopener noreferrer"
                    className="hover:text-blue-200 transition-colors">
                   <Instagram className="h-4 w-4" />
                 </a>

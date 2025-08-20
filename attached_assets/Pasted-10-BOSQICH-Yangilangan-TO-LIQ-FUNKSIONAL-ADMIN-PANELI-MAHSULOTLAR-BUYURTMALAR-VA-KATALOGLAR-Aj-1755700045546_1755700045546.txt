@@ -1,0 +1,56 @@
+10-BOSQICH (Yangilangan): TO'LIQ FUNKSIONAL ADMIN PANELI (MAHSULOTLAR, BUYURTMALAR VA KATALOGLAR)
+Ajoyib, Admin Panelning asosiy sahifasi va havolasi tayyor. Endi bu panelni to'liq ishlaydigan boshqaruv markaziga aylantiramiz.
+
+Loyiha mazmuni: Maqsadimiz — platforma administratori uchun mahsulotlar, buyurtmalar va eng asosiysi, katalog (kategoriyalar) tuzilmasini to'liq boshqarish imkonini beradigan funksional sahifalar yaratish.
+
+Aniq qadamlar:
+
+1-QISM: BACKENDNI YAKUNLASH
+
+Kategoriyalarni Boshqarish API'si:
+
+/api/admin/categories prefiksi bilan yangi, himoyalangan (faqat adminlar uchun) endpoint'lar yarating:
+
+GET /api/admin/categories: Barcha kategoriyalarni ro'yxat shaklida qaytarsin.
+
+POST /api/admin/categories: Yangi kategoriya yaratsin (nameUz, nameRu, slug, parentId ma'lumotlarini qabul qilsin).
+
+PUT /api/admin/categories/:id: Mavjud kategoriyani tahrirlasin.
+
+DELETE /api/admin/categories/:id: Kategoriyani o'chirsin.
+
+2-QISM: FRONTEND ADMIN PANELINI TO'LDIRISH
+
+Yangi Sahifa va Marshrut:
+
+client/src/pages/admin/AdminCategoriesPage.tsx nomli yangi sahifa yarating.
+
+App.tsx da /admin/categories uchun yangi, himoyalangan (AdminRoute bilan) marshrut qo'shing.
+
+Asosiy Admin Panel sahifasidagi (AdminDashboardPage.tsx) "Mahsulotlar" va "Buyurtmalar" yoniga "Kategoriyalar" uchun yangi bo'lim (card) qo'shing va uni /admin/categories ga yo'naltiring.
+
+Kategoriyalarni Boshqarish Sahifasi (AdminCategoriesPage.tsx):
+
+Barcha kategoriyalarni GET /api/admin/categories orqali olib, shadcn/ui Table komponenti yordamida jadvalda ko'rsating. Jadvalda kategoriyaning nomi, slugi va asosiy kategoriyasi (parent) ko'rinib tursin.
+
+"Yangi Kategoriya Qo'shish" tugmasini yarating. Bu tugma bosilganda, shadcn/ui Dialog (modal oyna) ichida forma ochilsin.
+
+Formada nameUz, nameRu, slug uchun maydonlar va asosiy kategoriyani tanlash uchun mavjud kategoriyalar ro'yxatidan iborat <Select> menyusi bo'lsin.
+
+Jadvaldagi har bir qator uchun "Tahrirlash" va "O'chirish" tugmalarini qo'shing. "Tahrirlash" tugmasi xuddi shu formani ochsin, lekin ma'lumotlar bilan to'ldirilgan holda. "O'chirish" tugmasi esa AlertDialog orqali tasdiq so'rasin.
+
+Barcha amallar (useMutation orqali) bajarilgandan so'ng jadval avtomatik yangilansin.
+
+Mahsulotlar va Buyurtmalar Sahifalarini Yakunlash:
+
+Avvalgi bosqichdagi reja asosida AdminProductsPage.tsx va AdminOrdersPage.tsx sahifalarini to'liq ishlab chiqing (jadval, qo'shish, tahrirlash, o'chirish funksiyalari bilan).
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Admin endi "Kategoriyalar" bo'limida yangi kategoriya qo'sha, mavjudini tahrirlay va o'chira olyaptimi?
+
+Mahsulot qo'shish/tahrirlash formasida kategoriyani tanlash imkoniyati mavjudmi?
+
+AdminProductsPage va AdminOrdersPage sahifalari to'liq ishlayaptimi?
+
+Barcha admin sahifalari oddiy foydalanuvchilardan himoyalanganmi?

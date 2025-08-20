@@ -24,6 +24,7 @@ import OrderSuccessPage from "@/pages/OrderSuccessPage";
 import AdminDashboardPage from "@/pages/admin/AdminDashboardPage";
 import AdminProductsPage from "@/pages/admin/AdminProductsPage";
 import AdminOrdersPage from "@/pages/admin/AdminOrdersPage";
+import AdminCategoriesPage from "@/pages/admin/AdminCategoriesPage";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -68,6 +69,13 @@ function Router() {
         {() => (
           <AdminRoute>
             <AdminOrdersPage />
+          </AdminRoute>
+        )}
+      </Route>
+      <Route path="/admin/categories">
+        {() => (
+          <AdminRoute>
+            <AdminCategoriesPage />
           </AdminRoute>
         )}
       </Route>

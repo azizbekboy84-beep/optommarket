@@ -13,6 +13,7 @@ import { Plus, Edit, Trash2, ArrowLeft } from 'lucide-react';
 import { Link } from 'wouter';
 import { useToast } from '../../hooks/use-toast';
 import { Product, InsertProduct } from '@shared/schema';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
 
 interface ProductFormData {
   nameUz: string;
@@ -54,6 +55,18 @@ export default function AdminProductsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [formData, setFormData] = useState<ProductFormData>(defaultFormData);
+
+  // Fetch categories for dropdown
+  const { data: categories = [] } = useQuery({
+    queryKey: ['admin-categories'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/categories');
+      if (!response.ok) {
+        throw new Error('Kategoriyalarni yuklab bo\'lmadi');
+      }
+      return response.json();
+    },
+  });
 
   // Fetch products
   const { data: products = [], isLoading } = useQuery<Product[]>({
@@ -229,6 +242,25 @@ export default function AdminProductsPage() {
                       required
                     />
                   </div>
+                </div>
+                
+                <div>
+                  <Label htmlFor="categoryId">Kategoriya</Label>
+                  <Select 
+                    value={formData.categoryId} 
+                    onValueChange={(value) => setFormData({ ...formData, categoryId: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Kategoriyani tanlang" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category: any) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.nameUz}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">

@@ -473,6 +473,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin Categories APIs
+  app.get("/api/admin/categories", adminAuth, async (req, res) => {
+    try {
+      const categories = await storage.getCategories();
+      res.json(categories);
+    } catch (error) {
+      res.status(500).json({ message: "Kategoriyalarni olishda xatolik" });
+    }
+  });
+
+  app.post("/api/admin/categories", adminAuth, async (req, res) => {
+    try {
+      const categoryData = insertCategorySchema.parse(req.body);
+      const category = await storage.createCategory(categoryData);
+      res.status(201).json(category);
+    } catch (error) {
+      res.status(400).json({ message: "Kategoriya yaratishda xatolik", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  app.put("/api/admin/categories/:id", adminAuth, async (req, res) => {
+    try {
+      const categoryData = insertCategorySchema.partial().parse(req.body);
+      const category = await storage.updateCategory(req.params.id, categoryData);
+      
+      if (!category) {
+        return res.status(404).json({ message: "Kategoriya topilmadi" });
+      }
+      
+      res.json(category);
+    } catch (error) {
+      res.status(400).json({ message: "Kategoriyani yangilashda xatolik", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  app.delete("/api/admin/categories/:id", adminAuth, async (req, res) => {
+    try {
+      const success = await storage.deleteCategory(req.params.id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Kategoriya topilmadi" });
+      }
+      
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Kategoriyani o'chirishda xatolik" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

@@ -1,7 +1,7 @@
 import { Link } from 'wouter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
-import { Package, ShoppingCart, Users, BarChart3 } from 'lucide-react';
+import { Package, ShoppingCart, Users, BarChart3, Folder } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export default function AdminDashboardPage() {
@@ -55,6 +55,26 @@ export default function AdminDashboardPage() {
               <Link href="/admin/orders">
                 <Button className="w-full">
                   Buyurtmalarni boshqarish
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          {/* Categories Management */}
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Folder className="h-5 w-5 text-orange-600" />
+                Kategoriyalar
+              </CardTitle>
+              <CardDescription>
+                Katalog tuzilmasini boshqarish va tahrirlash
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Link href="/admin/categories">
+                <Button className="w-full">
+                  Kategoriyalarni boshqarish
                 </Button>
               </Link>
             </CardContent>

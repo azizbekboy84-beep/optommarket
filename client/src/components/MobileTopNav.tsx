@@ -23,7 +23,7 @@ export function MobileTopNav() {
   };
 
   return (
-    <nav className="fixed top-0 w-full bg-background shadow-md z-40 md:hidden">
+    <nav className="fixed top-0 w-full bg-background shadow-md z-50 md:hidden">
       <div className="flex items-center justify-between px-4 h-14">
         {/* Logo */}
         <Link href="/" className="flex items-center">

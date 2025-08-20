@@ -25,6 +25,13 @@ export default function SearchPage() {
 
   const { data: searchResults, isLoading, error } = useQuery<SearchResult>({
     queryKey: ['/api/search', query],
+    queryFn: async () => {
+      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+      if (!response.ok) {
+        throw new Error('Qidiruv muvaffaqiyatsiz');
+      }
+      return response.json();
+    },
     enabled: !!query,
   });
 

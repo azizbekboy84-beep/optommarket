@@ -34,7 +34,7 @@ const defaultFormData: CategoryFormData = {
   descriptionRu: '',
   slug: '',
   image: '',
-  parentId: '',
+  parentId: 'none',
   isActive: true,
 };
 
@@ -127,7 +127,7 @@ export default function AdminCategoriesPage() {
     
     const categoryData: InsertCategory = {
       ...formData,
-      parentId: formData.parentId || null,
+      parentId: formData.parentId === 'none' ? null : formData.parentId || null,
       image: formData.image || null,
       descriptionUz: formData.descriptionUz || null,
       descriptionRu: formData.descriptionRu || null,
@@ -149,7 +149,7 @@ export default function AdminCategoriesPage() {
       descriptionRu: category.descriptionRu || '',
       slug: category.slug,
       image: category.image || '',
-      parentId: category.parentId || '',
+      parentId: category.parentId || 'none',
       isActive: category.isActive ?? true,
     });
     setIsDialogOpen(true);
@@ -266,7 +266,7 @@ export default function AdminCategoriesPage() {
                       <SelectValue placeholder="Asosiy kategoriyani tanlang" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Asosiy kategoriya</SelectItem>
+                      <SelectItem value="none">Asosiy kategoriya</SelectItem>
                       {categories.map((category) => (
                         <SelectItem key={category.id} value={category.id}>
                           {category.nameUz}

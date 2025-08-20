@@ -54,6 +54,9 @@ export const orders = pgTable("orders", {
   discountId: varchar("discount_id"), // chegirma ID'si (ixtiyoriy)
   discountAmount: decimal("discount_amount", { precision: 10, scale: 2 }), // chegirma miqdori
   status: text("status").notNull().default("pending"), // pending, confirmed, shipped, delivered, cancelled
+  deliveryMethod: text("delivery_method").notNull().default("olib_ketish"), // olib_ketish, kuryer
+  paymentMethod: text("payment_method").notNull().default("naqd"), // naqd, karta, qr_kod
+  paymentStatus: text("payment_status").notNull().default("kutmoqda"), // kutmoqda, to'langan, bekor_qilingan
   customerName: text("customer_name").notNull(),
   customerPhone: text("customer_phone").notNull(),
   customerEmail: text("customer_email"),

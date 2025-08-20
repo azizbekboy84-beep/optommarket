@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type Category, type InsertCategory, type Product, type InsertProduct, type Order, type InsertOrder, type OrderItem, type InsertOrderItem, type CartItem, type InsertCartItem, type BlogPost, type InsertBlogPost, type ChatMessage, type InsertChatMessage, type UserActivity, type InsertUserActivity } from "@shared/schema";
+import { type User, type InsertUser, type Category, type InsertCategory, type Product, type InsertProduct, type Order, type InsertOrder, type OrderItem, type InsertOrderItem, type CartItem, type InsertCartItem, type BlogPost, type InsertBlogPost, type ChatMessage, type InsertChatMessage, type UserActivity, type InsertUserActivity, type Favorite, type InsertFavorite } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -67,6 +67,12 @@ export interface IStorage {
     dateTo?: Date;
     limit?: number;
   }): Promise<UserActivity[]>;
+
+  // Favorites
+  getFavorites(userId: string): Promise<Favorite[]>;
+  addToFavorites(favorite: InsertFavorite): Promise<Favorite>;
+  removeFromFavorites(userId: string, productId: string): Promise<boolean>;
+  isFavorite(userId: string, productId: string): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -79,6 +85,7 @@ export class MemStorage implements IStorage {
   private blogPosts: Map<string, BlogPost>;
   private chatMessages: Map<string, ChatMessage>;
   private userActivities: Map<string, UserActivity>;
+  private favorites: Map<string, Favorite>;
 
   constructor() {
     this.users = new Map();
@@ -90,6 +97,7 @@ export class MemStorage implements IStorage {
     this.blogPosts = new Map();
     this.chatMessages = new Map();
     this.userActivities = new Map();
+    this.favorites = new Map();
     this.seedData();
   }
 
@@ -173,6 +181,7 @@ export class MemStorage implements IStorage {
         unit: "dona",
         specifications: {"Material": "LDPE", "Qalinligi": "50 mikron", "Ranglar": "Turli ranglar"} as Record<string, string>,
         images: ["https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300"],
+        videoUrl: null,
         slug: "sifatli-plastik-paketlar",
         isActive: true,
         isFeatured: true,
@@ -193,6 +202,7 @@ export class MemStorage implements IStorage {
         unit: "dona",
         specifications: {"Material": "Plastik", "Hajmi": "200ml", "Turi": "Bir martalik"} as Record<string, string>,
         images: ["https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300"],
+        videoUrl: null,
         slug: "bir-martalik-stakanlar",
         isActive: true,
         isFeatured: true,
@@ -213,6 +223,7 @@ export class MemStorage implements IStorage {
         unit: "dona",
         specifications: {"Material": "Silikon", "Moslik": "Universal", "Ranglar": "Ko'p rangli"} as Record<string, string>,
         images: ["https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300"],
+        videoUrl: null,
         slug: "telefon-aksessuarlari",
         isActive: true,
         isFeatured: true,
@@ -233,6 +244,7 @@ export class MemStorage implements IStorage {
         unit: "dona",
         specifications: {"Material": "100% Paxta", "Rang": "Oq, Qora", "O'lcham": "S-XXL"} as Record<string, string>,
         images: ["https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300"],
+        videoUrl: null,
         slug: "erkaklar-t-shirtkasi",
         isActive: true,
         isFeatured: true,
@@ -387,6 +399,7 @@ export class MemStorage implements IStorage {
       stockQuantity: insertProduct.stockQuantity ?? 0,
       specifications: insertProduct.specifications || null,
       images: insertProduct.images || null,
+      videoUrl: insertProduct.videoUrl || null,
       isActive: insertProduct.isActive ?? true,
       isFeatured: insertProduct.isFeatured ?? false,
       createdAt: new Date()
@@ -448,7 +461,12 @@ export class MemStorage implements IStorage {
     const order: Order = { 
       ...insertOrder, 
       id,
+      discountId: insertOrder.discountId || null,
+      discountAmount: insertOrder.discountAmount || null,
       status: insertOrder.status || "pending",
+      deliveryMethod: insertOrder.deliveryMethod || "olib_ketish",
+      paymentMethod: insertOrder.paymentMethod || "naqd",
+      paymentStatus: insertOrder.paymentStatus || "kutmoqda",
       customerEmail: insertOrder.customerEmail || null,
       notes: insertOrder.notes || null,
       createdAt: new Date()
@@ -714,6 +732,49 @@ export class MemStorage implements IStorage {
     }
 
     return activities;
+  }
+
+  // Favorites methods
+  async getFavorites(userId: string): Promise<Favorite[]> {
+    return Array.from(this.favorites.values()).filter(fav => fav.userId === userId);
+  }
+
+  async addToFavorites(insertFavorite: InsertFavorite): Promise<Favorite> {
+    // Check if already exists
+    const existingFavorite = Array.from(this.favorites.values()).find(
+      fav => fav.userId === insertFavorite.userId && fav.productId === insertFavorite.productId
+    );
+    
+    if (existingFavorite) {
+      return existingFavorite;
+    }
+
+    const id = randomUUID();
+    const favorite: Favorite = {
+      ...insertFavorite,
+      id,
+      createdAt: new Date(),
+    };
+    this.favorites.set(id, favorite);
+    return favorite;
+  }
+
+  async removeFromFavorites(userId: string, productId: string): Promise<boolean> {
+    const favorite = Array.from(this.favorites.values()).find(
+      fav => fav.userId === userId && fav.productId === productId
+    );
+    
+    if (favorite) {
+      return this.favorites.delete(favorite.id);
+    }
+    return false;
+  }
+
+  async isFavorite(userId: string, productId: string): Promise<boolean> {
+    const favorite = Array.from(this.favorites.values()).find(
+      fav => fav.userId === userId && fav.productId === productId
+    );
+    return !!favorite;
   }
 }
 

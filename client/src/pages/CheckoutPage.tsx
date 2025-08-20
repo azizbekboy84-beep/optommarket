@@ -15,7 +15,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, CheckCircle, Percent, Tag } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Percent, Tag, Truck, CreditCard } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 import { apiRequest } from '@/lib/queryClient';
 
 const checkoutSchema = z.object({
@@ -23,6 +26,12 @@ const checkoutSchema = z.object({
   customerPhone: z.string().min(9, 'Telefon raqami noto\'g\'ri formatda'),
   customerEmail: z.string().email('Email manzili noto\'g\'ri formatda').optional().or(z.literal('')),
   shippingAddress: z.string().min(10, 'Manzil kamida 10 ta belgidan iborat bo\'lishi kerak'),
+  deliveryMethod: z.enum(['olib_ketish', 'kuryer'], {
+    required_error: 'Yetkazib berish usulini tanlang',
+  }),
+  paymentMethod: z.enum(['naqd', 'karta', 'qr_kod'], {
+    required_error: 'To\'lov usulini tanlang',
+  }),
   notes: z.string().optional(),
 });
 
@@ -54,6 +63,8 @@ export default function CheckoutPage() {
       customerPhone: '',
       customerEmail: '',
       shippingAddress: '',
+      deliveryMethod: 'olib_ketish' as const,
+      paymentMethod: 'naqd' as const,
       notes: '',
     },
   });
@@ -66,6 +77,9 @@ export default function CheckoutPage() {
         totalAmount: finalAmount.toString(),
         discountId: appliedDiscount?.id || null,
         discountAmount: discountAmount.toString(),
+        deliveryMethod: formData.deliveryMethod,
+        paymentMethod: formData.paymentMethod,
+        paymentStatus: 'kutmoqda',
         customerName: formData.customerName,
         customerPhone: formData.customerPhone,
         customerEmail: formData.customerEmail || null,
@@ -309,6 +323,136 @@ export default function CheckoutPage() {
                               data-testid="input-shipping-address"
                               {...field} 
                             />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Delivery Method */}
+                    <FormField
+                      control={form.control}
+                      name="deliveryMethod"
+                      render={({ field }) => (
+                        <FormItem className="space-y-3">
+                          <FormLabel data-testid="label-delivery-method">
+                            <div className="flex items-center space-x-2">
+                              <Truck className="w-4 h-4" />
+                              <span>{language === 'uz' ? 'Yetkazib berish usuli' : 'Способ доставки'} *</span>
+                            </div>
+                          </FormLabel>
+                          <FormControl>
+                            <RadioGroup
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                              className="grid grid-cols-1 gap-4"
+                            >
+                              <div className="flex items-center space-x-2 border rounded-lg p-4 hover:bg-gray-50">
+                                <RadioGroupItem value="olib_ketish" id="pickup" />
+                                <Label htmlFor="pickup" className="flex-1 cursor-pointer">
+                                  <div>
+                                    <div className="font-medium">
+                                      {language === 'uz' ? 'Olib ketish' : 'Самовывоз'}
+                                    </div>
+                                    <div className="text-sm text-gray-500">
+                                      {language === 'uz' 
+                                        ? 'Mahsulotlarni do\'kondan olib ketish' 
+                                        : 'Забрать товары из магазина'
+                                      }
+                                    </div>
+                                  </div>
+                                </Label>
+                              </div>
+                              <div className="flex items-center space-x-2 border rounded-lg p-4 hover:bg-gray-50">
+                                <RadioGroupItem value="kuryer" id="delivery" />
+                                <Label htmlFor="delivery" className="flex-1 cursor-pointer">
+                                  <div>
+                                    <div className="font-medium">
+                                      {language === 'uz' ? 'Kuryer orqali' : 'Доставка курьером'}
+                                    </div>
+                                    <div className="text-sm text-gray-500">
+                                      {language === 'uz' 
+                                        ? 'Mahsulotlarni uyingizgacha yetkazib berish' 
+                                        : 'Доставка товаров до дома'
+                                      }
+                                    </div>
+                                  </div>
+                                </Label>
+                              </div>
+                            </RadioGroup>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Payment Method */}
+                    <FormField
+                      control={form.control}
+                      name="paymentMethod"
+                      render={({ field }) => (
+                        <FormItem className="space-y-3">
+                          <FormLabel data-testid="label-payment-method">
+                            <div className="flex items-center space-x-2">
+                              <CreditCard className="w-4 h-4" />
+                              <span>{language === 'uz' ? 'To\'lov usuli' : 'Способ оплаты'} *</span>
+                            </div>
+                          </FormLabel>
+                          <FormControl>
+                            <RadioGroup
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                              className="grid grid-cols-1 gap-4"
+                            >
+                              <div className="flex items-center space-x-2 border rounded-lg p-4 hover:bg-gray-50">
+                                <RadioGroupItem value="naqd" id="cash" />
+                                <Label htmlFor="cash" className="flex-1 cursor-pointer">
+                                  <div>
+                                    <div className="font-medium">
+                                      {language === 'uz' ? 'Naqd pul' : 'Наличные'}
+                                    </div>
+                                    <div className="text-sm text-gray-500">
+                                      {language === 'uz' 
+                                        ? 'Mahsulotni olganda naqd to\'lash' 
+                                        : 'Оплата наличными при получении'
+                                      }
+                                    </div>
+                                  </div>
+                                </Label>
+                              </div>
+                              <div className="flex items-center space-x-2 border rounded-lg p-4 hover:bg-gray-50">
+                                <RadioGroupItem value="karta" id="card" />
+                                <Label htmlFor="card" className="flex-1 cursor-pointer">
+                                  <div>
+                                    <div className="font-medium">
+                                      {language === 'uz' ? 'Bank kartasi' : 'Банковская карта'}
+                                    </div>
+                                    <div className="text-sm text-gray-500">
+                                      {language === 'uz' 
+                                        ? 'Karta orqali to\'lash' 
+                                        : 'Оплата банковской картой'
+                                      }
+                                    </div>
+                                  </div>
+                                </Label>
+                              </div>
+                              <div className="flex items-center space-x-2 border rounded-lg p-4 hover:bg-gray-50">
+                                <RadioGroupItem value="qr_kod" id="qr" />
+                                <Label htmlFor="qr" className="flex-1 cursor-pointer">
+                                  <div>
+                                    <div className="font-medium">
+                                      {language === 'uz' ? 'QR kod' : 'QR код'}
+                                    </div>
+                                    <div className="text-sm text-gray-500">
+                                      {language === 'uz' 
+                                        ? 'QR kod orqali to\'lash' 
+                                        : 'Оплата через QR код'
+                                      }
+                                    </div>
+                                  </div>
+                                </Label>
+                              </div>
+                            </RadioGroup>
                           </FormControl>
                           <FormMessage />
                         </FormItem>

@@ -3,6 +3,7 @@ import { useParams, Link } from 'wouter';
 import { useProductBySlug } from '@/hooks/useProductBySlug';
 import { useLanguage } from '@/components/language-provider';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 import { SEOHead } from '@/components/SEOHead';
 import { generateProductMetaTags } from '@shared/seo';
 import { Footer } from '@/components/footer';
@@ -10,12 +11,18 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/ui/dialog';
-import { ChevronLeft, Minus, Plus, ShoppingCart, ArrowLeft, Play, Star } from 'lucide-react';
+import { ChevronLeft, Minus, Plus, ShoppingCart, ArrowLeft, Play, Star, Heart } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useToast } from '@/hooks/use-toast';
+import { apiRequest } from '@/lib/queryClient';
 
 export default function ProductDetailsPage() {
   const { slug } = useParams<{ slug: string }>();
   const { language, t } = useLanguage();
   const { addToCart } = useCart();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [quantity, setQuantity] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [showVideoModal, setShowVideoModal] = useState(false);
@@ -87,6 +94,74 @@ export default function ProductDetailsPage() {
 
   const name = language === 'uz' ? product.nameUz : product.nameRu;
   const description = language === 'uz' ? product.descriptionUz : product.descriptionRu;
+
+  // Check if product is in favorites
+  const { data: favoriteStatus } = useQuery({
+    queryKey: ['/api/favorites/check', product.id],
+    queryFn: () => apiRequest(`/api/favorites/check/${product.id}`),
+    enabled: !!user,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  // Add to favorites mutation
+  const addToFavoritesMutation = useMutation({
+    mutationFn: () => apiRequest('/api/favorites', {
+      method: 'POST',
+      body: JSON.stringify({ productId: product.id }),
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/favorites'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/favorites/check', product.id] });
+      toast({
+        title: language === 'uz' ? "Sevimlilar ro'yxatiga qo'shildi" : "Добавлено в избранное",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: language === 'uz' ? "Xatolik" : "Ошибка",
+        description: error.message || (language === 'uz' ? "Sevimlilar ro'yxatiga qo'shishda xatolik" : "Ошибка при добавлении в избранное"),
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Remove from favorites mutation
+  const removeFromFavoritesMutation = useMutation({
+    mutationFn: () => apiRequest(`/api/favorites/${product.id}`, {
+      method: 'DELETE',
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/favorites'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/favorites/check', product.id] });
+      toast({
+        title: language === 'uz' ? "Sevimlilar ro'yxatidan o'chirildi" : "Удалено из избранного",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: language === 'uz' ? "Xatolik" : "Ошибка",
+        description: error.message || (language === 'uz' ? "Sevimlilar ro'yxatidan o'chirishda xatolik" : "Ошибка при удалении из избранного"),
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleToggleFavorite = () => {
+    if (!user) {
+      toast({
+        title: language === 'uz' ? "Tizimga kirish talab qilinadi" : "Требуется авторизация",
+        description: language === 'uz' ? "Sevimlilar ro'yxatidan foydalanish uchun tizimga kiring" : "Войдите в систему для использования избранного",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (favoriteStatus?.isFavorite) {
+      removeFromFavoritesMutation.mutate();
+    } else {
+      addToFavoritesMutation.mutate();
+    }
+  };
 
   // SEO meta-teglarni generate qilish
   const seoMetaTags = generateProductMetaTags(product);
@@ -249,9 +324,29 @@ export default function ProductDetailsPage() {
           <div className="space-y-8">
             {/* Product Title and Basic Info */}
             <div>
-              <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-4" data-testid="product-title">
-                {name}
-              </h1>
+              <div className="flex items-start justify-between mb-4">
+                <h1 className="text-3xl lg:text-4xl font-bold text-foreground flex-1 mr-4" data-testid="product-title">
+                  {name}
+                </h1>
+                {/* Favorites Button */}
+                {user && (
+                  <Button
+                    variant="ghost"
+                    size="lg"
+                    className={`p-3 rounded-full ${
+                      favoriteStatus?.isFavorite 
+                        ? 'text-red-500 hover:text-red-600 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/30' 
+                        : 'text-gray-400 hover:text-red-500 bg-gray-50 hover:bg-red-50 dark:bg-gray-800 dark:hover:bg-red-900/20'
+                    }`}
+                    onClick={handleToggleFavorite}
+                    disabled={addToFavoritesMutation.isPending || removeFromFavoritesMutation.isPending}
+                  >
+                    <Heart 
+                      className={`h-6 w-6 ${favoriteStatus?.isFavorite ? 'fill-current' : ''}`}
+                    />
+                  </Button>
+                )}
+              </div>
               
               <div className="flex items-center space-x-4 mb-6">
                 <Badge className={statusColors[stockStatus]} data-testid="stock-status">

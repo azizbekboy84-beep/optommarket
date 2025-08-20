@@ -20,7 +20,7 @@ export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   // Extract search query from URL
-  const urlParams = new URLSearchParams(location.split('?')[1] || '');
+  const urlParams = new URLSearchParams(window.location.search);
   const query = urlParams.get('q') || '';
 
   const { data: searchResults, isLoading, error } = useQuery<SearchResult>({

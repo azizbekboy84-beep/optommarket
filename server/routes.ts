@@ -598,21 +598,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Search API
-  app.get("/api/search", async (req, res) => {
-    try {
-      const { q } = req.query;
-      
-      if (!q || typeof q !== 'string') {
-        return res.status(400).json({ message: "Search query parameter 'q' is required" });
-      }
-      
-      const results = await storage.searchAll(q);
-      res.json(results);
-    } catch (error) {
-      res.status(500).json({ message: "Search failed", error: error instanceof Error ? error.message : "Unknown error" });
-    }
-  });
 
   // Chat API
   app.post("/api/chat", async (req, res) => {

@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useLanguage } from './language-provider';
 import { Link, useLocation } from 'wouter';
-import { Search, Globe, X } from 'lucide-react';
+import { Search, Globe, X, Phone, User } from 'lucide-react';
 import logoImage from '@assets/optombazar logo_1755690917356.png';
 
 export function MobileTopNav() {
@@ -24,6 +24,22 @@ export function MobileTopNav() {
 
   return (
     <nav className="md:hidden fixed top-0 w-full bg-background shadow-md z-50">
+      {/* Mobile Top Bar */}
+      <div className="bg-blue-600 text-white py-1 px-4">
+        <div className="flex justify-between items-center text-xs">
+          <div className="flex items-center space-x-2">
+            <Phone className="h-3 w-3" />
+            <span>+998 71 123-45-67</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Link href="/login" className="hover:text-blue-200">
+              <User className="h-3 w-3 inline mr-1" />
+              Kirish
+            </Link>
+          </div>
+        </div>
+      </div>
+      
       <div className="flex items-center justify-between px-4 h-14">
         {/* Logo */}
         <Link href="/" className="flex items-center">

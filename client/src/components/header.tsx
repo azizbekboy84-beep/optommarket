@@ -120,13 +120,13 @@ export function Header() {
 
           {/* Main Navigation - Hidden on mobile */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/catalog" className="text-card-foreground hover:text-accent-foreground font-medium transition-colors">
+            <Link href="/catalog" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
               {language === 'uz' ? 'Katalog' : 'Каталог'}
             </Link>
-            <Link href="/blog" className="text-card-foreground hover:text-accent-foreground font-medium transition-colors">
+            <Link href="/blog" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
               {language === 'uz' ? 'Blog' : 'Блог'}
             </Link>
-            <Link href="/contact" className="text-card-foreground hover:text-accent-foreground font-medium transition-colors">
+            <Link href="/contact" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
               {language === 'uz' ? 'Aloqa' : 'Контакты'}
             </Link>
           </nav>

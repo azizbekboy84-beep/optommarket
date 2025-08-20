@@ -19,6 +19,7 @@ import RegisterPage from "@/pages/RegisterPage";
 import LoginPage from "@/pages/LoginPage";
 import ProfilePage from "@/pages/ProfilePage";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import OrderSuccessPage from "@/pages/OrderSuccessPage";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -45,6 +46,7 @@ function Router() {
           </ProtectedRoute>
         )}
       </Route>
+      <Route path="/order-success" component={OrderSuccessPage} />
       <Route path="/contact" component={Contact} />
       <Route component={NotFound} />
     </Switch>

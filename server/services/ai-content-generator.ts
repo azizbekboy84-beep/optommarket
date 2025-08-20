@@ -93,33 +93,39 @@ export async function generateBlogPost(language: 'uz' | 'ru' = 'uz'): Promise<Bl
     const prompt = language === 'uz' 
       ? `OptomBazar.uz - O'zbekistondagi optom savdo platformasi uchun "${topicTitle}" mavzusida professional blog post yozing.
 
+MUHIM ESLATMA: Hech qanday yulduzcha (*) yoki maxsus belgi ishlatmang! Faqat toza matn yozing.
+
 Talablar:
-1. Jozibali va SEO-optimallashgan sarlavha yarating
-2. 800-1200 so'zlik kontent yozing
+1. Jozibali va SEO-optimallashgan sarlavha yarating (belgilarsiz)
+2. 800-1200 so'zlik toza kontent yozing
 3. Amaliy maslahatlar va foydali ma'lumotlar bering
 4. OptomBazar.uz platformasi haqida tabiiy holda eslatib o'ting
 5. Formal va professional yozuv uslubida yozing
 6. O'zbek tilida yozing
+7. Hech qanday formatlash belgilari ishlatmang
 
 Format:
-SARLAVHA: [blog post sarlavhasi]
-QISQACHA: [150-200 so'zlik qisqacha mazmun]
-CONTENT: [asosiy kontent]`
+SARLAVHA: [blog post sarlavhasi - faqat matn]
+QISQACHA: [150-200 so'zlik qisqacha mazmun - faqat matn]
+CONTENT: [asosiy kontent - faqat matn]`
 
       : `Напишите профессиональный блог-пост для OptomBazar.uz - платформы оптовой торговли в Узбекистане на тему "${topicTitle}".
 
+ВАЖНОЕ НАПОМИНАНИЕ: Не используйте никаких звездочек (*) или специальных символов! Пишите только чистый текст.
+
 Требования:
-1. Создайте привлекательный и SEO-оптимизированный заголовок
-2. Напишите контент объемом 800-1200 слов
+1. Создайте привлекательный и SEO-оптимизированный заголовок (без символов)
+2. Напишите чистый контент объемом 800-1200 слов
 3. Давайте практические советы и полезную информацию
 4. Естественно упомяните платформу OptomBazar.uz
 5. Пишите в формальном и профессиональном стиле
 6. Пишите на русском языке
+7. Не используйте никаких символов форматирования
 
 Формат:
-ЗАГОЛОВОК: [заголовок блог-поста]
-КРАТКОЕ: [краткое содержание 150-200 слов]
-КОНТЕНТ: [основной контент]`;
+ЗАГОЛОВОК: [заголовок блог-поста - только текст]
+КРАТКОЕ: [краткое содержание 150-200 слов - только текст]
+КОНТЕНТ: [основной контент - только текст]`;
 
     const result = await model.generateContent(prompt);
     const response = result.response.text();

@@ -32,7 +32,6 @@ import SearchPage from "@/pages/SearchPage";
 import NotFound from "@/pages/not-found";
 import { AIChatWidget } from "@/components/AIChatWidget";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
-import { MobileTopNav } from "@/components/MobileTopNav";
 import { Header } from "@/components/header";
 
 function Router() {
@@ -112,7 +111,6 @@ function App() {
           <CartProvider>
             <TooltipProvider>
               <Toaster />
-              <MobileTopNav />
               <Header />
               <main className="pt-14 pb-20 md:pt-0 md:pb-0">
                 <Router />

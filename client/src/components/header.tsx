@@ -1,12 +1,14 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useLanguage } from './language-provider';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { useCategories } from '@/hooks/useCategories';
-import { ChevronDown, ShoppingCart, User, Settings } from 'lucide-react';
+import { ChevronDown, ShoppingCart, User, Settings, Search } from 'lucide-react';
 import logoImage from '@assets/optombazar logo_1755690917356.png';
 
 export function Header() {
@@ -14,6 +16,8 @@ export function Header() {
   const { data: categories = [], isLoading: categoriesLoading } = useCategories();
   const { itemCount } = useCart();
   const { user, isAuthenticated, logout } = useAuth();
+  const [, setLocation] = useLocation();
+  const [searchQuery, setSearchQuery] = useState('');
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
@@ -30,6 +34,35 @@ export function Header() {
                 />
               </div>
             </Link>
+          </div>
+
+          {/* Search Bar */}
+          <div className="hidden lg:flex flex-1 max-w-md mx-8">
+            <div className="relative w-full">
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                if (searchQuery.trim()) {
+                  setLocation(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+                }
+              }} className="flex">
+                <Input
+                  type="text"
+                  placeholder="Qidiruv..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="flex-1 pr-10"
+                  data-testid="input-search"
+                />
+                <Button
+                  type="submit"
+                  size="sm"
+                  className="ml-1 bg-gradient-to-r from-blue-600 to-red-500 hover:from-red-500 hover:to-blue-600"
+                  data-testid="button-search"
+                >
+                  <Search className="h-4 w-4" />
+                </Button>
+              </form>
+            </div>
           </div>
 
           {/* Navigation */}

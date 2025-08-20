@@ -48,6 +48,9 @@ export interface IStorage {
   createBlogPost(post: InsertBlogPost): Promise<BlogPost>;
   updateBlogPost(id: string, updates: Partial<InsertBlogPost>): Promise<BlogPost | undefined>;
   deleteBlogPost(id: string): Promise<boolean>;
+
+  // Search
+  searchAll(query: string): Promise<{ products: Product[]; blogPosts: BlogPost[]; }>;
 }
 
 export class MemStorage implements IStorage {
@@ -148,7 +151,7 @@ export class MemStorage implements IStorage {
         minQuantity: 100,
         stockQuantity: 5000,
         unit: "dona",
-        specifications: {"Material": "LDPE", "Qalinligi": "50 mikron", "Ranglar": "Turli ranglar"},
+        specifications: {"Material": "LDPE", "Qalinligi": "50 mikron", "Ranglar": "Turli ranglar"} as Record<string, string>,
         images: ["https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300"],
         slug: "sifatli-plastik-paketlar",
         isActive: true,
@@ -168,7 +171,7 @@ export class MemStorage implements IStorage {
         minQuantity: 50,
         stockQuantity: 3000,
         unit: "dona",
-        specifications: {"Material": "Plastik", "Hajmi": "200ml", "Turi": "Bir martalik"},
+        specifications: {"Material": "Plastik", "Hajmi": "200ml", "Turi": "Bir martalik"} as Record<string, string>,
         images: ["https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300"],
         slug: "bir-martalik-stakanlar",
         isActive: true,
@@ -188,7 +191,7 @@ export class MemStorage implements IStorage {
         minQuantity: 10,
         stockQuantity: 500,
         unit: "dona",
-        specifications: {"Material": "Silikon", "Moslik": "Universal", "Ranglar": "Ko'p rangli"},
+        specifications: {"Material": "Silikon", "Moslik": "Universal", "Ranglar": "Ko'p rangli"} as Record<string, string>,
         images: ["https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300"],
         slug: "telefon-aksessuarlari",
         isActive: true,
@@ -208,7 +211,7 @@ export class MemStorage implements IStorage {
         minQuantity: 1,
         stockQuantity: 200,
         unit: "dona",
-        specifications: {"Material": "100% Paxta", "Rang": "Oq, Qora", "O'lcham": "S-XXL"},
+        specifications: {"Material": "100% Paxta", "Rang": "Oq, Qora", "O'lcham": "S-XXL"} as Record<string, string>,
         images: ["https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300"],
         slug: "erkaklar-t-shirtkasi",
         isActive: true,
@@ -218,10 +221,7 @@ export class MemStorage implements IStorage {
     ];
 
     products.forEach(product => {
-      this.products.set(product.id, {
-        ...product,
-        specifications: product.specifications || null
-      });
+      this.products.set(product.id, product);
     });
 
     // Seed blog posts
@@ -355,6 +355,7 @@ export class MemStorage implements IStorage {
       descriptionRu: insertProduct.descriptionRu || null,
       minQuantity: insertProduct.minQuantity ?? 1,
       stockQuantity: insertProduct.stockQuantity ?? 0,
+      specifications: insertProduct.specifications || null,
       images: insertProduct.images || null,
       isActive: insertProduct.isActive ?? true,
       isFeatured: insertProduct.isFeatured ?? false,
@@ -526,6 +527,7 @@ export class MemStorage implements IStorage {
     const post: BlogPost = {
       ...insertPost,
       id,
+      imageUrl: insertPost.imageUrl || null,
       isPublished: insertPost.isPublished ?? true,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -552,6 +554,35 @@ export class MemStorage implements IStorage {
 
   async deleteBlogPost(id: string): Promise<boolean> {
     return this.blogPosts.delete(id);
+  }
+
+  // Search implementation
+  async searchAll(query: string): Promise<{ products: Product[]; blogPosts: BlogPost[] }> {
+    const searchQuery = query.toLowerCase().trim();
+    
+    if (!searchQuery) {
+      return { products: [], blogPosts: [] };
+    }
+
+    // Search products
+    const products = Array.from(this.products.values()).filter(product => {
+      return product.isActive && (
+        product.nameUz.toLowerCase().includes(searchQuery) ||
+        product.nameRu.toLowerCase().includes(searchQuery) ||
+        (product.descriptionUz && product.descriptionUz.toLowerCase().includes(searchQuery)) ||
+        (product.descriptionRu && product.descriptionRu.toLowerCase().includes(searchQuery))
+      );
+    });
+
+    // Search blog posts
+    const blogPosts = Array.from(this.blogPosts.values()).filter(post => {
+      return post.isPublished && (
+        post.title.toLowerCase().includes(searchQuery) ||
+        post.content.toLowerCase().includes(searchQuery)
+      );
+    });
+
+    return { products, blogPosts };
   }
 }
 

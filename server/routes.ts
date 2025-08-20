@@ -595,6 +595,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Search API
+  app.get("/api/search", async (req, res) => {
+    try {
+      const query = req.query.q as string;
+      
+      if (!query || typeof query !== 'string') {
+        return res.status(400).json({ message: "Qidiruv so'zi kiritilmagan" });
+      }
+      
+      const results = await storage.searchAll(query);
+      res.json(results);
+    } catch (error) {
+      res.status(500).json({ message: "Qidiruvda xatolik" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

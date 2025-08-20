@@ -28,6 +28,7 @@ import AdminBlogPage from "@/pages/admin/AdminBlogPage";
 import AdminCategoriesPage from "@/pages/admin/AdminCategoriesPage";
 import BlogPage from "@/pages/BlogPage";
 import BlogPostPage from "@/pages/BlogPostPage";
+import SearchPage from "@/pages/SearchPage";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -93,6 +94,7 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/blog" component={BlogPage} />
       <Route path="/blog/:slug" component={BlogPostPage} />
+      <Route path="/search" component={SearchPage} />
       <Route component={NotFound} />
     </Switch>
   );

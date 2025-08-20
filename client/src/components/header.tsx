@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -8,8 +9,9 @@ import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { ThemeToggle } from './theme-toggle';
 import { Link, useLocation } from 'wouter';
-import { ChevronDown, ShoppingCart, User, Settings, Search, Phone, Facebook, Instagram, Mail } from 'lucide-react';
+import { ChevronDown, ShoppingCart, User, Settings, Search, Phone, Facebook, Instagram, Mail, Folder } from 'lucide-react';
 import logoImage from '@assets/optombazar logo_1755690917356.png';
+import { Category } from '@shared/schema';
 
 // Desktop Header Component  
 export function Header() {
@@ -18,6 +20,21 @@ export function Header() {
   const { user, isAuthenticated, logout } = useAuth();
   const [, setLocation] = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Fetch categories for navigation
+  const { data: categories = [] } = useQuery<Category[]>({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const response = await fetch('/api/categories');
+      if (!response.ok) {
+        throw new Error('Failed to fetch categories');
+      }
+      return response.json();
+    },
+  });
+
+  // Get main categories (no parent)
+  const mainCategories = categories.filter(cat => !cat.parentId).slice(0, 8);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,16 +135,26 @@ export function Header() {
             </Link>
           </div>
 
-          {/* Main Navigation - Hidden on mobile */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/catalog" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
-              {language === 'uz' ? 'Katalog' : 'Каталог'}
-            </Link>
-            <Link href="/blog" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
-              {language === 'uz' ? 'Blog' : 'Блог'}
-            </Link>
-            <Link href="/contact" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
-              {language === 'uz' ? 'Aloqa' : 'Контакты'}
+          {/* Main Navigation - Categories */}
+          <nav className="hidden lg:flex items-center space-x-6">
+            {/* Main Categories */}
+            {mainCategories.map((category) => (
+              <Link 
+                key={category.id} 
+                href={`/catalog?category=${category.slug}`} 
+                className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors text-sm"
+              >
+                {language === 'uz' ? category.nameUz : category.nameRu}
+              </Link>
+            ))}
+            
+            {/* All Categories Link */}
+            <Link 
+              href="/categories" 
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors text-sm flex items-center gap-1 bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-full"
+            >
+              <Folder className="h-4 w-4" />
+              {language === 'uz' ? 'Barcha kategoriyalar' : 'Все категории'}
             </Link>
           </nav>
 

@@ -20,6 +20,7 @@ export const categories = pgTable("categories", {
   descriptionUz: text("description_uz"),
   descriptionRu: text("description_ru"),
   image: text("image"),
+  icon: text("icon"), // Lucide React icon name (e.g., "Package", "Shirt", "Utensils")
   slug: text("slug").notNull().unique(),
   parentId: varchar("parent_id"),
   isActive: boolean("is_active").default(true),

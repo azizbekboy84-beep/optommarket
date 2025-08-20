@@ -1,0 +1,53 @@
+KATEGORIYALAR NAVIGATSIYASINI TO'LIQ QAYTA ISHLASH
+Ajoyib, loyihamiz deyarli tayyor, lekin hozirgi kunda sayt navigatsiyasi kategoriyalarning ko'pligidan foydalanish uchun noqulay bo'lib qoldi. Keling, buni to'g'rilaymiz.
+
+Loyiha mazmuni (Kontekst):
+Maqsadimiz — foydalanuvchi uchun sayt bo'ylab harakatlanishni osonlashtirish. Buning uchun biz Headerdagi kategoriyalar ro'yxatini qisqartiramiz va barcha kategoriyalarni ko'rish uchun alohida, chiroyli va qulay sahifa yaratamiz. Bu yondashuv foydalanuvchiga kerakli bo'limni tezda topishga yordam beradi.
+
+Aniq qadamlar:
+
+1-QISM: BAZA VA BACKENDNI TAYYORLASH
+
+Baza Sxemasini Ikonkalar Bilan Boyitish (shared/schema.ts):
+
+categories jadvaliga yangi icon (text, ixtiyoriy) nomli ustun qo'shing. Bu yerda biz har bir asosiy kategoriya uchun SVG ikonkasi nomini saqlaymiz (masalan, "Package", "Shirt", "Utensils").
+
+Admin Panelini Yangilash:
+
+AdminCategoriesPage.tsx sahifasidagi kategoriya qo'shish/tahrirlash formasiga "Ikona nomi" (lucide-react kutubxonasidan) uchun yangi matn maydoni qo'shing.
+
+/api/admin/categories endpoint'larini bu yangi icon ma'lumotini qabul qiladigan qilib yangilang.
+
+2-QISM: FRONTEND NAVIGATSIYASINI TO'LIQ QAYTA QURISH
+
+Header.tsx Komponentini Sodda va Aniq Qilish:
+
+Headerdagi "Kategoriyalar" ochiladigan menyusini olib tashlang.
+
+Uning o'rniga, siz taqdim etgan ro'yxatdan tanlab olingan eng muhim 8-10 ta asosiy kategoriyaning nomini to'g'ridan-to'g'ri havola (Link) sifatida joylashtiring.
+
+Bu havolalar qatorining oxirida "Barcha kategoriyalar" nomli alohida, ajralib turadigan havolani qo'shing va uni yangi /categories sahifasiga yo'naltiring.
+
+"Barcha Kategoriyalar" Sahifasini Yaratish (AllCategoriesPage.tsx):
+
+client/src/pages/AllCategoriesPage.tsx nomli yangi sahifa yarating va /categories uchun marshrut (route) qo'shing.
+
+Sahifaning sarlavhasiga "Barcha Kategoriyalar" deb yozing.
+
+GET /api/categories endpoint'idan barcha ierarxik kategoriya ma'lumotlarini oling.
+
+Ma'lumotlarni chiroyli grid (grid-cols-1 md:grid-cols-2 lg:grid-cols-3) shaklida chiqaring. Har bir grid elementi bitta asosiy kategoriyaga tegishli bo'lsin.
+
+Har bir asosiy kategoriya kartochkasi (Card) ichida:
+
+Katta ikonka va kategoriya nomi.
+
+Uning ostida esa o'sha kategoriyaga tegishli barcha ichki kategoriyalarning ro'yxatini bosiladigan havolalar (Link) shaklida chiqaring.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Header endi faqat eng muhim 8-10 ta kategoriya havolasini va "Barcha kategoriyalar" tugmasini ko'rsatyaptimi?
+
+Yangi /categories sahifasi yaratildimi va u yerda barcha asosiy kategoriyalar o'zining ichki kategoriyalari bilan birga chiroyli kartochkalar shaklida ko'rsatilyaptimi?
+
+Admin endi har bir asosiy kategoriyaga ikonka biriktira olyaptimi va bu ikonka "Barcha kategoriyalar" sahifasida ko'rinyaptimi?

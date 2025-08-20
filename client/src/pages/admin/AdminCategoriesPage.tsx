@@ -23,6 +23,7 @@ interface CategoryFormData {
   descriptionRu: string;
   slug: string;
   image: string;
+  icon: string;
   parentId: string;
   isActive: boolean;
 }
@@ -34,6 +35,7 @@ const defaultFormData: CategoryFormData = {
   descriptionRu: '',
   slug: '',
   image: '',
+  icon: '',
   parentId: 'none',
   isActive: true,
 };
@@ -129,6 +131,7 @@ export default function AdminCategoriesPage() {
       ...formData,
       parentId: formData.parentId === 'none' ? null : formData.parentId || null,
       image: formData.image || null,
+      icon: formData.icon || null,
       descriptionUz: formData.descriptionUz || null,
       descriptionRu: formData.descriptionRu || null,
     };
@@ -149,6 +152,7 @@ export default function AdminCategoriesPage() {
       descriptionRu: category.descriptionRu || '',
       slug: category.slug,
       image: category.image || '',
+      icon: category.icon || '',
       parentId: category.parentId || 'none',
       isActive: category.isActive ?? true,
     });
@@ -257,6 +261,19 @@ export default function AdminCategoriesPage() {
                       onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                     />
                   </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="icon">Ikona nomi (Lucide React)</Label>
+                  <Input
+                    id="icon"
+                    value={formData.icon}
+                    onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                    placeholder="Package, Shirt, Utensils, Smartphone..."
+                  />
+                  <p className="text-sm text-gray-500 mt-1">
+                    Masalan: Package, Shirt, Utensils, Smartphone, Box, etc.
+                  </p>
                 </div>
 
                 <div>

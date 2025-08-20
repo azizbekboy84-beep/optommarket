@@ -8,7 +8,7 @@ import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider } from "@/components/theme-provider";
 import Home from "@/pages/home";
-import Categories from "@/pages/categories";
+import AllCategoriesPage from "@/pages/AllCategoriesPage";
 import Products from "@/pages/products";
 import Contact from "@/pages/contact";
 import Catalog from "@/pages/catalog";
@@ -45,7 +45,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/categories" component={Categories} />
+      <Route path="/categories" component={AllCategoriesPage} />
       <Route path="/products" component={Products} />
       <Route path="/catalog" component={Catalog} />
       <Route path="/category/:slug">

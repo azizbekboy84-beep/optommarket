@@ -8,7 +8,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/categories", async (req, res) => {
     try {
       const categories = await storage.getCategories();
-      res.json(categories);
+      
+      // Build hierarchical structure
+      const categoriesMap = new Map();
+      const rootCategories: any[] = [];
+      
+      // First pass: create map of all categories
+      categories.forEach(category => {
+        categoriesMap.set(category.slug, { ...category, children: [] });
+      });
+      
+      // Second pass: build hierarchy
+      categories.forEach(category => {
+        const categoryWithChildren = categoriesMap.get(category.slug);
+        if (category.parentId) {
+          const parent = categoriesMap.get(category.parentId);
+          if (parent) {
+            parent.children.push(categoryWithChildren);
+          } else {
+            // If parent not found, treat as root
+            rootCategories.push(categoryWithChildren);
+          }
+        } else {
+          rootCategories.push(categoryWithChildren);
+        }
+      });
+      
+      res.json(rootCategories);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch categories" });
     }

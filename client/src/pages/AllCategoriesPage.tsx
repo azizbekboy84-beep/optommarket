@@ -101,25 +101,25 @@ export default function AllCategoriesPage() {
           </div>
         </div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Categories Grid - More compact */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {mainCategories.map((category) => {
             const children = getCategoryChildren(category.id);
             const IconComponent = getIconComponent(category.icon);
             
             return (
               <Card key={category.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader className="pb-4">
-                  <CardTitle className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                      <IconComponent className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                <CardHeader className="pb-2 pt-4 px-4">
+                  <CardTitle className="flex flex-col items-center gap-2 text-center">
+                    <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      <IconComponent className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg">
+                      <h3 className="font-semibold text-sm leading-tight">
                         {language === 'uz' ? category.nameUz : category.nameRu}
                       </h3>
                       {(category.descriptionUz || category.descriptionRu) && (
-                        <p className="text-sm text-gray-600 dark:text-gray-400 font-normal">
+                        <p className="text-xs text-gray-600 dark:text-gray-400 font-normal mt-1 line-clamp-2">
                           {language === 'uz' ? category.descriptionUz : category.descriptionRu}
                         </p>
                       )}
@@ -127,48 +127,42 @@ export default function AllCategoriesPage() {
                   </CardTitle>
                 </CardHeader>
                 
-                <CardContent className="space-y-3">
+                <CardContent className="space-y-2 px-4 pb-4">
                   {children.length > 0 ? (
                     <>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                          {language === 'uz' ? 'Ichki kategoriyalar:' : 'Подкategории:'}
-                        </span>
+                      <div className="flex items-center justify-center mb-2">
                         <Badge variant="secondary" className="text-xs">
-                          {children.length}
+                          {children.length} {language === 'uz' ? 'ichki' : 'под'}
                         </Badge>
                       </div>
                       
-                      <div className="space-y-2 max-h-40 overflow-y-auto">
-                        {children.map((child) => (
+                      <div className="space-y-1 max-h-24 overflow-y-auto text-center">
+                        {children.slice(0, 3).map((child) => (
                           <Link 
                             key={child.id} 
                             href={`/catalog?category=${child.slug}`}
                           >
-                            <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer">
-                              <span className="text-sm text-gray-700 dark:text-gray-300">
-                                {language === 'uz' ? child.nameUz : child.nameRu}
-                              </span>
-                              <ChevronLeft className="h-3 w-3 text-gray-400 rotate-180" />
+                            <div className="text-xs text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer truncate">
+                              {language === 'uz' ? child.nameUz : child.nameRu}
                             </div>
                           </Link>
                         ))}
+                        {children.length > 3 && (
+                          <div className="text-xs text-gray-400">+{children.length - 3} {language === 'uz' ? 'yana' : 'ещё'}</div>
+                        )}
                       </div>
                       
                       <Link href={`/catalog?category=${category.slug}`}>
-                        <Button variant="outline" size="sm" className="w-full mt-3">
-                          {language === 'uz' ? 'Barchasini ko\'rish' : 'Смотреть все'}
+                        <Button variant="outline" size="sm" className="w-full mt-2 text-xs h-7">
+                          {language === 'uz' ? 'Ko\'rish' : 'Смотреть'} →
                         </Button>
                       </Link>
                     </>
                   ) : (
-                    <div className="py-4">
-                      <p className="text-sm text-gray-500 dark:text-gray-400 text-center mb-3">
-                        {language === 'uz' ? 'Ichki kategoriyalar yo\'q' : 'Нет подкategorий'}
-                      </p>
+                    <div className="py-2">
                       <Link href={`/catalog?category=${category.slug}`}>
-                        <Button variant="default" size="sm" className="w-full">
-                          {language === 'uz' ? 'Mahsulotlarni ko\'rish' : 'Смотреть товары'}
+                        <Button variant="default" size="sm" className="w-full text-xs h-7">
+                          {language === 'uz' ? 'Ko\'rish' : 'Смотреть'} →
                         </Button>
                       </Link>
                     </div>

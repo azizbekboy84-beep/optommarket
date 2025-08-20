@@ -150,8 +150,8 @@ export function Header() {
           </div>
 
           {/* Main Navigation - Categories */}
-          <nav className="hidden lg:flex items-center space-x-3">
-            {/* Main Categories - Compact design */}
+          <nav className="hidden lg:flex items-center space-x-2">
+            {/* Main Categories - Ultra compact design */}
             {mainCategories.map((category) => {
               const IconComponent = getIconComponent(category.icon);
               
@@ -159,10 +159,10 @@ export function Header() {
                 <Link 
                   key={category.id} 
                   href={`/catalog?category=${category.slug}`} 
-                  className="flex items-center gap-1 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors text-xs px-2 py-1 rounded hover:bg-gray-50 dark:hover:bg-gray-800"
+                  className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-xs px-1.5 py-1 rounded hover:bg-gray-50 dark:hover:bg-gray-800"
                 >
-                  <IconComponent className="h-3 w-3" />
-                  <span className="truncate max-w-[80px]">
+                  <IconComponent className="h-2.5 w-2.5" />
+                  <span className="truncate max-w-[70px] text-[11px]">
                     {language === 'uz' ? category.nameUz : category.nameRu}
                   </span>
                 </Link>
@@ -172,9 +172,9 @@ export function Header() {
             {/* All Categories Link */}
             <Link 
               href="/categories" 
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors text-xs flex items-center gap-1 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded ml-2 border-l border-gray-200 dark:border-gray-700 pl-3"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors text-[11px] flex items-center gap-1 bg-blue-50 dark:bg-blue-900/20 px-1.5 py-1 rounded ml-1 border-l border-gray-200 dark:border-gray-700 pl-2"
             >
-              <Folder className="h-3 w-3" />
+              <Folder className="h-2.5 w-2.5" />
               {language === 'uz' ? 'Barcha' : 'Все'}
             </Link>
           </nav>

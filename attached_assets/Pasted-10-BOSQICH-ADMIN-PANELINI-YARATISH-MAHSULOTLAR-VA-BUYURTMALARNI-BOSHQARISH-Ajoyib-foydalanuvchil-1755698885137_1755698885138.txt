@@ -1,0 +1,68 @@
+10-BOSQICH: ADMIN PANELINI YARATISH (MAHSULOTLAR VA BUYURTMALARNI BOSHQARISH)
+Ajoyib, foydalanuvchilar uchun shaxsiy kabinet tayyor. Endi saytni boshqarish uchun o'zimizga qulay asbob yaratamiz.
+
+Loyiha mazmuni: Maqsadimiz — platforma administratori uchun to'liq funksional boshqaruv panelini yaratish. Bu panel orqali administrator kodga yoki ma'lumotlar bazasiga to'g'ridan-to'g'ri tegmasdan yangi mahsulotlar qo'shishi, mavjudlarini tahrirlashi, o'chirishi va barcha kelib tushgan buyurtmalarni ko'rib, ularning holatini o'zgartirishi mumkin bo'ladi.
+
+Aniq qadamlar:
+
+1-QISM: BACKENDNI KUCHAYTIRISH
+
+Admin Rolini Belgilash: shared/schema.ts faylidagi users jadvalida role ustuni borligiga ishonch hosil qiling. Bizga "admin" va "customer" rollari kerak.
+
+Admin Middleware Yaratish: server/middleware/adminAuth.ts faylini yarating. Bu middleware foydalanuvchi sessiyasini tekshirib, uning roli "admin" ekanligini tasdiqlasin. Agar roli "admin" bo'lmasa, "Ruxsat yo'q" (403 Forbidden) xatosini qaytarsin.
+
+Himoyalangan Admin API'larini Yaratish:
+
+/api/admin prefiksi bilan yangi router yarating va uni adminAuth middleware'i bilan himoyalang.
+
+Mahsulotlar uchun CRUD:
+
+GET /api/admin/products: Barcha mahsulotlarni qaytarsin.
+
+POST /api/admin/products: Yangi mahsulot yaratsin.
+
+PUT /api/admin/products/:id: Mahsulotni yangilasin.
+
+DELETE /api/admin/products/:id: Mahsulotni o'chirsin.
+
+Buyurtmalar uchun Boshqaruv:
+
+GET /api/admin/orders: Barcha foydalanuvchilarning barcha buyurtmalarini qaytarsin.
+
+PUT /api/admin/orders/:id: Ma'lum bir buyurtmaning holatini (statusini) o'zgartirsin (masalan, "yangi" dan "yetkazib berildi" ga).
+
+2-QISM: FRONTENDDA ADMIN PANELINI QURISH
+
+Admin Sahifalari va Marshrutlari:
+
+client/src/pages/admin papkasini va uning ichida AdminDashboardPage.tsx, AdminProductsPage.tsx, AdminOrdersPage.tsx sahifalarini yarating.
+
+App.tsx da /admin, /admin/products, /admin/orders uchun yangi marshrutlar qo'shing.
+
+Bu marshrutlarni himoyalash uchun ProtectedRoute ga o'xshash, lekin qo'shimcha ravishda foydalanuvchi rolini ham tekshiradigan AdminRoute.tsx komponentini yarating.
+
+Mahsulotlarni Boshqarish Sahifasi (AdminProductsPage.tsx):
+
+Barcha mahsulotlarni GET /api/admin/products orqali olib, jadvalda ko'rsating.
+
+"Yangi mahsulot qo'shish" tugmasini yarating. Bu tugma mahsulot qo'shish uchun modal oyna yoki alohida sahifa ochsin.
+
+Har bir mahsulot qatorida "Tahrirlash" va "O'chirish" tugmalari bo'lsin. Ular tegishli PUT va DELETE so'rovlarini jo'natsin.
+
+Buyurtmalarni Boshqarish Sahifasi (AdminOrdersPage.tsx):
+
+Barcha buyurtmalarni GET /api/admin/orders orqali olib, jadvalda ko'rsating.
+
+Jadvalda buyurtma raqami, sanasi, mijoz ma'lumotlari, jami summa va holati ko'rsatilsin.
+
+Har bir buyurtmaning holatini (statusini) ochiladigan menyu (Select) orqali o'zgartirish imkoniyatini yarating. Status o'zgarganda PUT /api/admin/orders/:id so'rovi yuborilsin.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Admin API endpoint'lari (/api/admin/*) faqat "admin" roli bor foydalanuvchilar uchun ishlayaptimi?
+
+AdminProductsPage sahifasida administrator yangi mahsulot qo'sha, mavjudini tahrirlay va o'chira olyaptimi?
+
+AdminOrdersPage sahifasida administrator barcha buyurtmalarni ko'ra olyaptimi va ularning statusini muvaffaqiyatli o'zgartira olyaptimi?
+
+Oddiy "customer" roli bor foydalanuvchi /admin manziliga kirishga uringanda, tizim bunga to'sqinlik qilyaptimi?

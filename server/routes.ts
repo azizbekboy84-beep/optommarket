@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import bcrypt from "bcrypt";
 import { storage } from "./storage";
 import { insertProductSchema, insertCategorySchema, insertOrderSchema, insertCartItemSchema, insertUserSchema } from "@shared/schema";
+import { adminAuth } from "./middleware/adminAuth";
 
 // Extend Express Request type for session
 declare module 'express-session' {
@@ -367,6 +368,108 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ ...order, items });
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch order" });
+    }
+  });
+
+  // Admin APIs - Protected with adminAuth middleware
+  app.get("/api/admin/products", adminAuth, async (req, res) => {
+    try {
+      const products = await storage.getProducts();
+      res.json(products);
+    } catch (error) {
+      res.status(500).json({ message: "Mahsulotlarni olishda xatolik" });
+    }
+  });
+
+  app.post("/api/admin/products", adminAuth, async (req, res) => {
+    try {
+      const productData = insertProductSchema.parse(req.body);
+      const product = await storage.createProduct(productData);
+      res.status(201).json(product);
+    } catch (error) {
+      res.status(400).json({ message: "Mahsulot yaratishda xatolik", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  app.put("/api/admin/products/:id", adminAuth, async (req, res) => {
+    try {
+      const productData = insertProductSchema.partial().parse(req.body);
+      const product = await storage.updateProduct(req.params.id, productData);
+      
+      if (!product) {
+        return res.status(404).json({ message: "Mahsulot topilmadi" });
+      }
+      
+      res.json(product);
+    } catch (error) {
+      res.status(400).json({ message: "Mahsulotni yangilashda xatolik", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  app.delete("/api/admin/products/:id", adminAuth, async (req, res) => {
+    try {
+      const success = await storage.deleteProduct(req.params.id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Mahsulot topilmadi" });
+      }
+      
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Mahsulotni o'chirishda xatolik" });
+    }
+  });
+
+  app.get("/api/admin/orders", adminAuth, async (req, res) => {
+    try {
+      const orders = await storage.getAllOrders();
+      
+      // Populate each order with its items and customer info
+      const ordersWithDetails = await Promise.all(
+        orders.map(async (order) => {
+          const items = await storage.getOrderItems(order.id);
+          
+          // Populate items with product details
+          const itemsWithProducts = await Promise.all(
+            items.map(async (item) => {
+              const product = await storage.getProduct(item.productId);
+              return {
+                ...item,
+                product
+              };
+            })
+          );
+          
+          return {
+            ...order,
+            items: itemsWithProducts
+          };
+        })
+      );
+      
+      res.json(ordersWithDetails);
+    } catch (error) {
+      res.status(500).json({ message: "Buyurtmalarni olishda xatolik" });
+    }
+  });
+
+  app.put("/api/admin/orders/:id", adminAuth, async (req, res) => {
+    try {
+      const { status } = req.body;
+      
+      if (!status) {
+        return res.status(400).json({ message: "Status talab qilinadi" });
+      }
+      
+      const order = await storage.updateOrder(req.params.id, { status });
+      
+      if (!order) {
+        return res.status(404).json({ message: "Buyurtma topilmadi" });
+      }
+      
+      res.json(order);
+    } catch (error) {
+      res.status(500).json({ message: "Buyurtma statusini yangilashda xatolik" });
     }
   });
 

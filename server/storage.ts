@@ -19,6 +19,8 @@ export interface IStorage {
   getProduct(id: string): Promise<Product | undefined>;
   getProductBySlug(slug: string): Promise<Product | undefined>;
   createProduct(product: InsertProduct): Promise<Product>;
+  updateProduct(id: string, product: Partial<InsertProduct>): Promise<Product | undefined>;
+  deleteProduct(id: string): Promise<boolean>;
   searchProducts(query: string): Promise<Product[]>;
 
   // Cart
@@ -30,8 +32,10 @@ export interface IStorage {
 
   // Orders
   getOrders(userId?: string): Promise<Order[]>;
+  getAllOrders(): Promise<Order[]>;
   getOrder(id: string): Promise<Order | undefined>;
   createOrder(order: InsertOrder): Promise<Order>;
+  updateOrder(id: string, updates: Partial<Order>): Promise<Order | undefined>;
   getOrderItems(orderId: string): Promise<OrderItem[]>;
   addOrderItem(orderItem: InsertOrderItem): Promise<OrderItem>;
 }
@@ -55,6 +59,18 @@ export class MemStorage implements IStorage {
   }
 
   private seedData() {
+    // Seed admin user for testing
+    const adminUser: User = {
+      id: "admin-user-1",
+      username: "admin",
+      password: "$2b$10$zKuFCQipOr6KbF.8wxS7/.z3p3EXlTdFjXl9e6Lxv7RzVpFQVqTR6", // "admin123" hashed
+      email: "admin@optombazar.uz",
+      phone: "+998901234567",
+      role: "admin",
+      createdAt: new Date()
+    };
+    this.users.set("admin-user-1", adminUser);
+    
     // Seed categories
     const categories = [
       {
@@ -283,6 +299,25 @@ export class MemStorage implements IStorage {
     return product;
   }
 
+  async updateProduct(id: string, updates: Partial<InsertProduct>): Promise<Product | undefined> {
+    const product = this.products.get(id);
+    if (!product) return undefined;
+    
+    const updatedProduct = {
+      ...product,
+      ...updates,
+      id: product.id, // Preserve original ID
+      createdAt: product.createdAt // Preserve creation date
+    };
+    
+    this.products.set(id, updatedProduct);
+    return updatedProduct;
+  }
+  
+  async deleteProduct(id: string): Promise<boolean> {
+    return this.products.delete(id);
+  }
+
   async searchProducts(query: string): Promise<Product[]> {
     const lowerQuery = query.toLowerCase();
     return Array.from(this.products.values()).filter(product => 
@@ -303,6 +338,10 @@ export class MemStorage implements IStorage {
     }
     return orders;
   }
+  
+  async getAllOrders(): Promise<Order[]> {
+    return Array.from(this.orders.values());
+  }
 
   async getOrder(id: string): Promise<Order | undefined> {
     return this.orders.get(id);
@@ -320,6 +359,21 @@ export class MemStorage implements IStorage {
     };
     this.orders.set(id, order);
     return order;
+  }
+  
+  async updateOrder(id: string, updates: Partial<Order>): Promise<Order | undefined> {
+    const order = this.orders.get(id);
+    if (!order) return undefined;
+    
+    const updatedOrder = {
+      ...order,
+      ...updates,
+      id: order.id, // Preserve original ID
+      createdAt: order.createdAt // Preserve creation date
+    };
+    
+    this.orders.set(id, updatedOrder);
+    return updatedOrder;
   }
 
   async getOrderItems(orderId: string): Promise<OrderItem[]> {

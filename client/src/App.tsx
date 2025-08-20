@@ -19,7 +19,11 @@ import RegisterPage from "@/pages/RegisterPage";
 import LoginPage from "@/pages/LoginPage";
 import ProfilePage from "@/pages/ProfilePage";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import AdminRoute from "@/components/AdminRoute";
 import OrderSuccessPage from "@/pages/OrderSuccessPage";
+import AdminDashboardPage from "@/pages/admin/AdminDashboardPage";
+import AdminProductsPage from "@/pages/admin/AdminProductsPage";
+import AdminOrdersPage from "@/pages/admin/AdminOrdersPage";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -44,6 +48,27 @@ function Router() {
           <ProtectedRoute>
             <ProfilePage />
           </ProtectedRoute>
+        )}
+      </Route>
+      <Route path="/admin">
+        {() => (
+          <AdminRoute>
+            <AdminDashboardPage />
+          </AdminRoute>
+        )}
+      </Route>
+      <Route path="/admin/products">
+        {() => (
+          <AdminRoute>
+            <AdminProductsPage />
+          </AdminRoute>
+        )}
+      </Route>
+      <Route path="/admin/orders">
+        {() => (
+          <AdminRoute>
+            <AdminOrdersPage />
+          </AdminRoute>
         )}
       </Route>
       <Route path="/order-success" component={OrderSuccessPage} />

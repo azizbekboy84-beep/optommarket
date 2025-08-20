@@ -27,9 +27,9 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-card dark:bg-card border-b shadow-lg">
+    <header className="sticky top-0 z-40 bg-white dark:bg-gray-900 border-b shadow-lg">
       {/* Top Bar */}
-      <div className="bg-primary text-primary-foreground py-2 hidden md:block">
+      <div className="bg-gray-800 text-white py-2 hidden md:block">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center text-sm">
             {/* Contact Info */}

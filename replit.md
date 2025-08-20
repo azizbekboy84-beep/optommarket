@@ -27,8 +27,9 @@ The server uses **Express.js** with TypeScript in ESM format:
 ## Data Storage Solutions
 The application uses **PostgreSQL** as the primary database with **Drizzle ORM** for type-safe database operations:
 
-- **Schema Design**: Comprehensive schema supporting users, categories, products, orders, and order items with proper relationships
+- **Schema Design**: Comprehensive schema supporting users, categories, products, orders, order items, blog posts, and chat messages with proper relationships
 - **Multilingual Support**: Database schema includes separate fields for Uzbek and Russian content (nameUz, nameRu, etc.)
+- **AI Chat Storage**: Chat messages are stored with session tracking for conversation history
 - **Migration Management**: Uses Drizzle Kit for schema migrations with configuration pointing to `./migrations` directory
 
 ## Authentication and Authorization
@@ -42,9 +43,13 @@ While authentication infrastructure is defined in the schema, the current implem
 - **Multilingual Support**: Full Uzbek/Russian localization throughout the application
 - **Product Management**: Comprehensive product catalog with categories, pricing tiers (retail/wholesale), and inventory tracking
 - **Search Functionality**: Product search capabilities across multiple criteria
+- **AI Chat Assistant**: Google Gemini-powered chat widget providing real-time customer support in Uzbek language
 - **Responsive Design**: Mobile-first approach with responsive layouts
 
 # External Dependencies
+
+## AI Services
+- **Google Gemini API**: Powers the AI chat assistant with natural language processing and contextual responses in Uzbek language
 
 ## Database Services
 - **Neon Database**: Uses `@neondatabase/serverless` for PostgreSQL hosting, configured via DATABASE_URL environment variable

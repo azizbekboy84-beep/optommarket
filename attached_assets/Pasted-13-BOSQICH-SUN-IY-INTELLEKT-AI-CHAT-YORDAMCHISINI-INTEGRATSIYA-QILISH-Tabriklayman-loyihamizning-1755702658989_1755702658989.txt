@@ -1,0 +1,61 @@
+13-BOSQICH: SUN'IY INTELLEKT (AI) CHAT YORDAMCHISINI INTEGRATSIYA QILISH
+Tabriklayman, loyihamizning barcha asosiy funksiyalari tayyor! Endi platformamizga zamonaviy va interaktiv element — sun'iy intellektga asoslangan chat yordamchisini qo'shamiz.
+
+Loyiha mazmuni: Maqsadimiz — saytning barcha sahifalarida paydo bo'ladigan, foydalanuvchilarning savollariga Google Gemini 1.5 Flash modeli yordamida real vaqtda javob beradigan "aqlli" chat vidjetini yaratish. Bu yordamchi mahsulotlar, yetkazib berish shartlari va boshqa mavzulardagi savollarga javob bera olishi kerak.
+
+Aniq qadamlar:
+
+1-QISM: BACKENDDA AI MANTIG'INI YARATISH
+
+Baza Sxemasini Yangilash (shared/schema.ts):
+
+Chat suhbatlarini saqlash uchun yangi chat_messages jadvalini qo'shing. Unda quyidagi ustunlar bo'lsin: id, session_id, user_id (agar tizimga kirgan bo'lsa), message (foydalanuvchi xabari), response (AI javobi), created_at.
+
+Yangi AI Chat API'sini Yaratish:
+
+POST /api/chat nomli yangi endpoint yarating.
+
+Bu endpoint foydalanuvchidan message (xabar matni) qabul qilsin.
+
+Endpoint ichida quyidagi amallarni bajaring:
+a. Foydalanuvchi xabarini chat_messages jadvaliga saqlang.
+b. Google Gemini API'siga fetch so'rovini yuboring. So'rov uchun GOOGLE_API_KEY maxfiy kalitidan foydalaning.
+c. Gemini'ga yuboriladigan prompt (so'rov matni) kontekstli bo'lishi kerak. Masalan: "Siz Optombazar.uz ulgurji savdo platformasining yordamchisisiz. Quyidagi savolga javob bering: [foydalanuvchi xabari]".
+d. Gemini'dan kelgan javobni qabul qilib, uni ham chat_messages jadvaliga saqlang.
+e. Nihoyat, AI javobini JSON formatida frontendga qaytaring.
+
+2-QISM: FRONTENDDA CHAT INTERFEYSINI QURISH
+
+Chat Vidjeti Komponentini Yaratish:
+
+client/src/components/AIChatWidget.tsx nomli yangi komponent yarating.
+
+Bu komponent sahifaning pastki o'ng burchagida doimiy turadigan suzuvchi (floating) chat ikonasini va u bosilganda ochiladigan chat oynasini o'z ichiga olsin.
+
+Chat Oynasi Interfeysi:
+
+Chat oynasi ochilganda, joriy sessiya uchun suhbat tarixini (GET /api/chat/history endpoint'i orqali, ixtiyoriy) ko'rsatsin.
+
+Foydalanuvchi xabar kiritishi uchun matn maydoni va "Yuborish" tugmasi bo'lsin.
+
+AI Bilan Muloqot:
+
+Foydalanuvchi xabar yuborganda, TanStack Queryning useMutation hook'i yordamida POST /api/chat endpoint'iga so'rov yuboring.
+
+Foydalanuvchining xabari darhol chat oynasida ko'rinsin. Javob kelishini kutish vaqtida "AI yozmoqda..." kabi indikatorni ko'rsating.
+
+Backend'dan AI javobi kelgach, uni ham chat oynasida chiroyli qilib ko'rsating.
+
+Vidjetni Saytga Joylashtirish:
+
+Yaratilgan AIChatWidget komponentini client/src/App.tsx fayliga qo'shing, shunda u saytning barcha sahifalarida ko'rinib turadi.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Backend'da POST /api/chat endpoint'i yaratildimi va u Google Gemini API'siga muvaffaqiyatli so'rov yubora olyaptimi?
+
+Saytning pastki o'ng burchagida chat ikonasi paydo bo'ldimi va u bosilganda chat oynasi ochilyaptimi?
+
+Foydalanuvchi xabar yuborganda, AI real vaqtda javob qaytaryaptimi va bu suhbat ekranda to'g'ri aks etyaptimi?
+
+Barcha suhbatlar tarixi ma'lumotlar bazasiga to'g'ri saqlanyaptimi?

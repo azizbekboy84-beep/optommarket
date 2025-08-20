@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type Category, type InsertCategory, type Product, type InsertProduct, type Order, type InsertOrder, type OrderItem, type InsertOrderItem, type CartItem, type InsertCartItem, type BlogPost, type InsertBlogPost } from "@shared/schema";
+import { type User, type InsertUser, type Category, type InsertCategory, type Product, type InsertProduct, type Order, type InsertOrder, type OrderItem, type InsertOrderItem, type CartItem, type InsertCartItem, type BlogPost, type InsertBlogPost, type ChatMessage, type InsertChatMessage } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -51,6 +51,11 @@ export interface IStorage {
 
   // Search
   searchAll(query: string): Promise<{ products: Product[]; blogPosts: BlogPost[]; }>;
+  
+  // Chat Messages
+  getChatHistory(sessionId: string): Promise<ChatMessage[]>;
+  saveChatMessage(chatMessage: InsertChatMessage): Promise<ChatMessage>;
+  updateChatResponse(messageId: string, response: string): Promise<ChatMessage | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -61,6 +66,7 @@ export class MemStorage implements IStorage {
   private orders: Map<string, Order>;
   private orderItems: Map<string, OrderItem>;
   private blogPosts: Map<string, BlogPost>;
+  private chatMessages: Map<string, ChatMessage>;
 
   constructor() {
     this.users = new Map();
@@ -70,6 +76,7 @@ export class MemStorage implements IStorage {
     this.orders = new Map();
     this.orderItems = new Map();
     this.blogPosts = new Map();
+    this.chatMessages = new Map();
     this.seedData();
   }
 
@@ -583,6 +590,39 @@ export class MemStorage implements IStorage {
     });
 
     return { products, blogPosts };
+  }
+
+  // Chat Messages implementation
+  async getChatHistory(sessionId: string): Promise<ChatMessage[]> {
+    return Array.from(this.chatMessages.values())
+      .filter(message => message.sessionId === sessionId)
+      .sort((a, b) => new Date(a.createdAt || '').getTime() - new Date(b.createdAt || '').getTime());
+  }
+
+  async saveChatMessage(insertMessage: InsertChatMessage): Promise<ChatMessage> {
+    const id = randomUUID();
+    const message: ChatMessage = {
+      ...insertMessage,
+      id,
+      userId: insertMessage.userId || null,
+      response: insertMessage.response || null,
+      createdAt: new Date(),
+    };
+    this.chatMessages.set(id, message);
+    return message;
+  }
+
+  async updateChatResponse(messageId: string, response: string): Promise<ChatMessage | undefined> {
+    const message = this.chatMessages.get(messageId);
+    if (!message) return undefined;
+
+    const updatedMessage = {
+      ...message,
+      response,
+    };
+
+    this.chatMessages.set(messageId, updatedMessage);
+    return updatedMessage;
   }
 }
 

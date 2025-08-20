@@ -2,13 +2,89 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import bcrypt from "bcrypt";
 import { storage } from "./storage";
-import { insertProductSchema, insertCategorySchema, insertOrderSchema, insertCartItemSchema, insertUserSchema, insertBlogPostSchema } from "@shared/schema";
+import { insertProductSchema, insertCategorySchema, insertOrderSchema, insertCartItemSchema, insertUserSchema, insertBlogPostSchema, insertChatMessageSchema } from "@shared/schema";
 import { adminAuth } from "./middleware/adminAuth";
 
 // Extend Express Request type for session
 declare module 'express-session' {
   interface SessionData {
     userId?: string;
+  }
+}
+
+// Helper function to generate AI response using Google Gemini
+async function generateAIResponse(userMessage: string): Promise<string> {
+  try {
+    const apiKey = process.env.GOOGLE_API_KEY;
+    if (!apiKey) {
+      throw new Error('GOOGLE_API_KEY environment variable is not set');
+    }
+
+    const prompt = `Siz Optombazar.uz ulgurji savdo platformasining yordamchisisiz. Ushbu platforma Oʻzbekistonda ulgurji mahsulotlar bilan savdo qiladi.
+
+Platforma haqida ma'lumot:
+- Polietilen paketlar, plastik mahsulotlar, qishloq xo'jaligi va oziq-ovqat mahsulotlari mavjud
+- Ulgurji narxlarda mahsulotlar sotiladi
+- Minimal buyurtma miqdori mavjud
+- Saytda blog bo'limi ham bor
+- Foydalanuvchilar ro'yxatdan o'tish va buyurtma berish imkoniyati bor
+
+Quyidagi savolga do'stona va foydali javob bering. Javobingiz o'zbek tilida bo'lsin:
+
+${userMessage}`;
+
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents: [{
+          parts: [{
+            text: prompt
+          }]
+        }],
+        generationConfig: {
+          temperature: 0.7,
+          topK: 1,
+          topP: 1,
+          maxOutputTokens: 1024,
+        },
+        safetySettings: [
+          {
+            category: "HARM_CATEGORY_HARASSMENT",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          },
+          {
+            category: "HARM_CATEGORY_HATE_SPEECH",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          },
+          {
+            category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          },
+          {
+            category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          }
+        ]
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Gemini API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    
+    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+      throw new Error('Invalid response from Gemini API');
+    }
+
+    return data.candidates[0].content.parts[0].text || "Kechirasiz, hozir javob bera olmayapman. Iltimos, keyinroq urinib ko'ring.";
+  } catch (error) {
+    console.error('Error generating AI response:', error);
+    return "Kechirasiz, hozir texnik xatolik tufayli javob bera olmayapman. Iltimos, keyinroq urinib ko'ring yoki to'g'ridan-to'g'ri biz bilan bog'laning.";
   }
 }
 
@@ -535,6 +611,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(results);
     } catch (error) {
       res.status(500).json({ message: "Search failed", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  // Chat API
+  app.post("/api/chat", async (req, res) => {
+    try {
+      const { message, sessionId } = req.body;
+      
+      if (!message || !sessionId) {
+        return res.status(400).json({ message: "Message and sessionId are required" });
+      }
+
+      // Save user message
+      const userMessage = await storage.saveChatMessage({
+        sessionId,
+        userId: req.session.userId || null,
+        message,
+        response: null,
+      });
+
+      // Generate AI response using Google Gemini
+      const aiResponse = await generateAIResponse(message);
+      
+      // Update the message with AI response
+      const updatedMessage = await storage.updateChatResponse(userMessage.id, aiResponse);
+
+      res.json({
+        id: updatedMessage?.id,
+        message,
+        response: aiResponse,
+        createdAt: updatedMessage?.createdAt,
+      });
+    } catch (error) {
+      console.error('Chat API error:', error);
+      res.status(500).json({ 
+        message: "Chat API'da xatolik yuz berdi", 
+        error: error instanceof Error ? error.message : "Unknown error" 
+      });
+    }
+  });
+
+  app.get("/api/chat/history/:sessionId", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const history = await storage.getChatHistory(sessionId);
+      res.json(history);
+    } catch (error) {
+      res.status(500).json({ message: "Suhbat tarixini olishda xatolik" });
     }
   });
 

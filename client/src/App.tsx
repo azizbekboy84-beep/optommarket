@@ -30,6 +30,7 @@ import BlogPage from "@/pages/BlogPage";
 import BlogPostPage from "@/pages/BlogPostPage";
 import SearchPage from "@/pages/SearchPage";
 import NotFound from "@/pages/not-found";
+import { AIChatWidget } from "@/components/AIChatWidget";
 
 function Router() {
   return (
@@ -109,6 +110,7 @@ function App() {
             <TooltipProvider>
               <Toaster />
               <Router />
+              <AIChatWidget />
             </TooltipProvider>
           </CartProvider>
         </AuthProvider>

@@ -10,9 +10,9 @@
   --card-foreground: hsl(210, 25%, 7.8431%);
   --popover: hsl(0, 0%, 100%);
   --popover-foreground: hsl(210, 25%, 7.8431%);
-  --primary: hsl(213.8, 94%, 68%);
+  --primary: hsl(221, 83%, 53%);
   --primary-foreground: hsl(0, 0%, 100%);
-  --secondary: hsl(210, 25%, 7.8431%);
+  --secondary: hsl(0, 84%, 60%);
   --secondary-foreground: hsl(0, 0%, 100%);
   --muted: hsl(240, 1.9608%, 90%);
   --muted-foreground: hsl(210, 25%, 7.8431%);
@@ -51,11 +51,13 @@
   --tracking-normal: 0em;
   --spacing: 0.25rem;
   
-  /* Custom colors from design */
-  --blue-primary: hsl(213.8, 94%, 68%);
-  --blue-600: hsl(214, 100%, 59%);
-  --blue-700: hsl(214, 100%, 51%);
-  --blue-800: hsl(214, 100%, 42%);
+  /* Custom brand colors from logo */
+  --brand-blue: hsl(221, 83%, 53%);
+  --brand-red: hsl(0, 84%, 60%);
+  --brand-blue-light: hsl(221, 70%, 65%);
+  --brand-red-light: hsl(0, 70%, 70%);
+  --brand-blue-dark: hsl(221, 90%, 40%);
+  --brand-red-dark: hsl(0, 90%, 45%);
   --success: hsl(160, 100%, 40%);
   --warning: hsl(37, 92%, 50%);
 }

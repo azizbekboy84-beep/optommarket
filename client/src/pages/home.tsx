@@ -67,14 +67,14 @@ export default function Home() {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-indigo-900 via-blue-900 to-purple-900 text-white py-32 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-red-800 text-white py-32 overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/30 to-purple-600/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/30 to-red-600/30"></div>
         
         {/* Animated background elements */}
         <div className="absolute top-20 left-10 w-32 h-32 bg-blue-400/20 rounded-full animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-24 h-24 bg-purple-400/20 rounded-full animate-bounce"></div>
-        <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-indigo-400/20 rounded-full animate-ping"></div>
+        <div className="absolute bottom-20 right-20 w-24 h-24 bg-red-400/20 rounded-full animate-bounce"></div>
+        <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-blue-400/20 rounded-full animate-ping"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -90,12 +90,12 @@ export default function Home() {
               </p>
               <div className="flex flex-col sm:flex-row gap-6">
                 <Link href="/catalog">
-                  <button className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-2xl" data-testid="button-view-catalog">
+                  <button className="bg-gradient-to-r from-blue-600 to-red-500 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:from-blue-700 hover:to-red-600 transition-all duration-300 transform hover:scale-105 shadow-2xl" data-testid="button-view-catalog">
                     Katalogni ko'rish
                   </button>
                 </Link>
                 <Link href="/contact">
-                  <button className="border-2 border-white/60 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-white hover:text-gray-900 transition-all duration-300 backdrop-blur-sm" data-testid="button-become-seller">
+                  <button className="border-2 border-white/60 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-red-500 hover:text-white hover:border-red-500 transition-all duration-300 backdrop-blur-sm" data-testid="button-become-seller">
                     Sotuvchi bo'lish
                   </button>
                 </Link>
@@ -104,19 +104,19 @@ export default function Home() {
             <div className="relative">
               <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/20">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gradient-to-br from-blue-500/30 to-indigo-600/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
+                  <div className="bg-gradient-to-br from-blue-500/30 to-blue-600/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
                     <div className="text-3xl font-bold mb-2">50K+</div>
                     <div className="text-sm opacity-80">Mahsulotlar</div>
                   </div>
-                  <div className="bg-gradient-to-br from-purple-500/30 to-pink-600/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
+                  <div className="bg-gradient-to-br from-red-500/30 to-red-600/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
                     <div className="text-3xl font-bold mb-2">1000+</div>
                     <div className="text-sm opacity-80">Sotuvchilar</div>
                   </div>
-                  <div className="bg-gradient-to-br from-green-500/30 to-teal-600/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
+                  <div className="bg-gradient-to-br from-blue-600/30 to-red-500/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
                     <div className="text-3xl font-bold mb-2">10K+</div>
                     <div className="text-sm opacity-80">Mijozlar</div>
                   </div>
-                  <div className="bg-gradient-to-br from-orange-500/30 to-red-600/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
+                  <div className="bg-gradient-to-br from-red-600/30 to-blue-500/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
                     <div className="text-3xl font-bold mb-2">24/7</div>
                     <div className="text-sm opacity-80">Qo'llab-quvvatlash</div>
                   </div>
@@ -138,7 +138,7 @@ export default function Home() {
             {features.map((feature, index) => (
               <div key={index} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105" data-testid={`feature-${index}`}>
                 <div className="mb-6 flex justify-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-red-500 rounded-2xl flex items-center justify-center">
                     {feature.icon}
                   </div>
                 </div>
@@ -187,7 +187,7 @@ export default function Home() {
                   data-testid={`category-card-${category.id}`}
                 >
                   <div className="text-center">
-                    <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl flex items-center justify-center group-hover:from-indigo-500 group-hover:to-purple-600 transition-all duration-300">
+                    <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-blue-600 to-red-500 rounded-3xl flex items-center justify-center group-hover:from-red-500 group-hover:to-blue-600 transition-all duration-300">
                       <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                       </svg>
@@ -199,7 +199,7 @@ export default function Home() {
                       Yuqori sifatli mahsulotlar eng yaxshi narxlarda
                     </p>
                     <div className="mt-6">
-                      <span className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium group-hover:bg-indigo-100 group-hover:text-indigo-800 transition-colors">
+                      <span className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium group-hover:bg-red-100 group-hover:text-red-800 transition-colors">
                         Ko'rish →
                       </span>
                     </div>
@@ -211,7 +211,7 @@ export default function Home() {
 
           <div className="text-center mt-12">
             <Link href="/categories">
-              <button className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-3 rounded-2xl font-semibold hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105">
+              <button className="bg-gradient-to-r from-blue-600 to-red-500 text-white px-8 py-3 rounded-2xl font-semibold hover:from-red-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105">
                 Barcha kategoriyalarni ko'rish
               </button>
             </Link>

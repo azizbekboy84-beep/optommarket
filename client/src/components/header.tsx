@@ -25,20 +25,20 @@ export function Header() {
 
           {/* Navigation */}
           <nav className="hidden md:flex space-x-8">
-            <Link href="/" className="text-gray-700 hover:text-primary font-medium transition-colors" data-testid="link-home-nav">
-              {t('home')}
+            <Link href="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors" data-testid="link-home-nav">
+              Bosh sahifa
             </Link>
-            <Link href="/categories" className="text-gray-700 hover:text-primary font-medium transition-colors" data-testid="link-categories">
-              {t('categories')}
+            <Link href="/categories" className="text-gray-700 hover:text-blue-600 font-medium transition-colors" data-testid="link-categories">
+              Kategoriyalar
             </Link>
-            <Link href="/catalog" className="text-gray-700 hover:text-primary font-medium transition-colors" data-testid="link-catalog">
+            <Link href="/catalog" className="text-gray-700 hover:text-red-600 font-medium transition-colors" data-testid="link-catalog">
               Katalog
             </Link>
-            <Link href="/products" className="text-gray-700 hover:text-primary font-medium transition-colors" data-testid="link-products">
-              {t('products')}
+            <Link href="/products" className="text-gray-700 hover:text-blue-600 font-medium transition-colors" data-testid="link-products">
+              Mahsulotlar
             </Link>
-            <Link href="/contact" className="text-gray-700 hover:text-primary font-medium transition-colors" data-testid="link-contact">
-              {t('contact')}
+            <Link href="/contact" className="text-gray-700 hover:text-red-600 font-medium transition-colors" data-testid="link-contact">
+              Aloqa
             </Link>
           </nav>
 
@@ -49,8 +49,8 @@ export function Header() {
                 onClick={() => setLanguage('uz')}
                 className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
                   language === 'uz' 
-                    ? 'text-primary bg-blue-50' 
-                    : 'text-gray-500 hover:text-primary'
+                    ? 'text-blue-600 bg-blue-50' 
+                    : 'text-gray-500 hover:text-blue-600'
                 }`}
                 data-testid="button-language-uz"
               >
@@ -60,16 +60,16 @@ export function Header() {
                 onClick={() => setLanguage('ru')}
                 className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
                   language === 'ru' 
-                    ? 'text-primary bg-blue-50' 
-                    : 'text-gray-500 hover:text-primary'
+                    ? 'text-red-600 bg-red-50' 
+                    : 'text-gray-500 hover:text-red-600'
                 }`}
                 data-testid="button-language-ru"
               >
                 RU
               </button>
             </div>
-            <Button className="bg-primary text-white hover:bg-blue-700" data-testid="button-login">
-              {t('login')}
+            <Button className="bg-gradient-to-r from-blue-600 to-red-500 text-white hover:from-red-500 hover:to-blue-600 transition-all duration-300" data-testid="button-login">
+              Kirish
             </Button>
           </div>
         </div>

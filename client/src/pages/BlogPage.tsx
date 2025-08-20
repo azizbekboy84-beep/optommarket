@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { Header } from '../components/header';
 import { Footer } from '../components/footer';
 import { Link } from 'wouter';
 import { Calendar, User, ArrowRight } from 'lucide-react';
@@ -22,7 +21,6 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-      <Header />
       
       <div className="py-12">
         <div className="max-w-7xl mx-auto px-4">

@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/components/language-provider';
-import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { CategoryCard } from '@/components/category-card';
 import { ProductCard } from '@/components/product-card';
@@ -64,7 +63,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
       
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-red-800 text-white py-32 overflow-hidden">

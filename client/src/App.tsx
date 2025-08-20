@@ -33,7 +33,6 @@ import NotFound from "@/pages/not-found";
 import { AIChatWidget } from "@/components/AIChatWidget";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { Header } from "@/components/header";
-import { MobileTopNav } from "@/components/MobileTopNav";
 
 function Router() {
   return (

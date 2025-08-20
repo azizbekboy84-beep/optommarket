@@ -3,7 +3,6 @@ import { useParams, Link } from 'wouter';
 import { useProductBySlug } from '@/hooks/useProductBySlug';
 import { useLanguage } from '@/components/language-provider';
 import { useCart } from '@/context/CartContext';
-import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -21,7 +20,7 @@ export default function ProductDetailsPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header />
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="animate-pulse">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -50,7 +49,7 @@ export default function ProductDetailsPage() {
   if (error || !product) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header />
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-4" data-testid="text-error-title">
@@ -117,7 +116,6 @@ export default function ProductDetailsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}

@@ -33,6 +33,7 @@ import NotFound from "@/pages/not-found";
 import { AIChatWidget } from "@/components/AIChatWidget";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { Header } from "@/components/header";
+import { AppDownloadPrompt } from "@/components/AppDownloadPrompt";
 
 function Router() {
   return (
@@ -117,6 +118,7 @@ function App() {
               </main>
               <MobileBottomNav />
               <AIChatWidget />
+              <AppDownloadPrompt />
             </TooltipProvider>
           </CartProvider>
         </AuthProvider>

@@ -9,9 +9,23 @@ import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { ThemeToggle } from './theme-toggle';
 import { Link, useLocation } from 'wouter';
-import { ChevronDown, ShoppingCart, User, Settings, Search, Phone, Facebook, Instagram, Mail, Folder } from 'lucide-react';
+import { ChevronDown, ShoppingCart, User, Settings, Search, Phone, Facebook, Instagram, Mail, Folder, Package, Shirt, Utensils, Smartphone, Box } from 'lucide-react';
 import logoImage from '@assets/optombazar logo_1755690917356.png';
 import { Category } from '@shared/schema';
+
+// Icon mapping for categories
+const getIconComponent = (iconName: string | null) => {
+  const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+    Package,
+    Shirt,
+    Utensils,
+    Smartphone,
+    Box,
+    Folder,
+  };
+  
+  return iconMap[iconName || 'Package'] || Package;
+};
 
 // Desktop Header Component  
 export function Header() {
@@ -33,8 +47,8 @@ export function Header() {
     },
   });
 
-  // Get main categories (no parent)
-  const mainCategories = categories.filter(cat => !cat.parentId).slice(0, 8);
+  // Get main categories (no parent) - show more categories  
+  const mainCategories = categories.filter(cat => !cat.parentId).slice(0, 12);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,25 +150,32 @@ export function Header() {
           </div>
 
           {/* Main Navigation - Categories */}
-          <nav className="hidden lg:flex items-center space-x-6">
-            {/* Main Categories */}
-            {mainCategories.map((category) => (
-              <Link 
-                key={category.id} 
-                href={`/catalog?category=${category.slug}`} 
-                className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors text-sm"
-              >
-                {language === 'uz' ? category.nameUz : category.nameRu}
-              </Link>
-            ))}
+          <nav className="hidden lg:flex items-center space-x-3">
+            {/* Main Categories - Compact design */}
+            {mainCategories.map((category) => {
+              const IconComponent = getIconComponent(category.icon);
+              
+              return (
+                <Link 
+                  key={category.id} 
+                  href={`/catalog?category=${category.slug}`} 
+                  className="flex items-center gap-1 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors text-xs px-2 py-1 rounded hover:bg-gray-50 dark:hover:bg-gray-800"
+                >
+                  <IconComponent className="h-3 w-3" />
+                  <span className="truncate max-w-[80px]">
+                    {language === 'uz' ? category.nameUz : category.nameRu}
+                  </span>
+                </Link>
+              );
+            })}
             
             {/* All Categories Link */}
             <Link 
               href="/categories" 
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors text-sm flex items-center gap-1 bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-full"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors text-xs flex items-center gap-1 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded ml-2 border-l border-gray-200 dark:border-gray-700 pl-3"
             >
-              <Folder className="h-4 w-4" />
-              {language === 'uz' ? 'Barcha kategoriyalar' : 'Все категории'}
+              <Folder className="h-3 w-3" />
+              {language === 'uz' ? 'Barcha' : 'Все'}
             </Link>
           </nav>
 

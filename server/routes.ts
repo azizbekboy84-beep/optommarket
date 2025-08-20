@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { storage } from "./storage";
 import { insertProductSchema, insertCategorySchema, insertOrderSchema, insertCartItemSchema, insertUserSchema, insertBlogPostSchema, insertChatMessageSchema } from "@shared/schema";
 import { adminAuth } from "./middleware/adminAuth";
+import { registerAITestRoutes } from "./routes/ai-test";
 
 // Extend Express Request type for session
 declare module 'express-session' {
@@ -735,6 +736,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Qidiruvda xatolik" });
     }
   });
+
+  // AI test routes qo'shish
+  registerAITestRoutes(app, storage);
 
   const httpServer = createServer(app);
   return httpServer;

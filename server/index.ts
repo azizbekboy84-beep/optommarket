@@ -2,6 +2,9 @@ import express, { type Request, Response, NextFunction } from "express";
 import session from "express-session";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { MemStorage } from "./storage";
+import { startBlogScheduler } from "./cron/blog-scheduler";
+import { getBotInfo } from "./services/telegram-bot";
 
 const app = express();
 app.use(express.json());
@@ -50,6 +53,9 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Storage yaratish
+  const storage = new MemStorage();
+  
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -78,7 +84,25 @@ app.use((req, res, next) => {
     port,
     host: "0.0.0.0",
     reusePort: true,
-  }, () => {
+  }, async () => {
     log(`serving on port ${port}`);
+    
+    // AI va Telegram servislarini ishga tushirish
+    if (process.env.GOOGLE_AI_API_KEY && process.env.TELEGRAM_BOT_TOKEN) {
+      try {
+        // Telegram bot ma'lumotlarini tekshirish
+        console.log('Telegram bot ma\'lumotlari tekshirilmoqda...');
+        await getBotInfo();
+        
+        // Blog scheduler'ni ishga tushirish
+        console.log('Blog scheduler ishga tushirilmoqda...');
+        startBlogScheduler(storage);
+        
+      } catch (error) {
+        console.error('Servislarni ishga tushirishda xatolik:', error);
+      }
+    } else {
+      console.warn('GOOGLE_AI_API_KEY yoki TELEGRAM_BOT_TOKEN mavjud emas. AI va Telegram funksiyalari o\'chirilgan.');
+    }
   });
 })();

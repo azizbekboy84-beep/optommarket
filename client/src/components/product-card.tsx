@@ -13,8 +13,8 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   const name = language === 'uz' ? product.nameUz : product.nameRu;
   const description = language === 'uz' ? product.descriptionUz : product.descriptionRu;
   
-  const stockStatus = product.stockQuantity > 100 ? 'inStock' : 
-                     product.stockQuantity > 0 ? 'lowStock' : 'outOfStock';
+  const stockStatus = (product.stockQuantity || 0) > 100 ? 'inStock' : 
+                     (product.stockQuantity || 0) > 0 ? 'lowStock' : 'outOfStock';
   
   const statusColors = {
     inStock: 'text-green-800 bg-green-100',
@@ -63,7 +63,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         <Button 
           className="w-full bg-gray-100 text-gray-700 hover:bg-primary hover:text-white" 
           onClick={handleAddToCart}
-          disabled={product.stockQuantity === 0}
+          disabled={(product.stockQuantity || 0) === 0}
           data-testid={`button-add-to-cart-${product.id}`}
         >
           {t('addToCart')}

@@ -16,7 +16,7 @@ export const translations = {
     becomeSeller: "Sotuvchi bo'lish",
     
     // Stats
-    products: "Mahsulotlar",
+    productsCount: "Mahsulotlar",
     sellers: "Sotuvchilar",
     customers: "Mamnun mijozlar",
     support: "Qo'llab-quvvatlash",
@@ -99,7 +99,7 @@ export const translations = {
     becomeSeller: "Стать продавцом",
     
     // Stats
-    products: "Товары",
+    productsCount: "Товары",
     sellers: "Продавцы",
     customers: "Довольные клиенты",
     support: "Поддержка",

@@ -9,7 +9,7 @@ import { Category, Product } from '@shared/schema';
 import { Link } from 'wouter';
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const { data: categories = [], isLoading: categoriesLoading } = useQuery<Category[]>({
     queryKey: ['/api/categories'],
@@ -20,7 +20,7 @@ export default function Home() {
   });
 
   const stats = [
-    { value: '50K+', label: t('products') },
+    { value: '50K+', label: t('productsCount') },
     { value: '1000+', label: t('sellers') },
     { value: '10K+', label: t('customers') },
     { value: '24/7', label: t('support') },
@@ -67,52 +67,87 @@ export default function Home() {
       <Header />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <section className="relative bg-gradient-to-br from-indigo-900 via-blue-900 to-purple-900 text-white py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/30 to-purple-600/30"></div>
+        
+        {/* Animated background elements */}
+        <div className="absolute top-20 left-10 w-32 h-32 bg-blue-400/20 rounded-full animate-pulse"></div>
+        <div className="absolute bottom-20 right-20 w-24 h-24 bg-purple-400/20 rounded-full animate-bounce"></div>
+        <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-indigo-400/20 rounded-full animate-ping"></div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-6" data-testid="text-hero-title">
-                {t('heroTitle').split(' ').slice(0, 2).join(' ')}<br />
-                <span className="text-blue-200">{t('heroTitle').split(' ').slice(2).join(' ')}</span>
+              <h1 className="text-5xl lg:text-7xl font-extrabold leading-tight mb-6 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent" data-testid="text-hero-title">
+                Optombazar.uz
               </h1>
-              <p className="text-xl text-blue-100 mb-8 leading-relaxed" data-testid="text-hero-description">
-                {t('heroDescription')}
+              <p className="text-2xl lg:text-3xl font-light mb-4 text-blue-100">
+                O'zbekistondagi eng yirik optom savdo platformasi
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/products">
-                  <Button className="bg-white text-blue-700 hover:bg-gray-50" data-testid="button-view-products">
-                    {t('viewProducts')}
-                  </Button>
+              <p className="text-xl text-gray-200 mb-8 leading-relaxed" data-testid="text-hero-description">
+                Polietilen paketlar, bir martalik idish-tovoq, elektronika va kiyim-kechak kabi mahsulotlarni optom narxlarda xarid qiling
+              </p>
+              <div className="flex flex-col sm:flex-row gap-6">
+                <Link href="/catalog">
+                  <button className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-2xl" data-testid="button-view-catalog">
+                    Katalogni ko'rish
+                  </button>
                 </Link>
-                <Button variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-blue-700" data-testid="button-become-seller">
-                  {t('becomeSeller')}
-                </Button>
+                <Link href="/contact">
+                  <button className="border-2 border-white/60 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-white hover:text-gray-900 transition-all duration-300 backdrop-blur-sm" data-testid="button-become-seller">
+                    Sotuvchi bo'lish
+                  </button>
+                </Link>
               </div>
             </div>
             <div className="relative">
-              <img 
-                src="https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
-                alt="Modern warehouse with organized inventory" 
-                className="rounded-xl shadow-2xl"
-                data-testid="img-hero"
-              />
+              <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/20">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-gradient-to-br from-blue-500/30 to-indigo-600/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
+                    <div className="text-3xl font-bold mb-2">50K+</div>
+                    <div className="text-sm opacity-80">Mahsulotlar</div>
+                  </div>
+                  <div className="bg-gradient-to-br from-purple-500/30 to-pink-600/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
+                    <div className="text-3xl font-bold mb-2">1000+</div>
+                    <div className="text-sm opacity-80">Sotuvchilar</div>
+                  </div>
+                  <div className="bg-gradient-to-br from-green-500/30 to-teal-600/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
+                    <div className="text-3xl font-bold mb-2">10K+</div>
+                    <div className="text-sm opacity-80">Mijozlar</div>
+                  </div>
+                  <div className="bg-gradient-to-br from-orange-500/30 to-red-600/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
+                    <div className="text-3xl font-bold mb-2">24/7</div>
+                    <div className="text-sm opacity-80">Qo'llab-quvvatlash</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="bg-white py-16">
+      {/* Features Section */}
+      <section className="bg-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center" data-testid={`stat-${index}`}>
-                <div className="text-3xl lg:text-4xl font-bold text-primary mb-2" data-testid={`text-stat-value-${index}`}>
-                  {stat.value}
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Bizning afzalliklarimiz</h2>
+            <p className="text-xl text-gray-600">Nima uchun aynan Optombazar.uz ni tanlashingiz kerak</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <div key={index} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105" data-testid={`feature-${index}`}>
+                <div className="mb-6 flex justify-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center">
+                    {feature.icon}
+                  </div>
                 </div>
-                <div className="text-gray-600" data-testid={`text-stat-label-${index}`}>
-                  {stat.label}
-                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4 text-center" data-testid={`text-feature-title-${index}`}>
+                  {language === 'uz' ? feature.titleUz : feature.titleRu}
+                </h3>
+                <p className="text-gray-600 text-center leading-relaxed" data-testid={`text-feature-description-${index}`}>
+                  {language === 'uz' ? feature.descriptionUz : feature.descriptionRu}
+                </p>
               </div>
             ))}
           </div>
@@ -120,39 +155,67 @@ export default function Home() {
       </section>
 
       {/* Categories Section */}
-      <section className="bg-gray-50 py-20">
+      <section className="bg-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4" data-testid="text-categories-title">
-              {t('mainCategories')}
+            <h2 className="text-4xl font-bold text-gray-900 mb-4" data-testid="text-categories-title">
+              Asosiy kategoriyalar
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto" data-testid="text-categories-description">
-              {t('categoriesDescription')}
+              Bizning eng mashhur mahsulot toifalarimiz bilan tanishing
             </p>
           </div>
 
           {categoriesLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="bg-white rounded-xl shadow-sm p-6 animate-pulse" data-testid={`skeleton-category-${i}`}>
-                  <div className="w-full h-32 bg-gray-200 rounded-lg mb-4"></div>
-                  <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                  <div className="h-4 bg-gray-200 rounded w-24"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-8 animate-pulse" data-testid={`skeleton-category-${i}`}>
+                  <div className="w-20 h-20 mx-auto mb-6 bg-gray-200 rounded-3xl"></div>
+                  <div className="h-6 bg-gray-200 rounded mb-3 mx-auto w-32"></div>
+                  <div className="h-4 bg-gray-200 rounded mb-4 mx-auto w-48"></div>
+                  <div className="h-8 bg-gray-200 rounded-full w-24 mx-auto"></div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {categories.map((category) => (
-                <CategoryCard 
-                  key={category.id} 
-                  category={category} 
-                  onClick={() => window.location.href = `/categories/${category.slug}`}
-                />
+                <div 
+                  key={category.id}
+                  className="group bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-8 hover:from-blue-50 hover:to-indigo-100 transition-all duration-300 cursor-pointer transform hover:scale-105 shadow-lg hover:shadow-xl"
+                  onClick={() => window.location.href = `/category/${category.slug}`}
+                  data-testid={`category-card-${category.id}`}
+                >
+                  <div className="text-center">
+                    <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl flex items-center justify-center group-hover:from-indigo-500 group-hover:to-purple-600 transition-all duration-300">
+                      <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3" data-testid={`text-category-name-${category.id}`}>
+                      {language === 'uz' ? category.nameUz : category.nameRu}
+                    </h3>
+                    <p className="text-gray-600 text-sm leading-relaxed mb-6">
+                      Yuqori sifatli mahsulotlar eng yaxshi narxlarda
+                    </p>
+                    <div className="mt-6">
+                      <span className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium group-hover:bg-indigo-100 group-hover:text-indigo-800 transition-colors">
+                        Ko'rish →
+                      </span>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           )}
+
+          <div className="text-center mt-12">
+            <Link href="/categories">
+              <button className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-3 rounded-2xl font-semibold hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105">
+                Barcha kategoriyalarni ko'rish
+              </button>
+            </Link>
+          </div>
         </div>
       </section>
 

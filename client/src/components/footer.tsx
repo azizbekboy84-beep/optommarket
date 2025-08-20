@@ -1,4 +1,5 @@
 import { useLanguage } from './language-provider';
+import logoImage from '@assets/optombazar logo_1755690917356.png';
 
 export function Footer() {
   const { t } = useLanguage();
@@ -10,10 +11,11 @@ export function Footer() {
           {/* Company Info */}
           <div>
             <div className="flex items-center mb-4">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">O</span>
-              </div>
-              <span className="ml-3 text-xl font-bold">Optombazar.uz</span>
+              <img 
+                src={logoImage} 
+                alt="Optombazar.uz" 
+                className="h-10 w-auto filter brightness-0 invert"
+              />
             </div>
             <p className="text-gray-400 mb-4">
               O'zbekiston uchun ishonchli optom bozor platformasi. Sizning biznesingiz uchun eng yaxshi yechimlar.

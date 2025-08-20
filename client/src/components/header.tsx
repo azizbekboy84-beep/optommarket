@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { useLanguage } from './language-provider';
 import { Link } from 'wouter';
+import logoImage from '@assets/optombazar logo_1755690917356.png';
 
 export function Header() {
   const { language, setLanguage, t } = useLanguage();
@@ -13,10 +14,11 @@ export function Header() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center" data-testid="link-home">
               <div className="flex-shrink-0 flex items-center">
-                <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">O</span>
-                </div>
-                <span className="ml-3 text-xl font-bold text-gray-900">Optombazar.uz</span>
+                <img 
+                  src={logoImage} 
+                  alt="Optombazar.uz" 
+                  className="h-10 w-auto"
+                />
               </div>
             </Link>
           </div>
@@ -28,6 +30,9 @@ export function Header() {
             </Link>
             <Link href="/categories" className="text-gray-700 hover:text-primary font-medium transition-colors" data-testid="link-categories">
               {t('categories')}
+            </Link>
+            <Link href="/catalog" className="text-gray-700 hover:text-primary font-medium transition-colors" data-testid="link-catalog">
+              Katalog
             </Link>
             <Link href="/products" className="text-gray-700 hover:text-primary font-medium transition-colors" data-testid="link-products">
               {t('products')}

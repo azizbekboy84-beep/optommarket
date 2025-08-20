@@ -8,6 +8,8 @@ import Home from "@/pages/home";
 import Categories from "@/pages/categories";
 import Products from "@/pages/products";
 import Contact from "@/pages/contact";
+import Catalog from "@/pages/catalog";
+import CategoryDetail from "@/pages/category-detail";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -16,6 +18,10 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/categories" component={Categories} />
       <Route path="/products" component={Products} />
+      <Route path="/catalog" component={Catalog} />
+      <Route path="/category/:slug">
+        {(params) => <CategoryDetail params={params} />}
+      </Route>
       <Route path="/contact" component={Contact} />
       <Route component={NotFound} />
     </Switch>

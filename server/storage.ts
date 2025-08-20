@@ -197,6 +197,7 @@ export class MemStorage implements IStorage {
     const user: User = { 
       ...insertUser, 
       id, 
+      role: insertUser.role || "customer",
       createdAt: new Date()
     };
     this.users.set(id, user);
@@ -218,7 +219,15 @@ export class MemStorage implements IStorage {
 
   async createCategory(insertCategory: InsertCategory): Promise<Category> {
     const id = randomUUID();
-    const category: Category = { ...insertCategory, id };
+    const category: Category = { 
+      ...insertCategory, 
+      id,
+      image: insertCategory.image || null,
+      descriptionUz: insertCategory.descriptionUz || null,
+      descriptionRu: insertCategory.descriptionRu || null,
+      parentId: insertCategory.parentId || null,
+      isActive: insertCategory.isActive ?? true
+    };
     this.categories.set(id, category);
     return category;
   }
@@ -250,7 +259,14 @@ export class MemStorage implements IStorage {
     const id = randomUUID();
     const product: Product = { 
       ...insertProduct, 
-      id, 
+      id,
+      descriptionUz: insertProduct.descriptionUz || null,
+      descriptionRu: insertProduct.descriptionRu || null,
+      minQuantity: insertProduct.minQuantity ?? 1,
+      stockQuantity: insertProduct.stockQuantity ?? 0,
+      images: insertProduct.images || null,
+      isActive: insertProduct.isActive ?? true,
+      isFeatured: insertProduct.isFeatured ?? false,
       createdAt: new Date()
     };
     this.products.set(id, product);
@@ -286,7 +302,10 @@ export class MemStorage implements IStorage {
     const id = randomUUID();
     const order: Order = { 
       ...insertOrder, 
-      id, 
+      id,
+      status: insertOrder.status || "pending",
+      customerEmail: insertOrder.customerEmail || null,
+      notes: insertOrder.notes || null,
       createdAt: new Date()
     };
     this.orders.set(id, order);

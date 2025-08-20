@@ -13,8 +13,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, CheckCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Percent, Tag } from 'lucide-react';
+import { apiRequest } from '@/lib/queryClient';
 
 const checkoutSchema = z.object({
   customerName: z.string().min(2, 'Ism kamida 2 ta belgidan iborat bo\'lishi kerak'),
@@ -32,6 +34,18 @@ export default function CheckoutPage() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Discount state
+  const [discountCode, setDiscountCode] = useState('');
+  const [appliedDiscount, setAppliedDiscount] = useState<any>(null);
+  const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
+  
+  // Calculate final amounts with discount
+  const discountAmount = appliedDiscount ? 
+    (appliedDiscount.type === 'percentage' ? 
+      (totalAmount * appliedDiscount.value / 100) : 
+      appliedDiscount.value) : 0;
+  const finalAmount = Math.max(0, totalAmount - discountAmount);
 
   const form = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
@@ -49,7 +63,9 @@ export default function CheckoutPage() {
     mutationFn: async (formData: CheckoutFormData) => {
       const orderData = {
         userId: 'guest-user', // For guest checkout
-        totalAmount: totalAmount.toString(),
+        totalAmount: finalAmount.toString(),
+        discountId: appliedDiscount?.id || null,
+        discountAmount: discountAmount.toString(),
         customerName: formData.customerName,
         customerPhone: formData.customerPhone,
         customerEmail: formData.customerEmail || null,
@@ -102,6 +118,49 @@ export default function CheckoutPage() {
       });
     },
   });
+
+  // Apply discount code
+  const applyDiscount = async () => {
+    if (!discountCode.trim()) {
+      toast({
+        title: language === 'uz' ? "Xatolik" : "Ошибка", 
+        description: language === 'uz' ? "Chegirma kodini kiriting" : "Введите код скидки",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setIsApplyingDiscount(true);
+    try {
+      const discount = await apiRequest('/api/discounts/apply', {
+        method: 'POST',
+        body: JSON.stringify({ code: discountCode.trim().toUpperCase() }),
+      });
+      
+      setAppliedDiscount(discount);
+      toast({
+        title: language === 'uz' ? "Muvaffaqiyat!" : "Успешно!",
+        description: discount.message || (language === 'uz' ? "Chegirma qo'llandi" : "Скидка применена"),
+      });
+    } catch (error: any) {
+      toast({
+        title: language === 'uz' ? "Xatolik" : "Ошибка",
+        description: error.message || (language === 'uz' ? "Chegirma kodi noto'g'ri" : "Неверный код скидки"),
+        variant: "destructive",
+      });
+    } finally {
+      setIsApplyingDiscount(false);
+    }
+  };
+
+  // Remove applied discount
+  const removeDiscount = () => {
+    setAppliedDiscount(null);
+    setDiscountCode('');
+    toast({
+      title: language === 'uz' ? "Chegirma olib tashlandi" : "Скидка удалена",
+    });
+  };
 
   const onSubmit = async (data: CheckoutFormData) => {
     setIsSubmitting(true);
@@ -331,6 +390,68 @@ export default function CheckoutPage() {
                 
                 <Separator />
                 
+                {/* Discount Code Section */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Tag className="h-4 w-4" />
+                    <span className="text-sm font-medium">
+                      {language === 'uz' ? 'Chegirma kodi' : 'Код скидки'}
+                    </span>
+                  </div>
+                  
+                  {!appliedDiscount ? (
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder={language === 'uz' ? 'Kodni kiriting' : 'Введите код'}
+                        value={discountCode}
+                        onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
+                        className="flex-1"
+                        disabled={isApplyingDiscount}
+                      />
+                      <Button 
+                        onClick={applyDiscount}
+                        disabled={isApplyingDiscount || !discountCode.trim()}
+                        size="sm"
+                      >
+                        {isApplyingDiscount ? 
+                          (language === 'uz' ? 'Tekshirish...' : 'Проверка...') :
+                          (language === 'uz' ? 'Qo\'llash' : 'Применить')
+                        }
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="secondary" className="flex items-center gap-1">
+                          {appliedDiscount.type === 'percentage' ? (
+                            <>
+                              <Percent className="h-3 w-3" />
+                              {appliedDiscount.value}%
+                            </>
+                          ) : (
+                            <>
+                              {appliedDiscount.value.toLocaleString()} {language === 'uz' ? 'so\'m' : 'сум'}
+                            </>
+                          )}
+                        </Badge>
+                        <span className="text-sm font-medium text-green-700">
+                          {appliedDiscount.code}
+                        </span>
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={removeDiscount}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        {language === 'uz' ? 'Olib tashlash' : 'Удалить'}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+                
+                <Separator />
+                
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span data-testid="text-subtotal-label">
@@ -340,6 +461,18 @@ export default function CheckoutPage() {
                       {totalAmount.toLocaleString()} {language === 'uz' ? 'so\'m' : 'сум'}
                     </span>
                   </div>
+                  
+                  {appliedDiscount && (
+                    <div className="flex justify-between text-sm text-green-600">
+                      <span>
+                        {language === 'uz' ? 'Chegirma' : 'Скидка'} ({appliedDiscount.code})
+                      </span>
+                      <span>
+                        -{discountAmount.toLocaleString()} {language === 'uz' ? 'so\'m' : 'сум'}
+                      </span>
+                    </div>
+                  )}
+                  
                   <div className="flex justify-between text-sm">
                     <span data-testid="text-delivery-label">
                       {language === 'uz' ? 'Yetkazib berish' : 'Доставка'}
@@ -356,10 +489,19 @@ export default function CheckoutPage() {
                   <span data-testid="text-total-label">
                     {language === 'uz' ? 'Jami' : 'Итого'}
                   </span>
-                  <span data-testid="text-total-amount">
-                    {totalAmount.toLocaleString()} {language === 'uz' ? 'so\'m' : 'сум'}
+                  <span data-testid="text-total-amount" className={appliedDiscount ? 'text-green-600' : ''}>
+                    {finalAmount.toLocaleString()} {language === 'uz' ? 'so\'m' : 'сум'}
                   </span>
                 </div>
+                
+                {appliedDiscount && (
+                  <div className="text-xs text-gray-500 text-center">
+                    {language === 'uz' ? 
+                      `${discountAmount.toLocaleString()} so'm chegirma qo'llandi` :
+                      `Применена скидка ${discountAmount.toLocaleString()} сум`
+                    }
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>

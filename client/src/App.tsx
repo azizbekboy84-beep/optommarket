@@ -27,10 +27,12 @@ import AdminOrdersPage from "@/pages/admin/AdminOrdersPage";
 import AdminBlogPage from "@/pages/admin/AdminBlogPage";
 import AdminCategoriesPage from "@/pages/admin/AdminCategoriesPage";
 import AdminSEOPage from "@/pages/admin/AdminSEOPage";
+import AdminDiscountsPage from "@/pages/admin/AdminDiscountsPage";
 import ReportsPage from "@/pages/admin/ReportsPage";
 import BlogPage from "@/pages/BlogPage";
 import BlogPostPage from "@/pages/BlogPostPage";
 import SearchPage from "@/pages/SearchPage";
+import FavoritesPage from "@/pages/FavoritesPage";
 import NotFound from "@/pages/not-found";
 import { AIChatWidget } from "@/components/AIChatWidget";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
@@ -62,6 +64,7 @@ function Router() {
           </ProtectedRoute>
         )}
       </Route>
+      <Route path="/favorites" component={FavoritesPage} />
       <Route path="/admin">
         {() => (
           <AdminRoute>
@@ -108,6 +111,13 @@ function Router() {
         {() => (
           <AdminRoute>
             <ReportsPage />
+          </AdminRoute>
+        )}
+      </Route>
+      <Route path="/admin/discounts">
+        {() => (
+          <AdminRoute>
+            <AdminDiscountsPage />
           </AdminRoute>
         )}
       </Route>

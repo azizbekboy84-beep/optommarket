@@ -1,0 +1,56 @@
+BIZNES LOGIKANI KENGAYTIRISH (YO'NALISHLAR)
+Loyiha mazmuni: Platforma funksionalligini kengaytirish orqali foydalanuvchilarga maxsus takliflar berish, sotishni oshirish va foydalanuvchi jalb qilish.
+
+Aniq vazifalar:
+
+1-QISM: CHEGIRMALAR VA KUPONLAR TIZIMINI YARATISH
+
+Ma'lumotlar Bazasini Yangilash (shared/schema.ts):
+discounts jadvalini yarating:
+id (varchar, primaryKey)
+code (text, noyob – chegirma kodi, masalan, "YANGI10")
+type (text – "percentage" yoki "fixed")
+value (integer – foiz yoki so'm miqdori)
+is_active (boolean – chegirma faolmi?)
+valid_from (timestamp – chegirma qachon dan boshlab amal qiladi)
+valid_until (timestamp – chegirma qachon tugaydi)
+max_uses (integer – maksimal foydalanish soni, 0 = cheksiz)
+used_count (integer – hozirgacha foydalanilgan soni)
+target_type (text – "all_products", "specific_products", "specific_categories")
+target_ids (jsonb – agar maxsus mahsulotlar/categories uchun bo'lsa, ularning ID'larini saqlash)
+created_at (timestamp)
+updated_at (timestamp)
+orders jadvaliga discount_id (varchar, discounts jadvaliga ishora, ixtiyoriy) va discount_amount (integer – chegirma miqdori) ustunlarini qo'shing.
+Chegirmalar API'sini Yaratish (server/routes/discounts.ts):
+GET /api/discounts – Barcha faol chegirmalarni olish (faqat admin uchun).
+POST /api/discounts – Yangi chegirma yaratish (faqat admin uchun).
+PUT /api/discounts/:id – Chegirmalarni tahrirlash (faqat admin uchun).
+DELETE /api/discounts/:id – Chegirmalarni o'chirish (faqat admin uchun).
+POST /api/discounts/apply – Foydalanuvchi kiritgan chegirma kodini tekshirish va agar to'g'ri bo'lsa, buyurtmaga qo'llash. Bu endpoint code parametrini qabul qiladi va agar kod to'g'ri hamda hali amal qilayotgan bo'lsa, chegirma ma'lumotlarini qaytaradi.
+Admin Panelga Chegirmalar Boshqaruvi Qo'shish (client/src/pages/admin/AdminDiscountsPage.tsx):
+Yangi sahifa yarating.
+Chegirmalarni jadval ko'rinishida ko'rsatish.
+Yangi chegirma qo'shish, mavjudlarni tahrirlash va o'chirish uchun formalar yarating (shadcn/ui Dialog/Form dan foydalaning).
+Chegirma kodi, turi, qiymati, amal qilish muddati, foydalanish cheklovlari kabi maydonlarni qo'llab-quvvatlang.
+Frontendda Chegirma Kodini Qo'llash:
+CheckoutPage.tsx sahifasiga chegirma kodini kiritish maydoni va "Qo'llash" tugmasini qo'shing.
+Foydalanuvchi "Qo'llash" tugmasini bosganda, POST /api/discounts/apply endpoint'iga so'rov yuboring.
+Agar kod to'g'ri bo'lsa, buyurtma umumiy summasini yangilang va foydalanuvchiga chegirma qo'llanganligini ko'rsating.
+2-QISM: FAVORITLAR (TANLANGANLAR) RO'YXATINI YARATISH
+
+Ma'lumotlar Bazasini Yangilash (shared/schema.ts):
+favorites jadvalini yarating:
+id (varchar, primaryKey)
+user_id (varchar, users jadvaliga ishora)
+product_id (varchar, products jadvaliga ishora)
+created_at (timestamp)
+Favoritlar API'sini Yaratish (server/routes/favorites.ts):
+GET /api/favorites – Tizimga kirgan foydalanuvchining barcha tanlangan mahsulotlarini olish.
+POST /api/favorites – Mahsulotni tanlanganlar ro'yxatiga qo'shish. product_id parametrini qabul qiladi.
+DELETE /api/favorites/:productId – Mahsulotni tanlanganlar ro'yxatidan o'chirish.
+Frontendda Favoritlar Funktsiyasini Amalga Oshirish:
+ProductCard.tsx va ProductDetailsPage.tsx komponentlariga "Sevimlilarga qo'shish" tugmasini qo'shing (masalan, ♥ ikonka).
+Foydalanuvchi tugmani bosganda, POST /api/favorites endpoint'iga so'rov yuboring.
+Foydalanuvchi allaqachon shu mahsulotni sevimlilarga qo'shgan bo'lsa, tugma boshqa rangda ko'rinsin (masalan, qizil).
+Foydalanuvchi tugmani qayta bosganda, DELETE /api/favorites/:productId endpoint'iga so'rov yuborib, mahsulotni o'chirib tashlang.
+Foydalanuvchi "Sevimlilar" sahifasiga o'tganda (/favorites marshruti), GET /api/favorites orqali barcha tanlangan mahsulotlarni olib kelib, ularni ko'rsating (katalog sahifasiga o'xshaydigan ko'rinishda).

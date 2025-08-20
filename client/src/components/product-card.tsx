@@ -1,6 +1,12 @@
+import React, { useState } from 'react';
 import { Link } from 'wouter';
 import { useLanguage } from './language-provider';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useToast } from '@/hooks/use-toast';
+import { Heart } from 'lucide-react';
+import { apiRequest } from '@/lib/queryClient';
 import { Product } from '@shared/schema';
 import { Button } from '@/components/ui/button';
 
@@ -12,6 +18,9 @@ interface ProductCardProps {
 export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   const { language, t } = useLanguage();
   const { addToCart } = useCart();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   
   const name = language === 'uz' ? product.nameUz : product.nameRu;
   const description = language === 'uz' ? product.descriptionUz : product.descriptionRu;
@@ -24,6 +33,57 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
     lowStock: 'text-yellow-800 bg-yellow-100',
     outOfStock: 'text-red-800 bg-red-100'
   };
+
+  // Check if product is in favorites
+  const { data: favoriteStatus } = useQuery({
+    queryKey: ['/api/favorites/check', product.id],
+    queryFn: () => apiRequest(`/api/favorites/check/${product.id}`),
+    enabled: !!user,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  // Add to favorites mutation
+  const addToFavoritesMutation = useMutation({
+    mutationFn: () => apiRequest('/api/favorites', {
+      method: 'POST',
+      body: JSON.stringify({ productId: product.id }),
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/favorites'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/favorites/check', product.id] });
+      toast({
+        title: language === 'uz' ? "Sevimlilar ro'yxatiga qo'shildi" : "Добавлено в избранное",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: language === 'uz' ? "Xatolik" : "Ошибка",
+        description: error.message || (language === 'uz' ? "Sevimlilar ro'yxatiga qo'shishda xatolik" : "Ошибка при добавлении в избранное"),
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Remove from favorites mutation
+  const removeFromFavoritesMutation = useMutation({
+    mutationFn: () => apiRequest(`/api/favorites/${product.id}`, {
+      method: 'DELETE',
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/favorites'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/favorites/check', product.id] });
+      toast({
+        title: language === 'uz' ? "Sevimlilar ro'yxatidan o'chirildi" : "Удалено из избранного",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: language === 'uz' ? "Xatolik" : "Ошибка",
+        description: error.message || (language === 'uz' ? "Sevimlilar ro'yxatidan o'chirishda xatolik" : "Ошибка при удалении из избранного"),
+        variant: "destructive",
+      });
+    },
+  });
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -39,9 +99,48 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
     }
   };
 
+  const handleToggleFavorite = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!user) {
+      toast({
+        title: language === 'uz' ? "Tizimga kirish talab qilinadi" : "Требуется авторизация",
+        description: language === 'uz' ? "Sevimlilar ro'yxatidan foydalanish uchun tizimga kiring" : "Войдите в систему для использования избранного",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (favoriteStatus?.isFavorite) {
+      removeFromFavoritesMutation.mutate();
+    } else {
+      addToFavoritesMutation.mutate();
+    }
+  };
+
   return (
     <Link href={`/products/${product.slug}`}>
-      <div className="bg-white border border-gray-200 rounded-xl hover:shadow-lg transition-all group cursor-pointer" data-testid={`card-product-${product.id}`}>
+      <div className="bg-white border border-gray-200 rounded-xl hover:shadow-lg transition-all group cursor-pointer relative" data-testid={`card-product-${product.id}`}>
+        {/* Favorites Button */}
+        {user && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className={`absolute top-2 right-2 z-10 p-2 rounded-full ${
+              favoriteStatus?.isFavorite 
+                ? 'text-red-500 hover:text-red-600 bg-white/80 hover:bg-white/90' 
+                : 'text-gray-400 hover:text-red-500 bg-white/80 hover:bg-white/90'
+            }`}
+            onClick={handleToggleFavorite}
+            disabled={addToFavoritesMutation.isPending || removeFromFavoritesMutation.isPending}
+          >
+            <Heart 
+              className={`h-5 w-5 ${favoriteStatus?.isFavorite ? 'fill-current' : ''}`}
+            />
+          </Button>
+        )}
+        
         {product.images && product.images.length > 0 && (
           <img 
             src={product.images[0]} 

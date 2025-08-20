@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, decimal, boolean, timestamp, json } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, integer, decimal, boolean, timestamp, json, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -50,6 +50,8 @@ export const orders = pgTable("orders", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").notNull(),
   totalAmount: decimal("total_amount", { precision: 10, scale: 2 }).notNull(),
+  discountId: varchar("discount_id"), // chegirma ID'si (ixtiyoriy)
+  discountAmount: decimal("discount_amount", { precision: 10, scale: 2 }), // chegirma miqdori
   status: text("status").notNull().default("pending"), // pending, confirmed, shipped, delivered, cancelled
   customerName: text("customer_name").notNull(),
   customerPhone: text("customer_phone").notNull(),
@@ -74,6 +76,31 @@ export const orderItems = pgTable("order_items", {
   quantity: integer("quantity").notNull(),
   unitPrice: decimal("unit_price", { precision: 10, scale: 2 }).notNull(),
   totalPrice: decimal("total_price", { precision: 10, scale: 2 }).notNull(),
+});
+
+// Chegirmalar tizimi uchun jadval
+export const discounts = pgTable("discounts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  code: text("code").notNull().unique(), // chegirma kodi masalan "YANGI10"
+  type: text("type").notNull(), // "percentage" yoki "fixed"
+  value: integer("value").notNull(), // foiz yoki so'm miqdori
+  isActive: boolean("is_active").default(true), // chegirma faolmi
+  validFrom: timestamp("valid_from").notNull(), // chegirma qachondan boshlab amal qiladi
+  validUntil: timestamp("valid_until").notNull(), // chegirma qachon tugaydi
+  maxUses: integer("max_uses").default(0), // maksimal foydalanish soni, 0 = cheksiz
+  usedCount: integer("used_count").default(0), // hozirgacha foydalanilgan soni
+  targetType: text("target_type").notNull().default("all_products"), // "all_products", "specific_products", "specific_categories"
+  targetIds: jsonb("target_ids").$type<string[]>(), // maxsus mahsulotlar/kategoriyalar uchun ID'lar
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Sevimlilar tizimi uchun jadval
+export const favorites = pgTable("favorites", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(), // foydalanuvchi ID'si
+  productId: varchar("product_id").notNull(), // mahsulot ID'si
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 // Insert schemas
@@ -105,6 +132,18 @@ export const insertOrderItemSchema = createInsertSchema(orderItems).omit({
   id: true,
 });
 
+export const insertDiscountSchema = createInsertSchema(discounts).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  usedCount: true,
+});
+
+export const insertFavoriteSchema = createInsertSchema(favorites).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -118,6 +157,10 @@ export type CartItem = typeof cartItems.$inferSelect;
 export type InsertCartItem = z.infer<typeof insertCartItemSchema>;
 export type OrderItem = typeof orderItems.$inferSelect;
 export type InsertOrderItem = z.infer<typeof insertOrderItemSchema>;
+export type Discount = typeof discounts.$inferSelect;
+export type InsertDiscount = z.infer<typeof insertDiscountSchema>;
+export type Favorite = typeof favorites.$inferSelect;
+export type InsertFavorite = z.infer<typeof insertFavoriteSchema>;
 
 // Blog Posts
 export const blogPosts = pgTable("blog_posts", {

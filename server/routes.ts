@@ -9,6 +9,8 @@ import { adminAuth } from "./middleware/adminAuth";
 import { registerAITestRoutes } from "./routes/ai-test";
 import { ActivityLogger } from "./utils/activityLogger";
 import { registerReportsRoutes } from "./routes/admin/reports";
+import discountsRouter from "./routes/discounts";
+import favoritesRouter from "./routes/favorites";
 
 // Extend Express Request type for session
 declare module 'express-session' {
@@ -870,6 +872,10 @@ export async function registerRoutes(app: Express, customStorage?: any): Promise
   
   // Register admin reports routes
   registerReportsRoutes(app, activeStorage);
+  
+  // Register discounts and favorites routes
+  app.use("/api/discounts", discountsRouter);
+  app.use("/api/favorites", favoritesRouter);
 
   const httpServer = createServer(app);
   return httpServer;

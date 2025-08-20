@@ -1,0 +1,77 @@
+DIZAYNNI OPTIMALLASHTIRISH VA QORONG'U REJIMNI QO'SHISH (BOSH DAN OXIRIGA)
+Ajoyib, loyihamizning barcha funksiyalari ishlamoqda. Endi uning tashqi ko'rinishini professional darajaga olib chiqamiz va foydalanuvchi tajribasini (UX) yaxshilaymiz. Biz saytni qorong'u rejim (dark mode) hamda oq rejim (light mode) orasida o'tish imkonini beruvchi, zamonaviy, chiroyli va qulay dizayn bilan ta'minlaymiz.
+
+Loyiha mazmuni: Saytning vizual tuzilmasini zamonaviy standartlarga moslashtirish. Elementlar orasida to'g'ri bo'sh joylar, rang kontrasti, ikonkalarning aniq ko'rinishi va qorong'u rejim uchun maxsus rang kombinatsiyalari qo'llaniladi. Foydalanuvchi "Qorong'u Rejim" tugmasi orqali o'z xarid qilish uslubiga mos ravishda rejimni o'zgartira oladi.
+
+Aniq qadamlar:
+
+1-QISM: ASOSIY SAHIFANI ZAMONAVIYLAŞTIRISH
+
+"Eng Arzon Narxlar", "Sifat Kafolati", "Tez Yetkazib Berish" kartochkalarini yangilash:
+Har bir kartochkaning ichida yangi, zamonaviy SVG ikonka qo'shing.
+Eng Arzon Narxlar uchun — 💰 (pul belgisi).
+Sifat Kafolati uchun — ✅ (to'g'ri belgi).
+Tez Yetkazib Berish uchun — 🚚 (yetkazib berish avtomobili).
+Ikonkalarni katta, rangli (gradient) va aniq qilib yaratish kerak.
+Kartochkalar orasida yetarlicha bo'sh joy (gap-8) qoldiring.
+Kartochkalar soliq (shadow-md) bilan bezatilgan bo'lsin.
+Sarlavhalar (Eng Arzon Narxlar) bold va katta harflarda
+bo'lsin.
+Tavsif matnlari qisqa, qiziqarli va foydali bo'lsin.
+"Asosiy kategoriyalar" bo'limini yangilash:
+"Asosiy kategoriyalar" sarlavhasi bosh sahifaning markaziga, kartochkalar ostiga joylashtirilsin.
+Sarlavha katta, bold va oq rangda bo'lsin.
+Sarlavha ostidagi to'rtinchi qator kichikroq, oq rangda bo'lsin.
+Kategoriyalar kartochkalarining ikonkalari ham yangi, zamonaviy SVG ikonkalarga almashtirilsin.
+Polietilen paketlar uchun — 📦 (paket).
+Bir martalik idishlar uchun — 🍽️ (ovqat).
+Elektronika uchun — 📱 (telefon).
+Kategoriyalar kartochkalarining orqa foni oq (bg-white) bo'lsin.
+Kategoriyalar kartochkalarining pastki qismi rangli (gradient) bo'lsin.
+"Biznes Hamkorimgiz Bo'lishga Tayormisiz?" bo'limini yangilash:
+Bu bo'lim saytning markaziga joylashtirilsin.
+Sarlavha katta, bold va oq rangda bo'lsin.
+Tavsif matni qisqa, qiziqarli va foydali bo'lsin.
+"Hoziroq Ro'yxatdan O'tish" tugmasi katta, rangli (primary) bo'lsin.
+"Bog'lanish" tugmasi oq rangda, rangli kontur bilan bo'lsin.
+Pastki panelda (Footer) yangilash:
+Logo oq rangda bo'lsin.
+"O'zbekiston uchun ishonchli optom bozor platformasi. Sizning..." matni kichik, oq rangda bo'lsin.
+"Tezkor Havolalar" va "Kategoriyalar" sarlavhalari oq rangda bo'lsin.
+"Aloqa Ma'lumotlari" sarlavhasi oq rangda bo'lsin.
+Telefon raqami va email manzili oq rangda bo'lsin.
+Pastki panel qora rangda (bg-black) bo'lsin.
+2-QISM: NAVIGATSIYA MENYUSINI YANGILASH
+
+Header (Web versiya):
+Logo oq rangda bo'lsin.
+Menyu elementlari (Katalog, Blog, Aloqa) oq rangda bo'lsin.
+Qidiruv maydoni oq rangda bo'lsin.
+Tilni o'zgartirish ikonkasini (globus) oq rangda bo'lsin.
+Savat ikonkasini oq rangda bo'lsin.
+Foydalanuvchi profil ikonkasini oq rangda bo'lsin.
+Header orqa fonini qora rangda (bg-black) qo'yish kerak.
+Mobile Header (Mobil versiya):
+Logo oq rangda bo'lsin.
+Qidiruv maydoni oq rangda bo'lsin.
+Tilni o'zgartirish ikonkasini (globus) oq rangda bo'lsin.
+Savat ikonkasini oq rangda bo'lsin.
+Foydalanuvchi profil ikonkasini oq rangda bo'lsin.
+Mobile header orqa fonini qora rangda (bg-black) qo'yish kerak.
+Bottom Navigation (Mobil versiya):
+Ikona va matnlar oq rangda bo'lsin.
+Aktiv bo'lgan element rangli (primary) bo'lsin.
+Bottom navigation orqa fonini qora rangda (bg-black) qo'yish kerak.
+3-QISM: QORONG'U REJIM UCHUN MAXSUS RANGLAR VA FONTLARNI OPTIMALLASHTIRISH
+
+Ranglar: Asosiy ranglar qizil, ko'k va oq bo'lsin.
+Fontlar: Matnlar sans-serif fontda (masalan, Inter, Roboto) bo'lsin.
+Rang kombinatsiyalari: Elementlar orasida rang kontrasti bor bo'lsin.
+Qorong'u rejim uchun: Barcha elementlar oq rangda (text-white) bo'lsin, orqa fonlar esa qora rangda (bg-black) bo'lsin.
+Oq rejim uchun: Barcha elementlar qora rangda (text-black) bo'lsin, orqa fonlar esa oq rangda (bg-white) bo'lsin.
+Qorong'u rejim uchun maxsus toggle: Headerda "Qorong'u Rejim" tugmasi qo'shing. Bu tugma foydalanuvchini o'z xarid qilish uslubiga mos ravishda rejimni o'zgartira oladi.
+4-QISM: FINAL TEKSHIRUV
+
+Sahifani barcha qurilmalarda (desktop, tablet, mobil) tekshiring.
+Elementlar bir-biriga to'g'ri tekislanib, bo'sh joylar borligiga ishonch hosil qiling.
+Gradient va soya effektlari vizual jihatdan chiroyli bo'lishi kerak.

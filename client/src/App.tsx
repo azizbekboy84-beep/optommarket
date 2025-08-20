@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/components/language-provider";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { ThemeProvider } from "@/components/theme-provider";
 import Home from "@/pages/home";
 import Categories from "@/pages/categories";
 import Products from "@/pages/products";
@@ -135,22 +136,24 @@ function App() {
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
-        <LanguageProvider>
-          <AuthProvider>
-            <CartProvider>
-              <TooltipProvider>
-                <Toaster />
-                <Header />
-                <main className="pb-20 md:pb-0">
-                  <Router />
-                </main>
-                <MobileBottomNav />
-                <AIChatWidget />
-                <AppDownloadPrompt />
-              </TooltipProvider>
-            </CartProvider>
-          </AuthProvider>
-        </LanguageProvider>
+        <ThemeProvider>
+          <LanguageProvider>
+            <AuthProvider>
+              <CartProvider>
+                <TooltipProvider>
+                  <Toaster />
+                  <Header />
+                  <main className="pb-20 md:pb-0">
+                    <Router />
+                  </main>
+                  <MobileBottomNav />
+                  <AIChatWidget />
+                  <AppDownloadPrompt />
+                </TooltipProvider>
+              </CartProvider>
+            </AuthProvider>
+          </LanguageProvider>
+        </ThemeProvider>
       </QueryClientProvider>
     </HelmetProvider>
   );

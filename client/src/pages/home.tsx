@@ -61,11 +61,11 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background dark:bg-black">
       <SEOHead seo={homeSEO} />
       
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-red-800 text-white py-32 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-red-800 dark:from-blue-800 dark:via-blue-700 dark:to-red-700 text-white py-32 overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/30 to-red-600/30"></div>
         
@@ -126,22 +126,24 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="bg-gray-50 py-20">
+      <section className="bg-background dark:bg-gray-900 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Bizning afzalliklarimiz</h2>
-            <p className="text-xl text-gray-600">Nima uchun aynan Optombazar.uz ni tanlashingiz kerak</p>
+            <h2 className="text-4xl font-bold text-foreground mb-4">Bizning afzalliklarimiz</h2>
+            <p className="text-xl text-muted-foreground">Nima uchun aynan Optombazar.uz ni tanlashingiz kerak</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="bg-white rounded-2xl p-10 shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105" data-testid={`feature-${index}`}>
+              <div key={index} className="bg-card dark:bg-gray-800 rounded-2xl p-10 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-border" data-testid={`feature-${index}`}>
                 <div className="mb-6 flex justify-center">
-                  {feature.icon}
+                  <div className="p-4 bg-gradient-to-br from-blue-100 to-red-100 dark:from-blue-900/30 dark:to-red-900/30 rounded-2xl">
+                    {feature.icon}
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center" data-testid={`text-feature-title-${index}`}>
+                <h3 className="text-2xl font-bold text-card-foreground mb-4 text-center" data-testid={`text-feature-title-${index}`}>
                   {language === 'uz' ? feature.titleUz : feature.titleRu}
                 </h3>
-                <p className="text-gray-600 text-center leading-relaxed" data-testid={`text-feature-description-${index}`}>
+                <p className="text-muted-foreground text-center leading-relaxed" data-testid={`text-feature-description-${index}`}>
                   {language === 'uz' ? feature.descriptionUz : feature.descriptionRu}
                 </p>
               </div>
@@ -151,7 +153,7 @@ export default function Home() {
       </section>
 
       {/* Categories Section */}
-      <section className="bg-gradient-to-br from-blue-900 via-blue-800 to-red-800 py-20">
+      <section className="bg-gradient-to-br from-blue-900 via-blue-800 to-red-800 dark:from-blue-800 dark:via-blue-700 dark:to-red-700 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4" data-testid="text-categories-title">
@@ -182,7 +184,7 @@ export default function Home() {
                 return (
                   <div 
                     key={category.id}
-                    className="group bg-white rounded-3xl p-8 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105 shadow-lg overflow-hidden"
+                    className="group bg-white dark:bg-gray-800 rounded-3xl p-8 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105 shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700"
                     onClick={() => window.location.href = `/category/${category.slug}`}
                     data-testid={`category-card-${category.id}`}
                   >
@@ -190,10 +192,10 @@ export default function Home() {
                       <div className="w-20 h-20 mx-auto mb-6 flex items-center justify-center text-6xl">
                         {categoryIcon}
                       </div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-3" data-testid={`text-category-name-${category.id}`}>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3" data-testid={`text-category-name-${category.id}`}>
                         {language === 'uz' ? category.nameUz : category.nameRu}
                       </h3>
-                      <p className="text-gray-600 text-sm leading-relaxed mb-6">
+                      <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-6">
                         Yuqori sifatli mahsulotlar eng yaxshi narxlarda
                       </p>
                       <div className="mt-6 -mx-8 -mb-8 p-4 bg-gradient-to-r from-blue-500 to-red-500">
@@ -219,19 +221,19 @@ export default function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="bg-white py-20">
+      <section className="bg-background dark:bg-gray-900 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-12">
             <div>
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4" data-testid="text-featured-title">
+              <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4" data-testid="text-featured-title">
                 {t('featuredProducts')}
               </h2>
-              <p className="text-xl text-gray-600" data-testid="text-featured-description">
+              <p className="text-xl text-muted-foreground" data-testid="text-featured-description">
                 {t('featuredDescription')}
               </p>
             </div>
             <Link href="/products" className="hidden md:block">
-              <Button variant="ghost" className="text-primary font-semibold hover:text-blue-700" data-testid="button-view-all-products">
+              <Button variant="ghost" className="text-primary font-semibold hover:text-blue-600 dark:hover:text-blue-400" data-testid="button-view-all-products">
                 {t('viewAll')} →
               </Button>
             </Link>
@@ -240,11 +242,11 @@ export default function Home() {
           {productsLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="bg-white border border-gray-200 rounded-xl p-6 animate-pulse" data-testid={`skeleton-product-${i}`}>
-                  <div className="w-full h-48 bg-gray-200 rounded-lg mb-4"></div>
-                  <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                  <div className="h-8 bg-gray-200 rounded"></div>
+                <div key={i} className="bg-card dark:bg-gray-800 border border-border rounded-xl p-6 animate-pulse" data-testid={`skeleton-product-${i}`}>
+                  <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-lg mb-4"></div>
+                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                  <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
                 </div>
               ))}
             </div>
@@ -296,7 +298,7 @@ export default function Home() {
       </section>
 
       {/* Contact CTA */}
-      <section className="bg-gradient-to-br from-blue-900 via-blue-800 to-red-800 py-20">
+      <section className="bg-gradient-to-br from-blue-900 via-blue-800 to-red-800 dark:from-blue-800 dark:via-blue-700 dark:to-red-700 py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6" data-testid="text-cta-title">
             Biznes Hamkorimgiz Bo'lishga Tayormisiz?
@@ -306,12 +308,12 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link href="/register">
-              <Button size="lg" className="bg-white text-blue-900 hover:bg-gray-50 px-8 py-4 text-lg font-bold rounded-2xl" data-testid="button-register-now">
+              <Button size="lg" className="bg-white text-blue-900 hover:bg-gray-50 px-8 py-4 text-lg font-bold rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl" data-testid="button-register-now">
                 Hoziroq Ro'yxatdan O'tish
               </Button>
             </Link>
             <Link href="/contact">
-              <Button variant="outline" size="lg" className="border-2 border-white text-white hover:bg-white hover:text-blue-900 px-8 py-4 text-lg font-bold rounded-2xl" data-testid="button-contact-us">
+              <Button variant="outline" size="lg" className="border-2 border-white text-white hover:bg-white hover:text-blue-900 px-8 py-4 text-lg font-bold rounded-2xl transition-all duration-300 transform hover:scale-105" data-testid="button-contact-us">
                 Bog'lanish
               </Button>
             </Link>

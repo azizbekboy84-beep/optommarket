@@ -1,0 +1,93 @@
+QORONG'U/YORUG' REJIM STILLARINI TO'G'RI SOZLASH
+Ajoyib, rejimni o'zgartirish tugmasi qo'shildi, lekin hozirda jiddiy stil muammosi bor: yorug' rejim tanlanganda ham sayt qorong'u bo'lib qolmoqda. Buni tuzatamiz.
+
+Loyiha mazmuni (Kontekst):
+Muammoning sababi shundaki, bizning asosiy CSS faylimizda (globals.css) yorug' rejim uchun rang o'zgaruvchilari (variables) to'g'ri belgilanmagan yoki qorong'u rejim stillari ularni "bosib qo'ygan". Maqsadimiz — ranglar tizimini shadcn/ui standartlariga moslab, to'liq qayta yozish va har ikkala rejimning to'g'ri ishlashini ta'minlash.
+
+Aniq qadamlar:
+
+Asosiy CSS Faylini Tozalash va Qayta Yozish:
+
+client/src/app/globals.css (yoki index.css) faylini oching.
+
+Faylning yuqori qismidagi @layer base direktivasi ichidagi mavjud :root va .dark bloklarini to'liq o'chirib tashlang.
+
+Ularning o'rniga quyidagi, to'g'ri sozlangan rang o'zgaruvchilarini joylashtiring. Bu bizning loyihamiz uchun yagona va to'g'ri ranglar manbasi bo'ladi:
+
+CSS
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 210 40% 15%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 90%;
+    --secondary-foreground: 210 40% 9%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 25 95% 55%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 90%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 25 95% 55%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+Tailwind Konfiguratsiyasini Tekshirish:
+
+tailwind.config.ts faylini oching.
+
+theme.extend.colors bo'limi CSS o'zgaruvchilaridan foydalanayotganiga ishonch hosil qiling. U quyidagicha ko'rinishda bo'lishi kerak:
+
+JavaScript
+
+// ...
+colors: {
+  // ...
+  background: 'hsl(var(--background))',
+  foreground: 'hsl(var(--foreground))',
+  primary: {
+    DEFAULT: 'hsl(var(--primary))',
+    foreground: 'hsl(var(--primary-foreground))',
+  },
+  secondary: {
+    DEFAULT: 'hsl(var(--secondary))',
+    foreground: 'hsl(var(--secondary-foreground))',
+  },
+  // ... va hokazo
+},
+// ...
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+globals.css fayli yuqorida ko'rsatilgan yangi va to'g'ri CSS o'zgaruvchilari bilan yangilandimi?
+
+Endi rejimni o'zgartirish tugmasi bosilganda, sayt haqiqatan ham yorug' (oq fon, qora matn) va qorong'u (qora fon, oq matn) rejimlar o'rtasida to'liq o'zgaryaptimi?

@@ -1,0 +1,54 @@
+2-BOSQICH (YANGILANGAN): BACKEND, BAZA SXEMASI VA KATALOG TUZILMASINI YARATISH (PROMPT 2.1)
+Yaxshi, loyihaning frontend poydevori tayyor. Endi butun backend infratuzilmasini va ma'lumotlar arxitekturasini bir qadamda yaratamiz.
+
+Vazifa: server papkasida Express.js serverini o'rnatish, uni TypeScript bilan sozlash, PostgreSQL uchun Drizzle ORM sxemalarini yaratish va sitemap.xmldagi katalog tuzilmasini bazaga kiritishga tayyorlash.
+
+Aniq qadamlar:
+
+Backend muhitini sozlash:
+
+server papkasiga o'tib, npm init -y buyrug'i bilan package.json yarat.
+
+Kerakli paketlarni o'rnat:
+
+Asosiy: npm install express cors dotenv pg drizzle-orm
+
+Development uchun: npm install -D typescript tsx @types/express @types/node drizzle-kit
+
+server papkasida tsconfig.json va drizzle.config.ts fayllarini yaratib, ularni loyihaga moslab sozla.
+
+Ma'lumotlar bazasi sxemasini (schema) yaratish:
+
+shared/schema.ts faylini yarat.
+
+Unga Drizzle ORM sintaksisida sitemap.xmldagi ma'lumotlarga asoslangan quyidagi jadvallarni yoz:
+
+categories (Kategoriyalar): id, name (nomi, masalan, "Полиэтиленовые пакеты"), slug (noyob, masalan, "polietilenovye-pakety"), parent_id (o'z-o'ziga ishora, ichki kategoriyalar uchun). Bu sitemap.xmldagi ierarxiyani aks ettirishi kerak.
+
+products (Mahsulotlar): id, name, slug (noyob), description, price, images, category_id (categories jadvaliga bog'liq).
+
+blog_posts (Blog maqolalari): id, title, slug (noyob), content.
+
+Server va bazaga ulanishni yaratish:
+
+server/index.ts faylini yarat va unga Express serverning boshlang'ich kodini yoz. Server 5000-portda ishga tushsin.
+
+server/db.ts faylini yarat va unda dotenv orqali .env faylidan ma'lumotlarni olib, PostgreSQL bazasiga Drizzle bilan ulanishni sozla.
+
+Skriptlarni package.jsonga qo'shish:
+
+server/package.json faylidagi "scripts" bo'limiga quyidagi skriptlarni qo'sh:
+
+"dev": "tsx index.ts" (Serverni ishga tushirish)
+
+"db:generate": "drizzle-kit generate:pg" (Migratsiya yaratish)
+
+"db:push": "drizzle-kit push:pg" (Sxemani bazaga yuborish)
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Qaysi fayllar yaratildi (index.ts, db.ts, schema.ts va hokazo)?
+
+server/package.json fayliga qanday paketlar va skriptlar qo'shildi?
+
+shared/schema.ts faylida qanday jadvallar (tables) va ular orasidagi bog'liqliklar (relations) ta'riflandi?

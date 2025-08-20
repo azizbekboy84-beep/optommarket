@@ -1,7 +1,7 @@
 import { Link } from 'wouter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
-import { Package, ShoppingCart, Users, BarChart3, Folder } from 'lucide-react';
+import { Package, ShoppingCart, Users, BarChart3, Folder, FileText } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export default function AdminDashboardPage() {
@@ -80,6 +80,26 @@ export default function AdminDashboardPage() {
             </CardContent>
           </Card>
 
+          {/* Blog Management */}
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5 text-blue-600" />
+                Blog
+              </CardTitle>
+              <CardDescription>
+                Blog postlarini yaratish va boshqarish
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Link href="/admin/blog">
+                <Button className="w-full">
+                  Blog'ni boshqarish
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
           {/* Quick Stats Card */}
           <Card className="hover:shadow-lg transition-shadow">
             <CardHeader>
@@ -102,7 +122,7 @@ export default function AdminDashboardPage() {
         {/* Quick Actions */}
         <div className="mt-12">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Tezkor amallar</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link href="/admin/products">
               <Card className="hover:shadow-md transition-shadow cursor-pointer">
                 <CardContent className="p-4">
@@ -125,6 +145,20 @@ export default function AdminDashboardPage() {
                     <div>
                       <h3 className="font-medium text-gray-900">Buyurtmalarni ko'rish</h3>
                       <p className="text-sm text-gray-600">Kelib tushgan buyurtmalarni tekshirish</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/admin/blog">
+              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <FileText className="h-8 w-8 text-blue-600" />
+                    <div>
+                      <h3 className="font-medium text-gray-900">Blog post yaratish</h3>
+                      <p className="text-sm text-gray-600">Yangi blog maqolasi yozish</p>
                     </div>
                   </div>
                 </CardContent>

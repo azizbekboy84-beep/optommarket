@@ -24,7 +24,10 @@ import OrderSuccessPage from "@/pages/OrderSuccessPage";
 import AdminDashboardPage from "@/pages/admin/AdminDashboardPage";
 import AdminProductsPage from "@/pages/admin/AdminProductsPage";
 import AdminOrdersPage from "@/pages/admin/AdminOrdersPage";
+import AdminBlogPage from "@/pages/admin/AdminBlogPage";
 import AdminCategoriesPage from "@/pages/admin/AdminCategoriesPage";
+import BlogPage from "@/pages/BlogPage";
+import BlogPostPage from "@/pages/BlogPostPage";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -72,6 +75,13 @@ function Router() {
           </AdminRoute>
         )}
       </Route>
+      <Route path="/admin/blog">
+        {() => (
+          <AdminRoute>
+            <AdminBlogPage />
+          </AdminRoute>
+        )}
+      </Route>
       <Route path="/admin/categories">
         {() => (
           <AdminRoute>
@@ -81,6 +91,8 @@ function Router() {
       </Route>
       <Route path="/order-success" component={OrderSuccessPage} />
       <Route path="/contact" component={Contact} />
+      <Route path="/blog" component={BlogPage} />
+      <Route path="/blog/:slug" component={BlogPostPage} />
       <Route component={NotFound} />
     </Switch>
   );

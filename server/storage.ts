@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type Category, type InsertCategory, type Product, type InsertProduct, type Order, type InsertOrder, type OrderItem, type InsertOrderItem, type CartItem, type InsertCartItem } from "@shared/schema";
+import { type User, type InsertUser, type Category, type InsertCategory, type Product, type InsertProduct, type Order, type InsertOrder, type OrderItem, type InsertOrderItem, type CartItem, type InsertCartItem, type BlogPost, type InsertBlogPost } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -40,6 +40,14 @@ export interface IStorage {
   updateOrder(id: string, updates: Partial<Order>): Promise<Order | undefined>;
   getOrderItems(orderId: string): Promise<OrderItem[]>;
   addOrderItem(orderItem: InsertOrderItem): Promise<OrderItem>;
+
+  // Blog Posts
+  getBlogPosts(): Promise<BlogPost[]>;
+  getBlogPost(id: string): Promise<BlogPost | undefined>;
+  getBlogPostBySlug(slug: string): Promise<BlogPost | undefined>;
+  createBlogPost(post: InsertBlogPost): Promise<BlogPost>;
+  updateBlogPost(id: string, updates: Partial<InsertBlogPost>): Promise<BlogPost | undefined>;
+  deleteBlogPost(id: string): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -49,6 +57,7 @@ export class MemStorage implements IStorage {
   private cartItems: Map<string, CartItem>;
   private orders: Map<string, Order>;
   private orderItems: Map<string, OrderItem>;
+  private blogPosts: Map<string, BlogPost>;
 
   constructor() {
     this.users = new Map();
@@ -57,6 +66,7 @@ export class MemStorage implements IStorage {
     this.cartItems = new Map();
     this.orders = new Map();
     this.orderItems = new Map();
+    this.blogPosts = new Map();
     this.seedData();
   }
 
@@ -138,6 +148,7 @@ export class MemStorage implements IStorage {
         minQuantity: 100,
         stockQuantity: 5000,
         unit: "dona",
+        specifications: {"Material": "LDPE", "Qalinligi": "50 mikron", "Ranglar": "Turli ranglar"},
         images: ["https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300"],
         slug: "sifatli-plastik-paketlar",
         isActive: true,
@@ -157,6 +168,7 @@ export class MemStorage implements IStorage {
         minQuantity: 50,
         stockQuantity: 3000,
         unit: "dona",
+        specifications: {"Material": "Plastik", "Hajmi": "200ml", "Turi": "Bir martalik"},
         images: ["https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300"],
         slug: "bir-martalik-stakanlar",
         isActive: true,
@@ -176,6 +188,7 @@ export class MemStorage implements IStorage {
         minQuantity: 10,
         stockQuantity: 500,
         unit: "dona",
+        specifications: {"Material": "Silikon", "Moslik": "Universal", "Ranglar": "Ko'p rangli"},
         images: ["https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300"],
         slug: "telefon-aksessuarlari",
         isActive: true,
@@ -195,6 +208,7 @@ export class MemStorage implements IStorage {
         minQuantity: 1,
         stockQuantity: 200,
         unit: "dona",
+        specifications: {"Material": "100% Paxta", "Rang": "Oq, Qora", "O'lcham": "S-XXL"},
         images: ["https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300"],
         slug: "erkaklar-t-shirtkasi",
         isActive: true,
@@ -203,7 +217,38 @@ export class MemStorage implements IStorage {
       },
     ];
 
-    products.forEach(product => this.products.set(product.id, product));
+    products.forEach(product => {
+      this.products.set(product.id, {
+        ...product,
+        specifications: product.specifications || null
+      });
+    });
+
+    // Seed blog posts
+    const blogPosts = [
+      {
+        id: "blog-1",
+        title: "Optom savdo biznesida muvaffaqiyat sirlari",
+        content: "Optom savdo sohasi o'zining imkoniyatlari va qiyinchiliklari bilan ajralib turadi. Ushbu maqolada sizga optom savdo biznesida muvaffaqiyat qozonish uchun zarur bo'lgan asosiy strategiyalar va maslahatlarni taqdim etamiz.\n\nBirinchi navbatda, ishonchli ta'minotchi topish muhim. Sifatli mahsulotlarni arzon narxlarda taklif qiladigan ta'minotchilar bilan uzoq muddatli hamkorlik o'rnatish biznesingizning barqarorligi uchun zarur.\n\nIkkinchidan, bozorni chuqur o'rganish kerak. Qaysi mahsulotlar eng ko'p sotiladi, qaysi mavsumda talab ortadi - bularni bilish sizga to'g'ri qarorlar qabul qilishga yordam beradi.",
+        imageUrl: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+        slug: "optom-savdo-muvaffaqiyat",
+        isPublished: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: "blog-2", 
+        title: "2024-yilda eng istiqbolli mahsulot turlari",
+        content: "Yangi yil bilan birga yangi imkoniyatlar ham keladi. 2024-yilda qaysi mahsulot turlari eng yuqori foyda keltirishi mumkin?\n\nEkologik toza mahsulotlar: Atrof-muhitga zarar yetkazmaydigan mahsulotlarga talab kundan-kunga ortib bormoqda. Qayta ishlanadigan materiallardan tayyorlangan paketlar, bio-parchalanuvchi mahsulotlar kabi tovarlarga investitsiya qilish mantiqan to'g'ri qaror.\n\nRaqamli texnologiyalar: Telefon aksessuarlari, portativ zaryadlovchi qurilmalar va boshqa IT mahsulotlari hamon yuqori talabda.",
+        imageUrl: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+        slug: "2024-istiqbolli-mahsulotlar",
+        isPublished: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+    ];
+
+    blogPosts.forEach(post => this.blogPosts.set(post.id, post));
   }
 
   // Users
@@ -461,6 +506,52 @@ export class MemStorage implements IStorage {
     
     itemsToDelete.forEach(item => this.cartItems.delete(item.id));
     return true;
+  }
+
+  // Blog Posts methods
+  async getBlogPosts(): Promise<BlogPost[]> {
+    return Array.from(this.blogPosts.values()).filter(post => post.isPublished);
+  }
+
+  async getBlogPost(id: string): Promise<BlogPost | undefined> {
+    return this.blogPosts.get(id);
+  }
+
+  async getBlogPostBySlug(slug: string): Promise<BlogPost | undefined> {
+    return Array.from(this.blogPosts.values()).find(post => post.slug === slug);
+  }
+
+  async createBlogPost(insertPost: InsertBlogPost): Promise<BlogPost> {
+    const id = randomUUID();
+    const post: BlogPost = {
+      ...insertPost,
+      id,
+      isPublished: insertPost.isPublished ?? true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.blogPosts.set(id, post);
+    return post;
+  }
+
+  async updateBlogPost(id: string, updates: Partial<InsertBlogPost>): Promise<BlogPost | undefined> {
+    const post = this.blogPosts.get(id);
+    if (!post) return undefined;
+
+    const updatedPost = {
+      ...post,
+      ...updates,
+      id: post.id, // Preserve original ID
+      createdAt: post.createdAt, // Preserve creation date
+      updatedAt: new Date(), // Update modification date
+    };
+
+    this.blogPosts.set(id, updatedPost);
+    return updatedPost;
+  }
+
+  async deleteBlogPost(id: string): Promise<boolean> {
+    return this.blogPosts.delete(id);
   }
 }
 

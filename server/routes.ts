@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import bcrypt from "bcrypt";
 import { storage } from "./storage";
-import { insertProductSchema, insertCategorySchema, insertOrderSchema, insertCartItemSchema, insertUserSchema } from "@shared/schema";
+import { insertProductSchema, insertCategorySchema, insertOrderSchema, insertCartItemSchema, insertUserSchema, insertBlogPostSchema } from "@shared/schema";
 import { adminAuth } from "./middleware/adminAuth";
 
 // Extend Express Request type for session
@@ -519,6 +519,79 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Kategoriyani o'chirishda xatolik" });
+    }
+  });
+
+  // Admin Blog APIs
+  app.get("/api/admin/blog", adminAuth, async (req, res) => {
+    try {
+      const posts = await storage.getBlogPosts();
+      res.json(posts);
+    } catch (error) {
+      res.status(500).json({ message: "Blog postlarini olishda xatolik" });
+    }
+  });
+
+  app.post("/api/admin/blog", adminAuth, async (req, res) => {
+    try {
+      const postData = insertBlogPostSchema.parse(req.body);
+      const post = await storage.createBlogPost(postData);
+      res.status(201).json(post);
+    } catch (error) {
+      res.status(400).json({ message: "Blog post yaratishda xatolik", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  app.put("/api/admin/blog/:id", adminAuth, async (req, res) => {
+    try {
+      const postData = insertBlogPostSchema.partial().parse(req.body);
+      const post = await storage.updateBlogPost(req.params.id, postData);
+      
+      if (!post) {
+        return res.status(404).json({ message: "Blog post topilmadi" });
+      }
+      
+      res.json(post);
+    } catch (error) {
+      res.status(400).json({ message: "Blog postni yangilashda xatolik", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  app.delete("/api/admin/blog/:id", adminAuth, async (req, res) => {
+    try {
+      const success = await storage.deleteBlogPost(req.params.id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Blog post topilmadi" });
+      }
+      
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Blog postni o'chirishda xatolik" });
+    }
+  });
+
+  // Public Blog APIs
+  app.get("/api/blog/posts", async (req, res) => {
+    try {
+      const posts = await storage.getBlogPosts();
+      res.json(posts);
+    } catch (error) {
+      res.status(500).json({ message: "Blog postlarini olishda xatolik" });
+    }
+  });
+
+  app.get("/api/blog/posts/:slug", async (req, res) => {
+    try {
+      const post = await storage.getBlogPostBySlug(req.params.slug);
+      
+      if (!post) {
+        return res.status(404).json({ message: "Blog post topilmadi" });
+      }
+      
+      res.json(post);
+    } catch (error) {
+      res.status(500).json({ message: "Blog postni olishda xatolik" });
     }
   });
 

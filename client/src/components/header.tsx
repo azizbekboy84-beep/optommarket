@@ -82,6 +82,9 @@ export function Header() {
             <Link href="/contact" className="text-gray-700 hover:text-red-600 font-medium transition-colors" data-testid="link-contact">
               Aloqa
             </Link>
+            <Link href="/blog" className="text-gray-700 hover:text-blue-600 font-medium transition-colors" data-testid="link-blog">
+              Blog
+            </Link>
           </nav>
 
           {/* Cart & Language Toggle & Actions */}

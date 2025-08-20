@@ -1,0 +1,76 @@
+11-BOSQICH: LOYIHANI REAL MA'LUMOTLAR BILAN TAKOMILLASHTIRISH VA BLOG QO'SHISH
+Juda yaxshi, bizda endi haqiqiy saytdan olingan ma'lumotlar tahlili bor. Endi loyihamizni o'sha standartlarga moslab, yanada professional holatga keltiramiz va yangi funksiyalar qo'shamiz.
+
+Loyiha mazmuni: Maqsadimiz — optombazar.uz tahlilidan kelib chiqib, ma'lumotlar bazamizni va mahsulot sahifalarini batafsil ma'lumotlar bilan boyitish. Shuningdek, foydalanuvchilarni jalb qilish va SEO'ni yaxshilash uchun to'liq ishlaydigan Blog bo'limini yaratish.
+
+Aniq qadamlar:
+
+1-QISM: BAZA VA BACKENDNI TAKOMILLASHTIRISH
+
+Baza Sxemasini Boyitish (shared/schema.ts):
+
+products jadvaliga optombazar.uz tahliliga asoslanib, quyidagi yangi ustunlarni qo'shing:
+
+min_quantity (integer, minimal buyurtma soni, default qiymati 1).
+
+unit (text, o'lchov birligi, masalan, "dona", "blok", "kg").
+
+specifications (json, mahsulotning qo'shimcha xususiyatlari uchun, masalan: {"Qalinligi": "50 mikron", "Material": "LDPE"}).
+
+blog_posts jadvali mavjudligiga va unda title, content, image_url, slug ustunlari borligiga ishonch hosil qiling.
+
+Admin API'sini Yangilash:
+
+POST va PUT so'rovlari uchun /api/admin/products endpoint'larini yangi qo'shilgan ustunlarni (min_quantity, unit, specifications) qabul qiladigan qilib o'zgartiring.
+
+Blog uchun to'liq CRUD API'si: /api/admin/blog prefiksi bilan yangi, himoyalangan (faqat adminlar uchun) endpoint'lar yarating:
+
+GET /api/admin/blog: Barcha postlarni qaytarsin.
+
+POST /api/admin/blog: Yangi post yaratsin.
+
+PUT /api/admin/blog/:id: Postni tahrirlasin.
+
+DELETE /api/admin/blog/:id: Postni o'chirsin.
+
+Ommaviy Blog API'sini Yaratish:
+
+GET /api/blog/posts: Barcha foydalanuvchilar uchun ochiq, barcha blog postlari ro'yxatini qaytaradigan endpoint yarating.
+
+GET /api/blog/posts/:slug: Bitta postni slug orqali topib, qaytaradigan endpoint yarating.
+
+2-QISM: FRONTENDNI YANGILASH VA YAKUNLASH
+
+Admin Panelini Kuchaytirish:
+
+AdminProductsPage.tsx sahifasidagi mahsulot qo'shish/tahrirlash formasiga yangi maydonlar qo'shing: "Minimal buyurtma soni", "O'lchov birligi" va "Xususiyatlari" (bu yerda admin {"key": "value"} formatida JSON kirita olsin).
+
+AdminDashboardPage.tsx ga "Blog" bo'limini boshqarish uchun yangi havola qo'shing.
+
+Mahsulot Sahifasini Boyitish (ProductDetailsPage.tsx):
+
+Mahsulotning batafsil sahifasida uning yangi ma'lumotlarini (minimal buyurtma soni, o'lchov birligi) chiroyli qilib ko'rsating.
+
+specifications maydonidagi JSON ma'lumotlarini o'qib, uni "Xususiyatlari" sarlavhasi ostida jadval shaklida (Xususiyat | Qiymat) chiqaring.
+
+Blog Bo'limini To'liq Yaratish:
+
+Admin uchun: client/src/pages/admin/AdminBlogPage.tsx sahifasini yarating. Bu yerda admin barcha postlarni ko'rishi, yangisini qo'shishi (shadcn/ui Dialog va forma bilan), tahrirlashi va o'chirishi mumkin bo'lsin.
+
+Foydalanuvchilar uchun:
+
+client/src/pages/BlogPage.tsx: Barcha blog postlarini kartochkalar (rasm, sarlavha, qisqacha matn) shaklida ko'rsatadigan sahifa yarating.
+
+client/src/pages/BlogPostPage.tsx: Biror post kartochkasi bosilganda ochiladigan sahifa. Unda postning to'liq mazmuni (rasm, sarlavha, matn) ko'rsatilsin.
+
+Header.tsx ga "Blog" nomli yangi menyu bandini qo'shing va uni /blog sahifasiga yo'naltiring.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Ma'lumotlar bazasidagi products jadvali yangi ustunlar bilan boyitildimi?
+
+Admin endi mahsulotlarga batafsil xususiyatlar qo'sha olyaptimi va bu ma'lumotlar mahsulot sahifasida ko'rinyaptimi?
+
+Admin panelida blog postlarini to'liq boshqarish (qo'shish, tahrirlash, o'chirish) imkoniyati mavjudmi?
+
+Foydalanuvchilar uchun /blog va /blog/:slug sahifalari ishlayaptimi va ularda blog postlari to'g'ri ko'rsatilyaptimi?

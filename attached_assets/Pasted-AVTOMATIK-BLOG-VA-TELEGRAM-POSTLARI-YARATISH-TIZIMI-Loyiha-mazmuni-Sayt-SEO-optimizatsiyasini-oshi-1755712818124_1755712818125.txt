@@ -1,0 +1,57 @@
+AVTOMATIK BLOG VA TELEGRAM POSTLARI YARATISH TIZIMI
+Loyiha mazmuni: Sayt SEO optimizatsiyasini oshirish, auditoriyani jalb qilish va foydalanuvchilarni doimiy ravishda yangi kontent va mahsulotlar bilan ta'minlash uchun AI yordamida avtomatik blog postlar yaratish va ularni saytga, shuningdek, Telegram kanaliga avtomatik tarqatish tizimini yaratish. Postlar rasm bilan, batafsil ma'lumotlar bilan va o'zaro mos formatda joylanadi.
+
+Aniq qadamlar:
+1-QISM: AVTOMATIK KONTENT GENERATOR TIZIMINI YARATISH
+
+AI Kontent Generator Servisini Yangilash (server/services/ai-content-generator.ts):
+Google Gemini 1.5 Flash API dan foydalanib, soha yangiliklari, mahsulotlar haqida, biznes maslahatlari kabi mavzularda ikki xil versiyada blog postlar yaratish funksiyasini yozing:
+generateBlogPostFull(mavzu: string): Promise<BlogPostFull>
+Natija: To'liq, batafsil matn (sayt uchun). Ushbu matnda jadval, taqdimot, qo'shimcha ma'lumotlar, linklar kabi elementlar bo'lishi kerak.
+generateTelegramPost(mavzu: string): Promise<TelegramPost>
+Natija: Qisqaroq, qiziqarli, diqqatni qozonuvchi matn (Telegram uchun). Har bir postning boshlig'i (bold) va asosiy ma'lumotlari qisqaroq ko'rinishda berilsin.
+Har bir post uchun sarlavha, qisqacha mazmun (excerpt), kalit so'zlar, teglar va rasm uchun manba (URL yoki generatsiya talab qilinadigan prompt) generatsiya qilish.
+Rasm uchun prompt yaratish (masalan, "Restoran va kafe uchun sifatli mahsulotlarni yetkazib berish, oshxona inventarizatsiyasi, OptomBazar.uz logotipi, professional, modern"). Agar AI rasm generatsiya qilish muammo bo'lsa, bu prompt orqali internetdan rasmlarni izlash imkonini beradi.
+Avtomatik Post Jadvalini Boshqarish (server/cron/blog-scheduler.ts):
+Har soatda (07:00 dan 19:00 gacha) yangi post yaratish vazifasini rejalashtirish.
+Kuniga 10-12 ta post chop etish me'yorida bo'lsa, har soatda
+1 tadan post yaratish mantiqini yozish.
+Yaratilgan postlarni ma'lumotlar bazasidagi blog_posts jadvaliga avtomatik saqlash.
+Har bir post uchun post_type maydonini qo'shing: "full" (sayt uchun) yoki "telegram" (kanal uchun).
+Ma'lumotlar Bazasini Yangilash (shared/schema.ts):
+blog_posts jadvaliga quyidagi yangi ustunlarni qo'shing:
+image_url (text): Rasm URL manzili.
+image_prompt (text): Rasm uchun AI prompti (agar rasm generatsiya qilinsa).
+content_full (text): To'liq matn (sayt uchun).
+content_telegram (text): Qisqaroq matn (Telegram uchun).
+source (text): Manba ("AI-Generator", "Admin").
+is_auto_generated (boolean): Avtomatik yaratilganmi?
+2-QISM: TELEGRAM BOTINI YARATISH VA KANALGA ULANGANISH
+
+Telegram Bot API dan Foydalanish (server/services/telegram-bot.ts):
+Yangi Telegram bot yaratish (@BotFather orqali).
+telegraf yoki node-telegram-bot-api kutubxonasidan foydalanib, bot logikasini yozish.
+Botni @optombazaruzb kanaliga admin sifatida qo'shish.
+Avtomatik Post Tarqatish Mantiqini Yozish:
+Yangi blog post ma'lumotlar bazasiga saqlanganda, uni Telegram kanaliga avtomatik yuborish funksiyasini yozish.
+Postni chiroyli formatda (rasm, sarlavha, qisqacha mazmun, havola) kanalga yuborish.
+Xabarlarga saytga o'tish uchun inline havola qo'shish.
+Marketing Xabarlarini Rejalashtirish:
+Maxsus marketing xabarlari uchun alohida jadval yaratish (masalan, marketing_messages).
+Bu xabarlarni ham ma'lum vaqtlarda Telegram kanaliga yuborish mantiqini yozish.
+3-QISM: MAHSULOTLAR HAQIDA XABARLARNI AVTOMATIK YUBORISH
+
+Yangi Mahsulotlarni Kuzatish:
+products jadvaliga created_at maydoni borligiga ishonch hosil qilish.
+Har kuni yangi qo'shilgan mahsulotlarni aniqlash uchun so'rov yozish.
+Mahsulotlarni Telegram Kanalga Yuborish:
+Yangi mahsulotlar haqida xabar yaratish va ularni Telegram kanaliga avtomatik yuborish.
+Xabar formatini chiroyli qilish (mahsulot rasmi, nomi, narxi, havola).
+Agar yangi mahsulotlar bo'lmasa, eski mahsulotlarni "tanlov" qilib, ular haqida eslatma xabarlari yuborish mantiqini yozish.
+4-QISM: FRONTENDDA YANGILANISHLAR
+
+Blog Sahifasini Yangilash:
+Foydalanuvchilarga avtomatik yaratilgan postlarni ajratib ko'rsatish (masalan, maxsus belgi yoki rang).
+Filtr qilish imkonini berish (masalan, faqat admin tomonidan yaratilgan postlar).
+Natija:
+Sizda SEO uchun foydali bo'lgan yangi kontent doimiy ravishda yaratiladi, auditoriya doimiy yangiliklar bilan ta'minlanadi va Telegram kanalingiz faol ravishda yangilanadi. Bu sizning saytingizni qidiruv tizimlarida yuqori o'rinlarga chiqish imkonini beradi va mijozlarni jalb qiladi.

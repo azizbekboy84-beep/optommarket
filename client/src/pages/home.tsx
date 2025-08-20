@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/components/language-provider';
 import { Footer } from '@/components/footer';
+import { SEOHead } from '@/components/SEOHead';
+import { DEFAULT_SEO } from '@shared/seo';
 import { CategoryCard } from '@/components/category-card';
 import { ProductCard } from '@/components/product-card';
 import { Button } from '@/components/ui/button';
@@ -24,6 +26,9 @@ export default function Home() {
     { value: '10K+', label: t('customers') },
     { value: '24/7', label: t('support') },
   ];
+
+  // Home sahifasi uchun asosiy SEO
+  const homeSEO = DEFAULT_SEO;
 
   const features = [
     {
@@ -63,6 +68,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEOHead seo={homeSEO} />
       
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-red-800 text-white py-32 overflow-hidden">

@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useRoute } from 'wouter';
 import { Footer } from '../components/footer';
+import { SEOHead } from '../components/SEOHead';
+import { generateBlogPostMetaTags } from '@shared/seo';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { ArrowLeft, Calendar, User, Share2 } from 'lucide-react';
@@ -24,6 +26,9 @@ export default function BlogPostPage() {
     },
     enabled: !!slug,
   });
+
+  // SEO meta-teglarni generate qilish
+  const blogPostSEO = post ? generateBlogPostMetaTags(post) : null;
 
   if (isLoading) {
     return (
@@ -88,6 +93,7 @@ export default function BlogPostPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+      {blogPostSEO && <SEOHead seo={blogPostSEO} />}
       
       <div className="py-8">
         <div className="max-w-4xl mx-auto px-4">

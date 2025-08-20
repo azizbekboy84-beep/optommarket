@@ -1,0 +1,39 @@
+SEO OPTIMIZATSIYA VA METATAGLARNI BOSHQARISH TIZIMI
+
+Loyiha mazmuni: Veb-saytimizning qidiruv tizimlarida yuqori o'rinlarda chiqishini ta'minlash uchun kerakli barcha SEO optimizatsiyalarni amalga oshirish. Bu foydalanuvchilarning saytimizni osongina topa olishini va saytga ko'proq tashrif buyurishini oshiradi.
+
+Aniq vazifalar:
+
+1-QISM: Dinamik Metateglarni Boshqarish Tizimini Yaratish
+
+shared/seo.ts faylini yaratish:
+Har bir sahifa (Katalog, Mahsulot, Blog) uchun mos title, description, keywords, og:image va boshqa meta-teglarni dinamik tarzda yaratish uchun umumiy funksiyalar yozing.
+Masalan, generateProductMetaTags(product: Product) funksiyasi mahsulot nomi, tavsifi va rasmi asosida mos meta-teglarni hosoblab bersin.
+Frontend sahifalarini yangilash (client/src/pages/):
+ProductDetailsPage.tsx, CatalogPage.tsx, BlogPostPage.tsx kabi sahifalarda useEffect yoki Helmet kabi kutubxonalar yordamida dinamik meta-teglarni HTML <head> qismiga joylashtirish mantiqini qo'shing.
+Har bir sahifa yuklanganda, tegishli generate...MetaTags funksiyasi chaqirilsin va natija sahifaga qo'llanilsin.
+2-QISM: Sitemap.xml va Robots.txt fayllarini Avtomatik Generatsiya Qilish
+
+Sitemap Generator Servisini Yaratish (server/services/sitemap-generator.ts):
+Ma'lumotlar bazasidagi barcha faol mahsulotlar, kategoriyalar va blog postlar uchun sitemap.xml faylini avtomatik yaratadigan servis yozing.
+Fayl har kun yangilanib turishi kerak.
+Robots.txt faylini yaratish:
+robots.txt faylini yaratib, qidiruv botlariga sayt qaysi qismlarini indexlash mumkinligini ko'rsating.
+sitemap.xml fayliga havola qo'shing.
+3-QISM: Schema.org Markuplarni Qo'shish
+
+Mahsulotlar uchun Schema Markup:
+ProductDetailsPage.tsx da mahsulot haqidagi ma'lumotlarga mos schema.org markuplarini qo'shing (Product, Offer, Review va hokazo).
+Bu qidiruv tizimlariga saytdagi kontentni yaxshiroq tushunish imkonini beradi.
+Blog postlar uchun Schema Markup:
+BlogPostPage.tsx da maqola haqida ma'lumotlarga mos Article turidagi schema markuplarni qo'llang.
+4-QISM: Ichki Linklar Tarmog'ini Optimallashtirish
+
+Kontentlar orasida ichki linklar:
+Blog postlar yozilganda, ular ichida saytdagi boshqa blog postlar yoki mahsulotlarga linklar bo'lishi kerak.
+AI kontent generatori (server/services/ai-content-generator.ts) ga ichki linklarni avtomatik aniqlab, matnga joylash imkonini qo'shing (agar mavjud bo'lsa).
+5-QISM: SEO Monitoring va Hisobot Tizimi (Qo'shimcha)
+
+Oddiy SEO Checker:
+Admin panelga oddiy SEO checker vositasini qo'shing. Bu vosita sayt sahifalarini tekshirib, kerakli meta-teglar mavjudligini, uzunligini va to'g'riligini tekshirsin.
+Bu bosqichni amalga oshirish orqali sizning optombazar.uz loyihamiz SEO jihatdan juda kuchli bo'lib, qidiruv tizimlarida yuqori o'rinlarga chiqish imkonini topadi. Tayyor bo'lsangiz, ushbu reja asosida ishlashni boshlaymiz.

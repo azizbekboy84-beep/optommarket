@@ -82,7 +82,82 @@ function generateTags(title: string, language: 'uz' | 'ru'): string[] {
   return relevantTags.slice(0, Math.min(5, Math.max(3, relevantTags.length)));
 }
 
-export async function generateBlogPost(language: 'uz' | 'ru' = 'uz'): Promise<BlogPostContent> {
+// Ichki linklar generatsiya qilish funksiyasi
+async function generateInternalLinks(content: string, storage?: any): Promise<string> {
+  if (!storage) return content;
+
+  try {
+    // Mavjud blog postlar va mahsulotlarni olish
+    const [blogPosts, products, categories] = await Promise.all([
+      storage.getBlogPosts?.() || [],
+      storage.getProducts?.() || [],
+      storage.getCategories?.() || []
+    ]);
+
+    let updatedContent = content;
+
+    // Blog postlar uchun ichki linklar
+    for (const post of blogPosts.slice(0, 3)) { // Faqat 3 taga
+      if (post.isPublished && post.slug && post.title) {
+        const keyWords = post.title.toLowerCase().split(' ').slice(0, 3);
+        for (const word of keyWords) {
+          if (word.length > 4 && updatedContent.toLowerCase().includes(word)) {
+            const regex = new RegExp(`\\b${word}\\b`, 'gi');
+            const match = updatedContent.match(regex);
+            if (match && match.length === 1) { // Faqat bir marta link qilish
+              updatedContent = updatedContent.replace(regex, 
+                `[${word}](https://optombazar.uz/blog/${post.slug})`);
+              break; // Har bir post uchun faqat bir link
+            }
+          }
+        }
+      }
+    }
+
+    // Mahsulotlar uchun ichki linklar
+    for (const product of products.slice(0, 2)) { // Faqat 2 taga
+      if (product.isActive && product.slug && product.nameUz) {
+        const keyWords = product.nameUz.toLowerCase().split(' ').slice(0, 2);
+        for (const word of keyWords) {
+          if (word.length > 4 && updatedContent.toLowerCase().includes(word)) {
+            const regex = new RegExp(`\\b${word}\\b`, 'gi');
+            const match = updatedContent.match(regex);
+            if (match && match.length === 1) {
+              updatedContent = updatedContent.replace(regex, 
+                `[${word}](https://optombazar.uz/products/${product.slug})`);
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    // Kategoriyalar uchun ichki linklar
+    for (const category of categories.slice(0, 2)) {
+      if (category.isActive && category.slug && category.nameUz) {
+        const keyWords = category.nameUz.toLowerCase().split(' ').slice(0, 2);
+        for (const word of keyWords) {
+          if (word.length > 4 && updatedContent.toLowerCase().includes(word)) {
+            const regex = new RegExp(`\\b${word}\\b`, 'gi');
+            const match = updatedContent.match(regex);
+            if (match && match.length === 1) {
+              updatedContent = updatedContent.replace(regex, 
+                `[${word}](https://optombazar.uz/category/${category.slug})`);
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    return updatedContent;
+  } catch (error) {
+    console.error('Ichki linklar generatsiya xatoligi:', error);
+    return content; // Xatolik bo'lsa asl kontentni qaytarish
+  }
+}
+
+export async function generateBlogPost(language: 'uz' | 'ru' = 'uz', storage?: any): Promise<BlogPostContent> {
   try {
     // Tasodifiy mavzu tanlash
     const randomTopic = topics[Math.floor(Math.random() * topics.length)];
@@ -141,9 +216,14 @@ CONTENT: [asosiy kontent - faqat matn]`
 
     const title = titleMatch[1].trim();
     const excerpt = excerptMatch ? excerptMatch[1].trim() : title.substring(0, 150) + '...';
-    const content = contentMatch[1].trim();
+    let content = contentMatch[1].trim();
     const slug = generateSlug(title);
     const tags = generateTags(title, language);
+
+    // Ichki linklar qo'shish
+    if (storage) {
+      content = await generateInternalLinks(content, storage);
+    }
 
     return {
       title,

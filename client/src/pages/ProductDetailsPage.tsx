@@ -3,6 +3,8 @@ import { useParams, Link } from 'wouter';
 import { useProductBySlug } from '@/hooks/useProductBySlug';
 import { useLanguage } from '@/components/language-provider';
 import { useCart } from '@/context/CartContext';
+import { SEOHead } from '@/components/SEOHead';
+import { generateProductMetaTags } from '@shared/seo';
 import { Footer } from '@/components/footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -73,6 +75,9 @@ export default function ProductDetailsPage() {
 
   const name = language === 'uz' ? product.nameUz : product.nameRu;
   const description = language === 'uz' ? product.descriptionUz : product.descriptionRu;
+
+  // SEO meta-teglarni generate qilish
+  const seoMetaTags = generateProductMetaTags(product);
   
   const stockStatus = (product.stockQuantity || 0) > 100 ? 'inStock' : 
                      (product.stockQuantity || 0) > 0 ? 'lowStock' : 'outOfStock';
@@ -116,6 +121,7 @@ export default function ProductDetailsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEOHead seo={seoMetaTags} />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}

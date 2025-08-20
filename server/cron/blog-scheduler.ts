@@ -11,7 +11,7 @@ async function createAndSaveBlogPost(storage: IStorage, language: 'uz' | 'ru' = 
     console.log(`${language.toUpperCase()} tilida yangi blog post yaratilmoqda...`);
     
     // AI orqali kontent yaratish
-    const blogContent = await generateBlogPost(language);
+    const blogContent = await generateBlogPost(language, storage);
     
     // Ma'lumotlar bazasiga saqlash
     const blogPost = await storage.createBlogPost({

@@ -26,6 +26,7 @@ import AdminProductsPage from "@/pages/admin/AdminProductsPage";
 import AdminOrdersPage from "@/pages/admin/AdminOrdersPage";
 import AdminBlogPage from "@/pages/admin/AdminBlogPage";
 import AdminCategoriesPage from "@/pages/admin/AdminCategoriesPage";
+import AdminSEOPage from "@/pages/admin/AdminSEOPage";
 import BlogPage from "@/pages/BlogPage";
 import BlogPostPage from "@/pages/BlogPostPage";
 import SearchPage from "@/pages/SearchPage";
@@ -34,6 +35,7 @@ import { AIChatWidget } from "@/components/AIChatWidget";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { Header } from "@/components/header";
 import { AppDownloadPrompt } from "@/components/AppDownloadPrompt";
+import { HelmetProvider } from 'react-helmet-async';
 
 function Router() {
   return (
@@ -94,6 +96,13 @@ function Router() {
           </AdminRoute>
         )}
       </Route>
+      <Route path="/admin/seo">
+        {() => (
+          <AdminRoute>
+            <AdminSEOPage />
+          </AdminRoute>
+        )}
+      </Route>
       <Route path="/order-success" component={OrderSuccessPage} />
       <Route path="/contact" component={Contact} />
       <Route path="/blog" component={BlogPage} />
@@ -106,24 +115,26 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <LanguageProvider>
-        <AuthProvider>
-          <CartProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Header />
-              <main className="pb-20 md:pb-0">
-                <Router />
-              </main>
-              <MobileBottomNav />
-              <AIChatWidget />
-              <AppDownloadPrompt />
-            </TooltipProvider>
-          </CartProvider>
-        </AuthProvider>
-      </LanguageProvider>
-    </QueryClientProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <LanguageProvider>
+          <AuthProvider>
+            <CartProvider>
+              <TooltipProvider>
+                <Toaster />
+                <Header />
+                <main className="pb-20 md:pb-0">
+                  <Router />
+                </main>
+                <MobileBottomNav />
+                <AIChatWidget />
+                <AppDownloadPrompt />
+              </TooltipProvider>
+            </CartProvider>
+          </AuthProvider>
+        </LanguageProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 }
 

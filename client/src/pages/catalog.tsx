@@ -3,6 +3,8 @@ import { useCategories } from '@/hooks/useCategories';
 import { useProducts } from '@/hooks/useProducts';
 import { useLanguage } from '@/components/language-provider';
 import { Footer } from '@/components/footer';
+import { SEOHead } from '@/components/SEOHead';
+import { generateCatalogMetaTags } from '@shared/seo';
 import { ProductCard } from '@/components/product-card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -29,8 +31,12 @@ export default function Catalog() {
     }
   });
 
+  // SEO meta-teglarni generate qilish
+  const catalogSEO = generateCatalogMetaTags();
+
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEOHead seo={catalogSEO} />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">

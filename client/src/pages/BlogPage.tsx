@@ -2,6 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Footer } from '../components/footer';
+import { SEOHead } from '../components/SEOHead';
+import { generateBlogMetaTags } from '@shared/seo';
 import { Link } from 'wouter';
 import { Calendar, User, ArrowRight, Bot } from 'lucide-react';
 import { BlogPost } from '@shared/schema';
@@ -19,8 +21,12 @@ export default function BlogPage() {
     },
   });
 
+  // Blog sahifasi uchun SEO meta-teglar
+  const blogSEO = generateBlogMetaTags();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+      <SEOHead seo={blogSEO} />
       
       <div className="py-12">
         <div className="max-w-7xl mx-auto px-4">

@@ -27,6 +27,7 @@ interface ProductFormData {
   minQuantity: number;
   stockQuantity: number;
   unit: string;
+  specifications: string;
   slug: string;
   isActive: boolean;
   isFeatured: boolean;
@@ -44,6 +45,7 @@ const defaultFormData: ProductFormData = {
   minQuantity: 1,
   stockQuantity: 0,
   unit: 'dona',
+  specifications: '{}',
   slug: '',
   isActive: true,
   isFeatured: false,
@@ -148,10 +150,19 @@ export default function AdminProductsPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    let specifications = {};
+    try {
+      specifications = JSON.parse(formData.specifications || '{}');
+    } catch {
+      toast({ title: 'Xatolik', description: 'Xususiyatlari maydoni noto\'g\'ri JSON formatida', variant: 'destructive' });
+      return;
+    }
+    
     const productData: InsertProduct = {
       ...formData,
       price: formData.price,
       wholesalePrice: formData.wholesalePrice,
+      specifications: specifications,
       images: null,
     };
 
@@ -176,6 +187,7 @@ export default function AdminProductsPage() {
       minQuantity: product.minQuantity || 1,
       stockQuantity: product.stockQuantity || 0,
       unit: product.unit,
+      specifications: JSON.stringify(product.specifications || {}),
       slug: product.slug,
       isActive: product.isActive ?? true,
       isFeatured: product.isFeatured ?? false,
@@ -344,6 +356,20 @@ export default function AdminProductsPage() {
                       required
                     />
                   </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="specifications">Xususiyatlari (JSON format)</Label>
+                  <Textarea
+                    id="specifications"
+                    value={formData.specifications}
+                    onChange={(e) => setFormData({ ...formData, specifications: e.target.value })}
+                    placeholder='{"Qalinligi": "50 mikron", "Material": "LDPE", "Rangi": "Shaffof"}'
+                    rows={4}
+                  />
+                  <p className="text-sm text-gray-500 mt-1">
+                    JSON formatida kiriting. Masalan: {"{"}"Qalinligi": "50 mikron", "Material": "LDPE"{"}"}
+                  </p>
                 </div>
 
                 <div className="flex items-center gap-6">

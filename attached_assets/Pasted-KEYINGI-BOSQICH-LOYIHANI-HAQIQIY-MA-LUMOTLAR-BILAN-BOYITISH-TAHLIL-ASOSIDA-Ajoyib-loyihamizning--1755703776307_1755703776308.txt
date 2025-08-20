@@ -1,0 +1,53 @@
+KEYINGI BOSQICH: LOYIHANI HAQIQIY MA'LUMOTLAR BILAN BOYITISH (TAHLIL ASOSIDA)
+Ajoyib, loyihamizning asosiy qismlari ishlamoqda. Endi platformamizni haqiqiy onlayn do'kon kabi professional va batafsil qilish vaqti keldi.
+
+Loyiha mazmuni (Kontekst):
+Biz optombazar.uz saytini tahlil qildik va unda mahsulotlar haqida bizning bazamizda yo'q qo'shimcha, muhim ma'lumotlar borligini aniqladik. Masalan, "Louis Vuitton" paketining sahifasida uning "Minimal buyurtma soni: 100 dona", "Qalinligi: 50 mikron", "Materiali: LDPE" kabi xususiyatlari ko'rsatilgan. Bizning maqsadimiz — xuddi shunday batafsil ma'lumotlarni o'z platformamizga qo'shish orqali uni yanada professional qilish.
+
+Aniq qadamlar:
+
+1-QISM: BAZA VA BACKENDNI TAKOMILLASHTIRISH
+
+Baza Sxemasini Haqiqiy Ma'lumotlarga Moslashtirish (shared/schema.ts):
+
+products jadvalini och va unga quyidagi yangi ustunlarni qo'sh. Bu ustunlar optombazar.uz saytidagi kabi batafsil ma'lumotlarni saqlash uchun kerak:
+
+min_quantity (integer, minimal buyurtma soni uchun, standart qiymati 1 bo'lsin).
+
+unit (text, o'lchov birligi uchun, masalan, "dona", "blok", "kg").
+
+specifications (json, mahsulotning "Qalinligi", "Materiali" kabi turli xil texnik xususiyatlarini saqlash uchun).
+
+Admin API'sini Yangi Maydonlarga Moslashtirish:
+
+POST /api/admin/products (yangi mahsulot yaratish) va PUT /api/admin/products/:id (mahsulotni tahrirlash) endpoint'larini o'zgartir. Endi ular frontend'dan yangi qo'shilgan min_quantity, unit va specifications ma'lumotlarini ham qabul qila olsin.
+
+2-QISM: FRONTENDNI YANGILASH
+
+Admin Panelini Kuchaytirish (AdminProductsPage.tsx):
+
+Mahsulot qo'shish va tahrirlash uchun ishlatiladigan modal oyna (yoki sahifa)dagi formaga quyidagi yangi maydonlarni qo'sh:
+
+"Minimal buyurtma soni": Raqam kiritiladigan maydon (<Input type="number">).
+
+"O'lchov birligi": Matn kiritiladigan maydon (<Input type="text">).
+
+"Xususiyatlari": Katta matn maydoni (<Textarea>). Bu yerga admin {"Qalinligi": "50 mikron", "Material": "LDPE"} kabi JSON formatida ma'lumot kiritishi haqida yo'riqnoma qo'sh.
+
+Mahsulot Sahifasini Boyitish (ProductDetailsPage.tsx):
+
+Mahsulotning batafsil ma'lumotlari ko'rsatiladigan sahifani och.
+
+Mahsulot narxi va tavsifi yoniga uning yangi ma'lumotlarini chiroyli qilib joylashtir: "Minimal buyurtma: [qiymat] [o'lchov birligi]". Masalan: "Minimal buyurtma: 100 dona".
+
+"Tavsif" bo'limidan keyin "Xususiyatlari" nomli yangi bo'lim yarat.
+
+specifications maydonidagi JSON ma'lumotlarini o'qib, uni chiroyli jadval (<table>) shaklida (birinchi ustun - xususiyat nomi, ikkinchi ustun - qiymati) ko'rsat.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Ma'lumotlar bazasidagi products jadvali yangi ustunlar (min_quantity, unit, specifications) bilan muvaffaqiyatli yangilandimi?
+
+Admin endi mahsulot qo'shishda uning minimal buyurtma soni va boshqa xususiyatlarini kirita olyaptimi?
+
+Bu yangi, batafsil ma'lumotlar foydalanuvchi ko'radigan mahsulot sahifasida to'g'ri va chiroyli ko'rsatilyaptimi?

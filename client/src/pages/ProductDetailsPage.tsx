@@ -222,6 +222,31 @@ export default function ProductDetailsPage() {
               </div>
             )}
 
+            {/* Specifications */}
+            {product.specifications && typeof product.specifications === 'object' && Object.keys(product.specifications).length > 0 && (
+              <div>
+                <h3 className="text-lg font-semibold mb-3" data-testid="text-specifications-title">
+                  {language === 'uz' ? 'Xususiyatlari' : 'Характеристики'}
+                </h3>
+                <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                  <table className="w-full" data-testid="table-specifications">
+                    <tbody>
+                      {Object.entries(product.specifications as Record<string, string>).map(([key, value], index) => (
+                        <tr key={key} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                          <td className="px-4 py-3 text-sm font-medium text-gray-900 border-r border-gray-200">
+                            {key}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-700">
+                            {String(value)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
             {/* Quantity Selector */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700" data-testid="label-quantity">

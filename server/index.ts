@@ -3,6 +3,7 @@ import session from "express-session";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { MemStorage } from "./storage";
+import { db } from "./db";
 import { startBlogScheduler } from "./cron/blog-scheduler";
 import { getBotInfo } from "./services/telegram-bot";
 
@@ -53,10 +54,11 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Storage yaratish
-  const storage = new MemStorage();
+  // Database Storage yaratish (PostgreSQL blog posts uchun)
+  const { DatabaseStorage } = await import("./database-storage");
+  const storage = new DatabaseStorage();
   
-  const server = await registerRoutes(app);
+  const server = await registerRoutes(app, storage);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;

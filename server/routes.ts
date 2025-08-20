@@ -89,19 +89,21 @@ ${userMessage}`;
   }
 }
 
-export async function registerRoutes(app: Express): Promise<Server> {
+export async function registerRoutes(app: Express, customStorage?: any): Promise<Server> {
+  // Storage instance ni ishlatish (agar berilgan bo'lsa)
+  const activeStorage = customStorage || storage;
   // Authentication endpoints
   app.post("/api/auth/register", async (req, res) => {
     try {
       const { username, email, password, phone } = insertUserSchema.parse(req.body);
       
       // Check if user already exists
-      const existingUserByEmail = await storage.getUserByEmail(email);
+      const existingUserByEmail = await activeStorage.getUserByEmail(email);
       if (existingUserByEmail) {
         return res.status(400).json({ message: "User with this email already exists" });
       }
       
-      const existingUserByUsername = await storage.getUserByUsername(username);
+      const existingUserByUsername = await activeStorage.getUserByUsername(username);
       if (existingUserByUsername) {
         return res.status(400).json({ message: "Username already taken" });
       }
@@ -110,7 +112,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const hashedPassword = await bcrypt.hash(password, 10);
       
       // Create user
-      const user = await storage.createUser({
+      const user = await activeStorage.createUser({
         username,
         email,
         password: hashedPassword,
@@ -138,7 +140,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Find user by email
-      const user = await storage.getUserByEmail(email);
+      const user = await activeStorage.getUserByEmail(email);
       if (!user) {
         return res.status(401).json({ message: "Invalid email or password" });
       }
@@ -180,7 +182,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Not authenticated" });
       }
       
-      const user = await storage.getUser(req.session.userId);
+      const user = await activeStorage.getUser(req.session.userId);
       if (!user) {
         req.session.userId = undefined; // Clear invalid session
         return res.status(401).json({ message: "User not found" });
@@ -197,7 +199,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Categories
   app.get("/api/categories", async (req, res) => {
     try {
-      const categories = await storage.getCategories();
+      const categories = await activeStorage.getCategories();
       
       // Build hierarchical structure
       const categoriesMap = new Map();
@@ -232,7 +234,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/categories/:id", async (req, res) => {
     try {
-      const category = await storage.getCategory(req.params.id);
+      const category = await activeStorage.getCategory(req.params.id);
       if (!category) {
         return res.status(404).json({ message: "Category not found" });
       }
@@ -249,9 +251,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       let products;
       if (search) {
-        products = await storage.searchProducts(search as string);
+        products = await activeStorage.searchProducts(search as string);
       } else {
-        products = await storage.getProducts(
+        products = await activeStorage.getProducts(
           categoryId as string,
           featured === 'true' ? true : undefined
         );
@@ -266,13 +268,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/products/:slug", async (req, res) => {
     try {
       // Try to get by slug first
-      const product = await storage.getProductBySlug(req.params.slug);
+      const product = await activeStorage.getProductBySlug(req.params.slug);
       if (product) {
         return res.json(product);
       }
       
       // Fallback to ID if slug not found
-      const productById = await storage.getProduct(req.params.slug);
+      const productById = await activeStorage.getProduct(req.params.slug);
       if (!productById) {
         return res.status(404).json({ message: "Product not found" });
       }
@@ -286,12 +288,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/cart", async (req, res) => {
     try {
       const sessionId = req.headers['x-session-id'] as string || 'anonymous';
-      const cartItems = await storage.getCartItems(sessionId);
+      const cartItems = await activeStorage.getCartItems(sessionId);
       
       // Populate with product details
       const cartWithProducts = await Promise.all(
         cartItems.map(async (item) => {
-          const product = await storage.getProduct(item.productId);
+          const product = await activeStorage.getProduct(item.productId);
           return {
             ...item,
             product
@@ -313,7 +315,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         sessionId
       });
       
-      const cartItem = await storage.addToCart(cartData);
+      const cartItem = await activeStorage.addToCart(cartData);
       res.status(201).json(cartItem);
     } catch (error) {
       res.status(400).json({ message: "Failed to add to cart", error: error instanceof Error ? error.message : "Unknown error" });
@@ -327,7 +329,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid quantity" });
       }
       
-      const updatedItem = await storage.updateCartItem(req.params.itemId, quantity);
+      const updatedItem = await activeStorage.updateCartItem(req.params.itemId, quantity);
       if (!updatedItem) {
         return res.status(404).json({ message: "Cart item not found" });
       }
@@ -340,7 +342,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.delete("/api/cart/:itemId", async (req, res) => {
     try {
-      const success = await storage.removeFromCart(req.params.itemId);
+      const success = await activeStorage.removeFromCart(req.params.itemId);
       if (!success) {
         return res.status(404).json({ message: "Cart item not found" });
       }
@@ -360,12 +362,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ...req.body,
         userId: userId || 'anonymous'
       });
-      const order = await storage.createOrder(orderData);
+      const order = await activeStorage.createOrder(orderData);
       
       // Add order items if provided
       if (req.body.items && Array.isArray(req.body.items)) {
         for (const item of req.body.items) {
-          await storage.addOrderItem({
+          await activeStorage.addOrderItem({
             orderId: order.id,
             productId: item.productId,
             quantity: item.quantity,
@@ -377,7 +379,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Clear cart after successful order
       const sessionId = req.headers['x-session-id'] as string || 'anonymous';
-      await storage.clearCart(sessionId);
+      await activeStorage.clearCart(sessionId);
       
       res.status(201).json(order);
     } catch (error) {
@@ -393,17 +395,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Ruxsat yo'q. Tizimga kirish talab qilinadi." });
       }
       
-      const orders = await storage.getOrders(req.session.userId);
+      const orders = await activeStorage.getOrders(req.session.userId);
       
       // Populate each order with its items
       const ordersWithItems = await Promise.all(
         orders.map(async (order) => {
-          const items = await storage.getOrderItems(order.id);
+          const items = await activeStorage.getOrderItems(order.id);
           
           // Populate items with product details
           const itemsWithProducts = await Promise.all(
             items.map(async (item) => {
-              const product = await storage.getProduct(item.productId);
+              const product = await activeStorage.getProduct(item.productId);
               return {
                 ...item,
                 product
@@ -427,7 +429,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/orders", async (req, res) => {
     try {
       const { userId } = req.query;
-      const orders = await storage.getOrders(userId as string);
+      const orders = await activeStorage.getOrders(userId as string);
       res.json(orders);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch orders" });
@@ -436,12 +438,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/orders/:id", async (req, res) => {
     try {
-      const order = await storage.getOrder(req.params.id);
+      const order = await activeStorage.getOrder(req.params.id);
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
       }
       
-      const items = await storage.getOrderItems(order.id);
+      const items = await activeStorage.getOrderItems(order.id);
       res.json({ ...order, items });
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch order" });
@@ -451,7 +453,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Admin APIs - Protected with adminAuth middleware
   app.get("/api/admin/products", adminAuth, async (req, res) => {
     try {
-      const products = await storage.getProducts();
+      const products = await activeStorage.getProducts();
       res.json(products);
     } catch (error) {
       res.status(500).json({ message: "Mahsulotlarni olishda xatolik" });
@@ -461,7 +463,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/admin/products", adminAuth, async (req, res) => {
     try {
       const productData = insertProductSchema.parse(req.body);
-      const product = await storage.createProduct(productData);
+      const product = await activeStorage.createProduct(productData);
       res.status(201).json(product);
     } catch (error) {
       res.status(400).json({ message: "Mahsulot yaratishda xatolik", error: error instanceof Error ? error.message : "Unknown error" });
@@ -471,7 +473,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put("/api/admin/products/:id", adminAuth, async (req, res) => {
     try {
       const productData = insertProductSchema.partial().parse(req.body);
-      const product = await storage.updateProduct(req.params.id, productData);
+      const product = await activeStorage.updateProduct(req.params.id, productData);
       
       if (!product) {
         return res.status(404).json({ message: "Mahsulot topilmadi" });
@@ -485,7 +487,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.delete("/api/admin/products/:id", adminAuth, async (req, res) => {
     try {
-      const success = await storage.deleteProduct(req.params.id);
+      const success = await activeStorage.deleteProduct(req.params.id);
       
       if (!success) {
         return res.status(404).json({ message: "Mahsulot topilmadi" });
@@ -499,17 +501,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/admin/orders", adminAuth, async (req, res) => {
     try {
-      const orders = await storage.getAllOrders();
+      const orders = await activeStorage.getAllOrders();
       
       // Populate each order with its items and customer info
       const ordersWithDetails = await Promise.all(
         orders.map(async (order) => {
-          const items = await storage.getOrderItems(order.id);
+          const items = await activeStorage.getOrderItems(order.id);
           
           // Populate items with product details
           const itemsWithProducts = await Promise.all(
             items.map(async (item) => {
-              const product = await storage.getProduct(item.productId);
+              const product = await activeStorage.getProduct(item.productId);
               return {
                 ...item,
                 product
@@ -538,7 +540,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Status talab qilinadi" });
       }
       
-      const order = await storage.updateOrder(req.params.id, { status });
+      const order = await activeStorage.updateOrder(req.params.id, { status });
       
       if (!order) {
         return res.status(404).json({ message: "Buyurtma topilmadi" });
@@ -553,7 +555,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Admin Categories APIs
   app.get("/api/admin/categories", adminAuth, async (req, res) => {
     try {
-      const categories = await storage.getCategories();
+      const categories = await activeStorage.getCategories();
       res.json(categories);
     } catch (error) {
       res.status(500).json({ message: "Kategoriyalarni olishda xatolik" });
@@ -563,7 +565,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/admin/categories", adminAuth, async (req, res) => {
     try {
       const categoryData = insertCategorySchema.parse(req.body);
-      const category = await storage.createCategory(categoryData);
+      const category = await activeStorage.createCategory(categoryData);
       res.status(201).json(category);
     } catch (error) {
       res.status(400).json({ message: "Kategoriya yaratishda xatolik", error: error instanceof Error ? error.message : "Unknown error" });
@@ -573,7 +575,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put("/api/admin/categories/:id", adminAuth, async (req, res) => {
     try {
       const categoryData = insertCategorySchema.partial().parse(req.body);
-      const category = await storage.updateCategory(req.params.id, categoryData);
+      const category = await activeStorage.updateCategory(req.params.id, categoryData);
       
       if (!category) {
         return res.status(404).json({ message: "Kategoriya topilmadi" });
@@ -587,7 +589,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.delete("/api/admin/categories/:id", adminAuth, async (req, res) => {
     try {
-      const success = await storage.deleteCategory(req.params.id);
+      const success = await activeStorage.deleteCategory(req.params.id);
       
       if (!success) {
         return res.status(404).json({ message: "Kategoriya topilmadi" });
@@ -610,7 +612,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Save user message
-      const userMessage = await storage.saveChatMessage({
+      const userMessage = await activeStorage.saveChatMessage({
         sessionId,
         userId: req.session.userId || null,
         message,
@@ -621,7 +623,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const aiResponse = await generateAIResponse(message);
       
       // Update the message with AI response
-      const updatedMessage = await storage.updateChatResponse(userMessage.id, aiResponse);
+      const updatedMessage = await activeStorage.updateChatResponse(userMessage.id, aiResponse);
 
       res.json({
         id: updatedMessage?.id,
@@ -641,7 +643,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/chat/history/:sessionId", async (req, res) => {
     try {
       const { sessionId } = req.params;
-      const history = await storage.getChatHistory(sessionId);
+      const history = await activeStorage.getChatHistory(sessionId);
       res.json(history);
     } catch (error) {
       res.status(500).json({ message: "Suhbat tarixini olishda xatolik" });
@@ -651,7 +653,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Admin Blog APIs
   app.get("/api/admin/blog", adminAuth, async (req, res) => {
     try {
-      const posts = await storage.getBlogPosts();
+      const posts = await activeStorage.getBlogPosts();
       res.json(posts);
     } catch (error) {
       res.status(500).json({ message: "Blog postlarini olishda xatolik" });
@@ -661,7 +663,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/admin/blog", adminAuth, async (req, res) => {
     try {
       const postData = insertBlogPostSchema.parse(req.body);
-      const post = await storage.createBlogPost(postData);
+      const post = await activeStorage.createBlogPost(postData);
       res.status(201).json(post);
     } catch (error) {
       res.status(400).json({ message: "Blog post yaratishda xatolik", error: error instanceof Error ? error.message : "Unknown error" });
@@ -671,7 +673,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put("/api/admin/blog/:id", adminAuth, async (req, res) => {
     try {
       const postData = insertBlogPostSchema.partial().parse(req.body);
-      const post = await storage.updateBlogPost(req.params.id, postData);
+      const post = await activeStorage.updateBlogPost(req.params.id, postData);
       
       if (!post) {
         return res.status(404).json({ message: "Blog post topilmadi" });
@@ -685,7 +687,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.delete("/api/admin/blog/:id", adminAuth, async (req, res) => {
     try {
-      const success = await storage.deleteBlogPost(req.params.id);
+      const success = await activeStorage.deleteBlogPost(req.params.id);
       
       if (!success) {
         return res.status(404).json({ message: "Blog post topilmadi" });
@@ -700,7 +702,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Public Blog APIs
   app.get("/api/blog/posts", async (req, res) => {
     try {
-      const posts = await storage.getBlogPosts();
+      const posts = await activeStorage.getBlogPosts();
       res.json(posts);
     } catch (error) {
       res.status(500).json({ message: "Blog postlarini olishda xatolik" });
@@ -709,7 +711,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/blog/posts/:slug", async (req, res) => {
     try {
-      const post = await storage.getBlogPostBySlug(req.params.slug);
+      const post = await activeStorage.getBlogPostBySlug(req.params.slug);
       
       if (!post) {
         return res.status(404).json({ message: "Blog post topilmadi" });
@@ -730,7 +732,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Qidiruv so'zi kiritilmagan" });
       }
       
-      const results = await storage.searchAll(query);
+      const results = await activeStorage.searchAll(query);
       res.json(results);
     } catch (error) {
       res.status(500).json({ message: "Qidiruvda xatolik" });
@@ -738,7 +740,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // AI test routes qo'shish
-  registerAITestRoutes(app, storage);
+  registerAITestRoutes(app, activeStorage);
 
   const httpServer = createServer(app);
   return httpServer;

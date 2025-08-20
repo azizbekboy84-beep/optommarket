@@ -6,7 +6,7 @@ import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { Link } from 'wouter';
 import { useCategories } from '@/hooks/useCategories';
-import { ChevronDown, ShoppingCart, User } from 'lucide-react';
+import { ChevronDown, ShoppingCart, User, Settings } from 'lucide-react';
 import logoImage from '@assets/optombazar logo_1755690917356.png';
 
 export function Header() {
@@ -151,6 +151,17 @@ export function Header() {
                       Mening akkauntim
                     </Link>
                   </DropdownMenuItem>
+                  {user?.role === 'admin' && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link href="/admin" className="cursor-pointer">
+                          <Settings className="mr-2 h-4 w-4" />
+                          Admin Panel
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={logout} className="cursor-pointer">
                     Chiqish

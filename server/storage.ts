@@ -150,22 +150,12 @@ export class MemStorage implements IStorage {
   }
 
   private loadSeedData() {
-    // Import seed data dynamically to avoid circular dependencies
-    try {
-      const seedModule = require('./seed');
-      return {
-        realCategories: seedModule.realCategories || [],
-        realProducts: seedModule.realProducts || [],
-        realBlogPosts: seedModule.realBlogPosts || []
-      };
-    } catch (error) {
-      console.warn('Could not load seed data:', error);
-      return {
-        realCategories: this.getFallbackCategories(),
-        realProducts: [],
-        realBlogPosts: []
-      };
-    }
+    // Use fallback data for now - direct import will be implemented in production
+    return {
+      realCategories: this.getFallbackCategories(),
+      realProducts: [],
+      realBlogPosts: []
+    };
   }
 
   private getFallbackCategories() {

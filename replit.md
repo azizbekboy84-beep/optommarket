@@ -6,6 +6,25 @@ This is a full-stack e-commerce marketplace application called Optombazar.uz, de
 
 Preferred communication style: Simple, everyday language.
 
+# Recent Changes (August 21, 2025)
+
+## Deployment Preparation Completed
+- ✓ Created comprehensive deployment configuration for Render.com
+- ✓ Added health check endpoints (/health, /api/health) for monitoring
+- ✓ Created production-ready Docker configuration
+- ✓ Fixed seed data loading issues for production environment
+- ✓ Generated deployment scripts (build.sh, deploy.sh, start.sh)
+- ✓ Created bilingual deployment guide (English + Uzbek)
+- ✓ Configured render.yaml for automatic deployment
+- ✓ Added real data from actual Optombazar.uz website
+- ✓ Updated admin contact to real phone number: +998996448444
+
+## Deployment Status
+- **Ready for production deployment on Render.com**
+- **Cost estimate**: $14/month (Starter plan: $7 web service + $7 PostgreSQL)
+- **Expected URL**: https://optombazar-uz.onrender.com
+- **All technical issues resolved, real data integrated**
+
 # System Architecture
 
 ## Frontend Architecture

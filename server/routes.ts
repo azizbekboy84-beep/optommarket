@@ -104,6 +104,25 @@ export async function registerRoutes(app: Express, customStorage?: any): Promise
   
   // Initialize activity logger
   const activityLogger = new ActivityLogger(activeStorage);
+
+  // Health check endpoints for deployment monitoring
+  app.get("/health", (req, res) => {
+    res.status(200).json({ 
+      status: "healthy", 
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      environment: process.env.NODE_ENV || 'development'
+    });
+  });
+
+  app.get("/api/health", (req, res) => {
+    res.status(200).json({ 
+      status: "healthy", 
+      api: "operational",
+      timestamp: new Date().toISOString() 
+    });
+  });
+
   // Authentication endpoints
   app.post("/api/auth/register", async (req, res) => {
     try {

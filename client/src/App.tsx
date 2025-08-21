@@ -31,6 +31,8 @@ import AdminSEOPage from "@/pages/admin/AdminSEOPage";
 import AdminDiscountsPage from "@/pages/admin/AdminDiscountsPage";
 import AdminPushNotificationsPage from "@/pages/admin/AdminPushNotificationsPage";
 import AdminAnalyticsPage from "@/pages/admin/AdminAnalyticsPage";
+import AdminMarketingPage from "@/pages/admin/AdminMarketingPage";
+import AdminMarketingConfigPage from "@/pages/admin/AdminMarketingConfigPage";
 import ReportsPage from "@/pages/admin/ReportsPage";
 import BlogPage from "@/pages/BlogPage";
 import BlogPostPage from "@/pages/BlogPostPage";
@@ -136,6 +138,20 @@ function Router() {
         {() => (
           <AdminRoute>
             <AdminAnalyticsPage />
+          </AdminRoute>
+        )}
+      </Route>
+      <Route path="/admin/marketing">
+        {() => (
+          <AdminRoute>
+            <AdminMarketingPage />
+          </AdminRoute>
+        )}
+      </Route>
+      <Route path="/admin/marketing/config">
+        {() => (
+          <AdminRoute>
+            <AdminMarketingConfigPage />
           </AdminRoute>
         )}
       </Route>

@@ -1,7 +1,7 @@
 import { Link } from 'wouter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
-import { Package, ShoppingCart, Users, BarChart3, Folder, FileText, Percent, Bell } from 'lucide-react';
+import { Package, ShoppingCart, Users, BarChart3, Folder, FileText, Percent, Bell, Megaphone } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export default function AdminDashboardPage() {
@@ -155,6 +155,26 @@ export default function AdminDashboardPage() {
               <Link href="/admin/analytics">
                 <Button className="w-full">
                   Analytics ko'rish
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          {/* Marketing Dashboard */}
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Megaphone className="h-5 w-5 text-purple-600" />
+                Marketing Dashboard
+              </CardTitle>
+              <CardDescription>
+                Reklama kampaniyalari va konversiya tracking
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Link href="/admin/marketing">
+                <Button className="w-full">
+                  Marketing ko'rish
                 </Button>
               </Link>
             </CardContent>

@@ -13,6 +13,7 @@ import discountsRouter from "./routes/discounts";
 import favoritesRouter from "./routes/favorites";
 import pushRouter from "./push";
 import analyticsRouter from "./routes/analytics";
+import marketingRouter from "./routes/marketing";
 
 // Extend Express Request type for session
 declare module 'express-session' {
@@ -875,11 +876,12 @@ export async function registerRoutes(app: Express, customStorage?: any): Promise
   // Register admin reports routes
   registerReportsRoutes(app, activeStorage);
   
-  // Register discounts, favorites, push notification and analytics routes
+  // Register discounts, favorites, push notification, analytics and marketing routes
   app.use("/api/discounts", discountsRouter);
   app.use("/api/favorites", favoritesRouter);
   app.use("/api/push", pushRouter);
   app.use("/api/analytics", analyticsRouter);
+  app.use("/api/marketing", marketingRouter);
 
   const httpServer = createServer(app);
   return httpServer;

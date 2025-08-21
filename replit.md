@@ -47,6 +47,8 @@ While authentication infrastructure is defined in the schema, the current implem
 - **Push Notifications**: Web push notification system with VAPID keys for user engagement
 - **SEO & Analytics**: Google Analytics 4 integration with comprehensive SEO monitoring dashboard
 - **Admin Analytics**: Real-time analytics dashboard with SEO metrics, Google Analytics data, and Search Console integration
+- **Marketing Tracking**: Google Tag Manager (GTM) integration with Facebook Pixel, UTM parameter tracking, and conversion monitoring
+- **Digital Marketing**: Complete advertising campaign tracking for Google Ads, Facebook, and Instagram with ROAS monitoring
 - **Responsive Design**: Mobile-first approach with responsive layouts
 
 # External Dependencies

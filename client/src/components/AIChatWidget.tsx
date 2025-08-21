@@ -231,7 +231,7 @@ export function AIChatWidget() {
                   <Bot className="h-12 w-12 mx-auto mb-4 text-blue-600" />
                   <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
                     {language === 'uz' 
-                      ? 'Salam! Sizga yordam berishga tayyorman' 
+                      ? 'Salom! Sizga yordam berishga tayyorman' 
                       : 'Привет! Я готов помочь вам'}
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-300">

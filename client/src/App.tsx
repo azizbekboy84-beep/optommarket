@@ -175,14 +175,12 @@ function App() {
               <CartProvider>
                 <TooltipProvider>
                   <Toaster />
-                  <Header />
                   <main className="pb-20 md:pb-0">
                     <Router />
                   </main>
                   <MobileBottomNav />
                   <AIChatWidget />
                   <AppDownloadPrompt />
-                  <PushNotificationSetup autoRequest={true} showCard={false} />
                 </TooltipProvider>
               </CartProvider>
             </AuthProvider>

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'wouter';
 import { useLanguage } from '@/components/language-provider';
+import { Header } from '@/components/header';
 import { SEOHead } from '@/components/SEOHead';
 import { Footer } from '@/components/footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -85,6 +86,7 @@ export default function AllCategoriesPage() {
     return (
       <div className="min-h-screen bg-background dark:bg-black">
         <SEOHead seo={seoMetaTags} />
+        <Header />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="animate-pulse">
             <div className="h-8 bg-muted rounded w-1/3 mb-8"></div>
@@ -104,6 +106,7 @@ export default function AllCategoriesPage() {
     return (
       <div className="min-h-screen bg-background dark:bg-black">
         <SEOHead seo={seoMetaTags} />
+        <Header />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-foreground mb-4" data-testid="text-error-title">
@@ -124,6 +127,7 @@ export default function AllCategoriesPage() {
   return (
     <div className="min-h-screen bg-background dark:bg-black">
       <SEOHead seo={seoMetaTags} />
+      <Header />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Page Header */}

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/components/language-provider';
+import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { SEOHead } from '@/components/SEOHead';
 import { DEFAULT_SEO } from '@shared/seo';
@@ -63,6 +64,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background dark:bg-black">
       <SEOHead seo={homeSEO} />
+      <Header />
       
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-red-800 dark:from-blue-800 dark:via-blue-700 dark:to-red-700 text-white py-32 overflow-hidden">

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useCategories } from '@/hooks/useCategories';
 import { useProducts } from '@/hooks/useProducts';
 import { useLanguage } from '@/components/language-provider';
+import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { SEOHead } from '@/components/SEOHead';
 import { generateCatalogMetaTags } from '@shared/seo';
@@ -37,6 +38,7 @@ export default function Catalog() {
   return (
     <div className="min-h-screen bg-gray-50">
       <SEOHead seo={catalogSEO} />
+      <Header />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">

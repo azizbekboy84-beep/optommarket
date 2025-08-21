@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/components/language-provider';
+import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { ProductCard } from '@/components/product-card';
 import { Input } from '@/components/ui/input';
@@ -61,6 +62,7 @@ export default function Products() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Header />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">

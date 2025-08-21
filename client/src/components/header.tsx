@@ -208,7 +208,7 @@ export function Header() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm">
-                  {language === 'uz' ? '🇺🇿 O\'z' : '🇷🇺 Ru'}
+                  {language === 'uz' ? '🇺🇿 O\'Z' : '🇷🇺 RU'}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">

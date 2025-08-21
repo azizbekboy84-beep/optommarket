@@ -1,0 +1,49 @@
+KEYINGI BOSQICH: "O'XSHASH MAHSULOTLAR" BO'LIMINI QO'SHISH
+Ajoyib, platformamiz deyarli tayyor. Endi foydalanuvchi tajribasini yanada yaxshilaydigan va sotuvlarni oshirishga yordam beradigan muhim funksiyani qo'shamiz.
+
+Loyiha mazmuni (Kontekst):
+Maqsadimiz — foydalanuvchi biror mahsulot sahifasini ko'rayotganida, unga o'sha mahsulotga o'xshash yoki bir kategoriyadagi boshqa tovarlarni tavsiya qilish. Bu mijozga tanlash imkoniyatini kengaytiradi va uni saytda ko'proq qolishga undaydi.
+
+Aniq qadamlar:
+
+1-QISM: BACKENDNI YANGI MANTIQ BILAN TO'LDIRISH
+
+Yangi API Endpoint Yaratish:
+
+GET /api/products/:productId/related nomli yangi endpoint yarating.
+
+Bu endpoint quyidagi logikani bajarishi kerak:
+a. URL'dan :productId ni qabul qilib olsin.
+b. Ma'lumotlar bazasidan shu productId ga ega mahsulotni topib, uning categoryId sini aniqlasin.
+c. Endi products jadvalidan xuddi o'sha categoryId ga ega bo'lgan boshqa mahsulotlarni topib, ro'yxat shakllantirsin.
+d. Bu ro'yxatdan asosiy mahsulotning o'zini (:productId bilan) chiqarib tashlasin.
+e. Natijani 4-5 ta tasodifiy mahsulot bilan cheklasin (LIMIT).
+f. Topilgan o'xshash mahsulotlar ro'yxatini JSON formatida frontendga qaytarsin.
+
+2-QISM: FRONTENDNI INTEGRATSIYA QILISH
+
+Yangi Maxsus Hook Yaratish (useRelatedProducts):
+
+client/src/hooks/useRelatedProducts.ts nomli yangi fayl yarating.
+
+Bu hook TanStack Query yordamida yangi GET /api/products/:productId/related endpoint'idan ma'lumotlarni olib kelsin. U o'ziga argument sifatida productId ni qabul qilishi kerak.
+
+Mahsulot Sahifasini Yangilash (ProductDetailsPage.tsx):
+
+client/src/pages/ProductDetailsPage.tsx faylini oching.
+
+Asosiy mahsulot ma'lumotlari yuklangandan so'ng, uning id sini oling va yangi useRelatedProducts(productId) hook'ini chaqiring.
+
+Sahifaning pastki qismida, mahsulot tavsifi va xususiyatlaridan keyin yangi bo'lim yarating.
+
+Bo'limga "O'xshash mahsulotlar" yoki "Balki sizni qiziqtirar" deb sarlavha qo'ying.
+
+useRelatedProducts hook'idan kelgan ma'lumotlarni biz avval yaratgan ProductCard.tsx komponenti yordamida chiroyli, gorizontal aylanadigan karusel (carousel) yoki grid shaklida ko'rsating.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Backend'da GET /api/products/:productId/related endpoint'i yaratildimi va u to'g'ri ishlayaptimi?
+
+ProductDetailsPage sahifasining pastki qismida "O'xshash mahsulotlar" bo'limi paydo bo'ldimi?
+
+Bu bo'limda ko'rsatilayotgan mahsulotlar haqiqatan ham asosiy mahsulot bilan bir xil kategoriyaga tegishlimi va asosiy mahsulotning o'zi bu ro'yxatda yo'qmi?

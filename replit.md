@@ -8,6 +8,16 @@ Preferred communication style: Simple, everyday language.
 
 # Recent Changes (August 21, 2025)
 
+## Related Products System Implementation Completed
+- ✓ Created `/api/products/:productId/related` endpoint for fetching similar products
+- ✓ Implemented useRelatedProducts custom hook for frontend integration
+- ✓ Added "O'xshash mahsulotlar" section to ProductDetailsPage
+- ✓ Related products are filtered by same category and exclude main product
+- ✓ Randomized selection limited to 4 products per request
+- ✓ Added bilingual support (Uzbek/Russian) for related products section
+- ✓ Successfully tested with actual product data from database
+- ✓ Integrated with existing ProductCard component for consistent UI
+
 ## Featured Products System Implementation Completed
 - ✓ Added "Bosh sahifada ko'rsatish" checkbox to admin panel for marking products as featured
 - ✓ Created dedicated `/api/products/featured` endpoint for home page

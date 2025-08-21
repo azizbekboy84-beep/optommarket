@@ -425,6 +425,30 @@ export async function registerRoutes(app: Express, customStorage?: any): Promise
     }
   });
 
+  // Related products endpoint - Must be before :slug route
+  app.get("/api/products/:productId/related", async (req, res) => {
+    try {
+      const productId = req.params.productId;
+      
+      // Get the main product to find its category
+      const mainProduct = await activeStorage.getProduct(productId);
+      if (!mainProduct) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      
+      // Get products from the same category, excluding the main product
+      const allProductsInCategory = await activeStorage.getProducts(mainProduct.categoryId);
+      const relatedProducts = allProductsInCategory
+        .filter(product => product.id !== productId)
+        .sort(() => Math.random() - 0.5) // Randomize
+        .slice(0, 4); // Limit to 4 products
+      
+      res.json(relatedProducts);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch related products" });
+    }
+  });
+
   app.get("/api/products/:slug", async (req, res) => {
     try {
       // Try to get by slug first

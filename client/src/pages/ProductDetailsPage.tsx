@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams, Link } from 'wouter';
 import { useProductBySlug } from '@/hooks/useProductBySlug';
+import { useRelatedProducts } from '@/hooks/useRelatedProducts';
 import { useLanguage } from '@/components/language-provider';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
@@ -8,6 +9,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { generateProductMetaTags } from '@shared/seo';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
+import { ProductCard } from '@/components/product-card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -40,6 +42,9 @@ export default function ProductDetailsPage() {
   };
 
   const { data: product, isLoading, error } = useProductBySlug(slug || '');
+  
+  // Get related products
+  const { data: relatedProducts = [], isLoading: relatedLoading } = useRelatedProducts(product?.id || '');
 
   // All hooks must be called at the top level before any conditional returns
   // Check if product is in favorites
@@ -477,6 +482,56 @@ export default function ProductDetailsPage() {
           </div>
         </div>
       </div>
+
+      {/* O'xshash mahsulotlar bo'limi */}
+      {relatedProducts.length > 0 && (
+        <div className="bg-gray-50 dark:bg-gray-900 py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-foreground mb-4">
+                {language === 'uz' ? "O'xshash mahsulotlar" : "Похожие товары"}
+              </h2>
+              <p className="text-muted-foreground text-lg">
+                {language === 'uz' ? 
+                  "Sizni qiziqtirishi mumkin bo'lgan boshqa mahsulotlar" : 
+                  "Другие товары, которые могут вас заинтересовать"
+                }
+              </p>
+            </div>
+            
+            {relatedLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="bg-card dark:bg-gray-800 rounded-2xl p-6 shadow-lg animate-pulse border border-border" data-testid={`skeleton-related-${i}`}>
+                    <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-xl mb-4"></div>
+                    <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                    <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {relatedProducts.map((relatedProduct) => (
+                  <ProductCard 
+                    key={relatedProduct.id} 
+                    product={relatedProduct}
+                    onAddToCart={(product) => {
+                      addToCart(product.id, 1);
+                      toast({
+                        title: language === 'uz' ? "Savatga qo'shildi" : "Добавлено в корзину",
+                        description: language === 'uz' ? 
+                          `${product.nameUz} savatga qo'shildi` : 
+                          `${product.nameRu} добавлен в корзину`
+                      });
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
       
       <Footer />
     </div>

@@ -267,4 +267,33 @@ export class DatabaseStorage implements IStorage {
   async updateChatResponse(messageId: string, response: string): Promise<ChatMessage | undefined> {
     return this.memStorage.updateChatResponse(messageId, response);
   }
+
+  // Favorites methods
+  async getFavorites(userId: string): Promise<import("@shared/schema").Favorite[]> {
+    if (!this.memStorage) {
+      await this.initMemStorage();
+    }
+    return this.memStorage.getFavorites(userId);
+  }
+
+  async addToFavorites(favorite: import("@shared/schema").InsertFavorite): Promise<import("@shared/schema").Favorite> {
+    if (!this.memStorage) {
+      await this.initMemStorage();
+    }
+    return this.memStorage.addToFavorites(favorite);
+  }
+
+  async removeFromFavorites(userId: string, productId: string): Promise<boolean> {
+    if (!this.memStorage) {
+      await this.initMemStorage();
+    }
+    return this.memStorage.removeFromFavorites(userId, productId);
+  }
+
+  async isFavorite(userId: string, productId: string): Promise<boolean> {
+    if (!this.memStorage) {
+      await this.initMemStorage();
+    }
+    return this.memStorage.isFavorite(userId, productId);
+  }
 }

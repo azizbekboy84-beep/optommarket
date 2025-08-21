@@ -108,14 +108,68 @@ export class MemStorage implements IStorage {
       username: "admin",
       password: "$2b$10$iS57iqUbq7J.OMoe.GK2neN28m0UbQFFIGgYmEysYzXw3XjK6B18S", // "admin123" hashed
       email: "admin@optombazar.uz",
-      phone: "+998901234567",
+      phone: "+998996448444",
       role: "admin",
       createdAt: new Date()
     };
     this.users.set("admin-user-1", adminUser);
     
-    // Seed categories
-    const categories = [
+    // Import real categories from seed data
+    const { realCategories, realProducts, realBlogPosts } = this.loadSeedData();
+    
+    // Seed categories from real Optombazar.uz data
+    realCategories.forEach((category: any) => {
+      const categoryWithDefaults: Category = {
+        ...category,
+        isActive: category.isActive ?? true,
+        createdAt: new Date()
+      };
+      this.categories.set(category.id, categoryWithDefaults);
+    });
+
+    // Seed products from real Optombazar.uz data
+    realProducts.forEach((product: any) => {
+      const productWithDefaults: Product = {
+        ...product,
+        isActive: product.isActive ?? true,
+        isFeatured: product.isFeatured ?? false,
+        createdAt: new Date()
+      };
+      this.products.set(product.id, productWithDefaults);
+    });
+
+    // Seed blog posts from real Optombazar.uz data
+    realBlogPosts.forEach((blogPost: any) => {
+      const postWithDefaults: BlogPost = {
+        ...blogPost,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      this.blogPosts.set(blogPost.id, postWithDefaults);
+    });
+  }
+
+  private loadSeedData() {
+    // Import seed data dynamically to avoid circular dependencies
+    try {
+      const seedModule = require('./seed');
+      return {
+        realCategories: seedModule.realCategories || [],
+        realProducts: seedModule.realProducts || [],
+        realBlogPosts: seedModule.realBlogPosts || []
+      };
+    } catch (error) {
+      console.warn('Could not load seed data:', error);
+      return {
+        realCategories: this.getFallbackCategories(),
+        realProducts: [],
+        realBlogPosts: []
+      };
+    }
+  }
+
+  private getFallbackCategories() {
+    return [
       {
         id: "cat-1",
         nameUz: "Polietilen paketlar",
@@ -165,8 +219,6 @@ export class MemStorage implements IStorage {
         isActive: true,
       },
     ];
-
-    categories.forEach(category => this.categories.set(category.id, category));
 
     // Seed products
     const products = [

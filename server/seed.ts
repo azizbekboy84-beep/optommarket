@@ -1,354 +1,333 @@
-import { storage } from './storage.js';
+import { randomUUID } from "crypto";
 
-// Helper function to create slug from text
-function createSlug(text: string): string {
-  const slugMap: Record<string, string> = {
-    'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo',
-    'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm',
-    'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
-    'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch',
-    'ы': 'y', 'э': 'e', 'ю': 'yu', 'я': 'ya', ' ': '-', '_': '-'
-  };
-  
-  return text.toLowerCase()
-    .split('')
-    .map(char => slugMap[char] || char)
-    .join('')
-    .replace(/[^a-z0-9-]/g, '')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
-}
-
-// Parse bilingual category names (format: "Russian | Uzbek")
-function parseCategoryName(fullName: string): { nameRu: string; nameUz: string } {
-  const parts = fullName.split('|').map(part => part.trim());
-  return {
-    nameRu: parts[0] || fullName,
-    nameUz: parts[1] || parts[0] || fullName
-  };
-}
-
-// Real bilingual categories data
-const categoriesData = [
-  // Main category: Plastic bags
+// Real data from Optombazar.uz website
+export const realCategories = [
+  // Main categories
   {
-    type: 'main',
-    name: 'Полиэтиленовые пакеты | Plastik paketlar'
+    id: "polietilen-paketlar",
+    nameUz: "Plastik paketlar",
+    nameRu: "Полиэтиленовые пакеты",
+    descriptionUz: "Har xil o'lcham va qalinlikdagi polietilen paketlar",
+    descriptionRu: "Полиэтиленовые пакеты различных размеров и толщин",
+    slug: "polietilen-paketlar",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200",
+    icon: "Package",
+    parentId: null
   },
   {
-    type: 'sub',
-    parent: 'Полиэтиленовые пакеты | Plastik paketlar',
-    name: 'Полиэтиленовый пакет "Майка" без рисунка | Rasmsiz mayka paketlar'
+    id: "bir-martali-idishlar",
+    nameUz: "Bir martali ishlatiladigan idishlar",
+    nameRu: "Одноразовая посуда",
+    descriptionUz: "Plastik va qog'ozdan yasalgan bir martali idishlar",
+    descriptionRu: "Одноразовая посуда из пластика и бумаги",
+    slug: "bir-martali-idishlar",
+    image: "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200",
+    icon: "UtensilsCrossed",
+    parentId: null
   },
   {
-    type: 'sub',
-    parent: 'Полиэтиленовые пакеты | Plastik paketlar',
-    name: 'Фасовочные пакеты и рулоне | Qadoqlash paketlari va rulonlari'
+    id: "uy-kimyoviy-moddalari",
+    nameUz: "Uy kimyoviy moddalari",
+    nameRu: "Бытовая химия",
+    descriptionUz: "Tozalash va parvarish uchun kimyoviy vositalar",
+    descriptionRu: "Химические средства для уборки и ухода",
+    slug: "uy-kimyoviy-moddalari",
+    image: "https://images.unsplash.com/photo-1563453392212-326f5e854473?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200",
+    icon: "Sparkles",
+    parentId: null
   },
   {
-    type: 'sub',
-    parent: 'Полиэтиленовые пакеты | Plastik paketlar',
-    name: 'Полиэтиленовый пакет с замком zip-lock (струна) | Zip paketlar'
+    id: "elektronika",
+    nameUz: "Elektronika",
+    nameRu: "Электроника",
+    descriptionUz: "Maishiy texnika va elektron qurilmalar",
+    descriptionRu: "Бытовая техника и электронные устройства",
+    slug: "elektronika",
+    image: "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200",
+    icon: "Smartphone",
+    parentId: null
   },
   {
-    type: 'sub',
-    parent: 'Полиэтиленовые пакеты | Plastik paketlar',
-    name: 'Мусорные пакеты | Axlat uchun qoplari'
+    id: "kiyim-kechak",
+    nameUz: "Kiyim-kechak",
+    nameRu: "Одежда",
+    descriptionUz: "Erkaklar, ayollar va bolalar kiyimlari",
+    descriptionRu: "Мужская, женская и детская одежда",
+    slug: "kiyim-kechak",
+    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200",
+    icon: "Shirt",
+    parentId: null
   },
   {
-    type: 'sub',
-    parent: 'Полиэтиленовые пакеты | Plastik paketlar',
-    name: 'Пакеты с вырубной ручкой | Kesilgan tutqichli paketlar'
-  },
-  {
-    type: 'sub',
-    parent: 'Полиэтиленовые пакеты | Plastik paketlar',
-    name: 'Пакеты с петлевой ручкой | Halqa tutqichili sumkalar'
-  },
-
-  // Main category: Disposable tableware
-  {
-    type: 'main',
-    name: 'Одноразовая посуда | Bir martali ishlatiladigan idishlar'
-  },
-  {
-    type: 'sub',
-    parent: 'Одноразовая посуда | Bir martali ishlatiladigan idishlar',
-    name: 'Одноразовая пластиковая посуда | Plastmassa idishlar'
-  },
-  {
-    type: 'sub',
-    parent: 'Одноразовая посуда | Bir martali ishlatiladigan idishlar',
-    name: 'Одноразовые бумажные стаканы, крышки и тарелки | Stakan va tarelkalar'
-  },
-  {
-    type: 'sub',
-    parent: 'Одноразовая посуда | Bir martali ishlatiladigan idishlar',
-    name: 'Контейнеры и тара для ягод, блистерная упаковка для пищевых продуктов | Oziq-ovqat va pishiriq idishlari'
+    id: "kantstovarlar",
+    nameUz: "Kantstovarlar",
+    nameRu: "Канцтовары",
+    descriptionUz: "Yozish va chizish uchun buyumlar",
+    descriptionRu: "Товары для письма и рисования",
+    slug: "kantstovarlar",
+    image: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200",
+    icon: "PenTool",
+    parentId: null
   },
 
-  // Main category: Household goods
+  // Subcategories for Plastik paketlar
   {
-    type: 'main',
-    name: 'Товары для дома для магазинов кафе ресторанов баров | Uy buyumlari va do\'kon tovarlari'
+    id: "mayka-paketlar",
+    nameUz: "Rasmsiz mayka paketlar",
+    nameRu: "Полиэтиленовый пакет \"Майка\" без рисунка",
+    descriptionUz: "Oddiy mayka shaklidagi plastik paketlar",
+    descriptionRu: "Обычные пластиковые пакеты в форме майки",
+    slug: "mayka-paketlar",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200",
+    icon: "ShoppingBag",
+    parentId: "polietilen-paketlar"
   },
   {
-    type: 'sub',
-    parent: 'Товары для дома для магазинов кафе ресторанов баров | Uy buyumlari va do\'kon tovarlari',
-    name: 'Бытовые товары для дома | Uy uchun maishiy buyumlar'
+    id: "zip-paketlar",
+    nameUz: "Zip paketlar",
+    nameRu: "Полиэтиленовый пакет с замком zip-lock (струна)",
+    descriptionUz: "Zip qulfli polietilen paketlar",
+    descriptionRu: "Полиэтиленовые пакеты с zip замком",
+    slug: "zip-paketlar",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200",
+    icon: "Package",
+    parentId: "polietilen-paketlar"
   },
   {
-    type: 'sub',
-    parent: 'Товары для дома для магазинов кафе ресторанов баров | Uy buyumlari va do\'kon tovarlari',
-    name: 'Товары для кафе, ресторанов и баров | Kafe va restoran tovarlari'
-  },
-
-  // Main category: Household chemicals
-  {
-    type: 'main',
-    name: 'Бытовая химия | Maishiy kimyo'
-  },
-  {
-    type: 'sub',
-    parent: 'Бытовая химия | Maishiy kimyo',
-    name: 'Моющие средства | Yuvish vositalari'
-  },
-  {
-    type: 'sub',
-    parent: 'Бытовая химия | Maishiy kimyo',
-    name: 'Чистящие средства | Tozalash vositalari'
-  },
-
-  // Main category: Clothing
-  {
-    type: 'main',
-    name: 'Одежда | Kiyim-kechak'
-  },
-  {
-    type: 'sub',
-    parent: 'Одежда | Kiyim-kechak',
-    name: 'Детская одежда | Bolalar kiyimi'
-  },
-  {
-    type: 'sub',
-    parent: 'Одежда | Kiyim-kechak',
-    name: 'Женская одежда | Ayollar kiyimi'
-  },
-  {
-    type: 'sub',
-    parent: 'Одежда | Kiyim-kechak',
-    name: 'Мужская одежда | Erkaklar kiyimi'
+    id: "kesilgan-tutqichli-paketlar",
+    nameUz: "Kesilgan tutqichli paketlar",
+    nameRu: "Пакеты с вырубной ручкой",
+    descriptionUz: "Kesilgan tutqichga ega plastik paketlar",
+    descriptionRu: "Пластиковые пакеты с вырубной ручкой",
+    slug: "kesilgan-tutqichli-paketlar",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200",
+    icon: "Grip",
+    parentId: "polietilen-paketlar"
   },
 
-  // Main category: Electronics
+  // Subcategories for Bытовая химия
   {
-    type: 'main',
-    name: 'Электроника | Elektronika'
+    id: "yuvish-vositalari",
+    nameUz: "Yuvish vositalari",
+    nameRu: "Средства для стирки",
+    descriptionUz: "Kir yuvish uchun kukunlar va suyuqliklar",
+    descriptionRu: "Порошки и жидкости для стирки",
+    slug: "yuvish-vositalari",
+    image: "https://images.unsplash.com/photo-1563453392212-326f5e854473?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200",
+    icon: "Shirt",
+    parentId: "uy-kimyoviy-moddalari"
   },
   {
-    type: 'sub',
-    parent: 'Электроника | Elektronika',
-    name: 'Бытовая техника для дома | Uy uchun maishiy texnika'
-  },
-  {
-    type: 'sub',
-    parent: 'Электроника | Elektronika',
-    name: 'Бытовая техника для кухни | Oshxona uchun texnika'
-  },
-
-  // Main category: Office supplies
-  {
-    type: 'main',
-    name: 'Канстовары для школы и офиса все для учебы и работы | Maktab va ofis uchun tovarlar'
-  },
-  {
-    type: 'sub',
-    parent: 'Канстовары для школы и офиса все для учебы и работы | Maktab va ofis uchun tovarlar',
-    name: 'Школьные принадлежности | Maktab jihozlari'
-  },
-  {
-    type: 'sub',
-    parent: 'Канстовары для школы и офиса все для учебы и работы | Maktab va ofis uchun tovarlar',
-    name: 'Офисные принадлежности | Ofis jihozlari'
-  },
-
-  // Main category: Holiday items
-  {
-    type: 'main',
-    name: 'Товары для праздников | Bayram tovarlari'
-  },
-  {
-    type: 'sub',
-    parent: 'Товары для праздников | Bayram tovarlari',
-    name: 'Украшения для праздников | Bayram bezaklari'
-  },
-  {
-    type: 'sub',
-    parent: 'Товары для праздников | Bayram tovarlari',
-    name: 'Подарочная упаковка | Sovg\'a qadoqlari'
+    id: "tozalash-vositalari",
+    nameUz: "Tozalash uchun tovarlar",
+    nameRu: "Товары для уборки (тряпки, губки, салфетки, скатерти)",
+    descriptionUz: "Tozalash uchun latta, gubka va boshqa buyumlar",
+    descriptionRu: "Тряпки, губки и другие товары для уборки",
+    slug: "tozalash-vositalari",
+    image: "https://images.unsplash.com/photo-1563453392212-326f5e854473?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200",
+    icon: "Sparkles",
+    parentId: "uy-kimyoviy-moddalari"
   }
 ];
 
-export async function seedDatabase() {
-  console.log('🌱 Starting database seeding with real bilingual data...');
-
-  try {
-    // Clear existing data
-    console.log('🗑️ Clearing existing categories and products...');
-    
-    // Create category map to store main categories first, then subcategories
-    const categoryMap = new Map<string, string>(); // key: category name, value: category id
-    
-    // Process main categories first
-    console.log('📁 Creating main categories...');
-    for (const categoryData of categoriesData.filter(c => c.type === 'main')) {
-      const parsed = parseCategoryName(categoryData.name);
-      const slug = createSlug(parsed.nameRu);
-      const categoryId = `cat-${slug}`;
-      
-      const category = {
-        id: categoryId,
-        nameUz: parsed.nameUz,
-        nameRu: parsed.nameRu,
-        slug,
-        parentId: null,
-        icon: getIconForCategory(parsed.nameRu),
-        isActive: true
-      };
-
-      await storage.createCategory(category);
-      categoryMap.set(categoryData.name, categoryId);
-      
-      console.log(`✓ Created main category: ${parsed.nameRu} | ${parsed.nameUz}`);
-    }
-
-    // Process subcategories
-    console.log('📂 Creating subcategories...');
-    for (const categoryData of categoriesData.filter(c => c.type === 'sub')) {
-      const parsed = parseCategoryName(categoryData.name);
-      const parentId = categoryMap.get(categoryData.parent!);
-      const slug = createSlug(parsed.nameRu);
-      const categoryId = `cat-${slug}`;
-      
-      if (!parentId) {
-        console.warn(`⚠️ Parent category not found for: ${categoryData.name}`);
-        continue;
-      }
-
-      const category = {
-        id: categoryId,
-        nameUz: parsed.nameUz,
-        nameRu: parsed.nameRu,
-        slug,
-        parentId,
-        icon: getIconForCategory(parsed.nameRu),
-        isActive: true
-      };
-
-      await storage.createCategory(category);
-      categoryMap.set(categoryData.name, categoryId);
-      
-      console.log(`  ✓ Created subcategory: ${parsed.nameRu} | ${parsed.nameUz}`);
-    }
-
-    // Create sample products for some categories
-    console.log('📦 Creating sample products...');
-    await createSampleProducts(categoryMap);
-
-    console.log('✅ Database seeding completed successfully!');
-    console.log(`📊 Total categories created: ${categoryMap.size}`);
-    
-  } catch (error) {
-    console.error('❌ Database seeding failed:', error);
-    throw error;
-  }
-}
-
-// Helper function to assign icons to categories
-function getIconForCategory(categoryName: string): string {
-  const iconMap: Record<string, string> = {
-    'Полиэтиленовые пакеты': 'Package',
-    'Одноразовая посуда': 'Utensils',
-    'Товары для дома': 'Folder',
-    'Бытовая химия': 'Box',
-    'Одежда': 'Shirt',
-    'Электроника': 'Smartphone',
-    'Канстовары': 'Folder',
-    'Товары для праздников': 'Package'
-  };
-  
-  // Find matching icon based on category name
-  for (const [key, icon] of Object.entries(iconMap)) {
-    if (categoryName.includes(key)) {
-      return icon;
-    }
-  }
-  
-  return 'Folder'; // Default icon
-}
-
-// Create sample products for demonstration
-async function createSampleProducts(categoryMap: Map<string, string>) {
-  const sampleProducts = [
-    {
-      nameRu: 'Пакет майка белый 30x60',
-      nameUz: 'Oq mayka paket 30x60',
-      categoryName: 'Полиэтиленовый пакет "Майка" без рисунка | Rasmsiz mayka paketlar',
-      price: 15.0,
-      wholesalePrice: 12.0
+export const realProducts = [
+  {
+    id: randomUUID(),
+    nameUz: "\"Louis Vuitton\" tasvirli paket 40x50 sm",
+    nameRu: "Пакеты с вырубной ручкой Louis Vuitton 40-50 см",
+    descriptionUz: "Yuqori sifatli polietilen paket, 50 mikron qalinlikda, 100 dona blokda",
+    descriptionRu: "Высококачественный полиэтиленовый пакет, толщина 50 микрон, в блоке 100 штук",
+    slug: "pakety-s-vyrubnoy-ruchkoy-louis-vuitton-40-50-sm",
+    price: "1000.00",
+    wholesalePrice: "900.00",
+    categoryId: "kesilgan-tutqichli-paketlar",
+    sellerId: "admin-user-1",
+    images: ["https://optombazar.uz/image/cache/catalog/products/2023/10/26/photo_2023-10-26_16-08-31-500x500.jpg"],
+    stockQuantity: 500,
+    minQuantity: 100,
+    unit: "dona",
+    specifications: {
+      "O'lchami": "40x50 sm",
+      "Qalinligi": "50 mikron",
+      "Material": "Yuqori bosimli polietilen (LDPE)",
+      "Soni (blokda)": "100 dona",
+      "Ishlab chiqaruvchi": "O'zbekiston"
     },
-    {
-      nameRu: 'Одноразовые пластиковые стаканы 200мл',
-      nameUz: 'Bir martalik plastik stakanlar 200ml',
-      categoryName: 'Одноразовая пластиковая посуда | Plastmassa idishlar',
-      price: 25.0,
-      wholesalePrice: 20.0
+    videoUrl: null
+  },
+  {
+    id: randomUUID(),
+    nameUz: "Oziq-ovqat uchun streych plyonka Casper 300 m",
+    nameRu: "Стрейч-пленка Casper 300 м",
+    descriptionUz: "Oziq-ovqat mahsulotlarini saqlash uchun Casper brendi streych plyonka",
+    descriptionRu: "Стрейч-пленка бренда Casper для хранения пищевых продуктов",
+    slug: "streych-plenka-casper-300-m",
+    price: "45000.00",
+    wholesalePrice: "42000.00",
+    categoryId: "polietilen-paketlar",
+    sellerId: "admin-user-1",
+    images: ["https://optombazar.uz/image/cache/catalog/products/2023/11/01/photo_2023-11-01_12-25-10-500x500.jpg"],
+    stockQuantity: 50,
+    minQuantity: 1,
+    unit: "rulon",
+    specifications: {
+      "Uzunligi": "300 m",
+      "Eni": "29 sm",
+      "Qalinligi": "8 mikron",
+      "Brend": "Casper",
+      "Ishlab chiqaruvchi": "O'zbekiston"
     },
-    {
-      nameRu: 'Моющее средство для посуды 500мл',
-      nameUz: 'Idish yuvish vositasi 500ml',
-      categoryName: 'Моющие средства | Yuvish vositalari',
-      price: 35.0,
-      wholesalePrice: 28.0
-    }
-  ];
-
-  for (const productData of sampleProducts) {
-    const categoryId = categoryMap.get(productData.categoryName);
-    if (!categoryId) {
-      console.warn(`⚠️ Category not found for product: ${productData.nameRu}`);
-      continue;
-    }
-
-    const product = {
-      id: `prod-${createSlug(productData.nameRu)}`,
-      nameUz: productData.nameUz,
-      nameRu: productData.nameRu,
-      descriptionUz: `${productData.nameUz} - sifatli mahsulot optom narxlarda`,
-      descriptionRu: `${productData.nameRu} - качественный товар по оптовым ценам`,
-      slug: createSlug(productData.nameRu),
-      categoryId,
-      price: productData.price,
-      wholesalePrice: productData.wholesalePrice,
-      stockQuantity: 1000,
-      images: [],
-      isActive: true
-    };
-
-    await storage.createProduct(product);
-    console.log(`  ✓ Created product: ${productData.nameRu} | ${productData.nameUz}`);
+    videoUrl: null
+  },
+  {
+    id: randomUUID(),
+    nameUz: "Ariel 1.5 kg kir yuvish kukuni",
+    nameRu: "Ariel 1.5 кг стиральный порошок",
+    descriptionUz: "Avtomat kir yuvish mashinasi uchun Ariel brendi kukuni",
+    descriptionRu: "Стиральный порошок Ariel для автоматических стиральных машин",
+    slug: "ariel-15-kg-stiralnyy-poroshok",
+    price: "45000.00",
+    wholesalePrice: "42000.00",
+    categoryId: "yuvish-vositalari",
+    sellerId: "admin-user-1",
+    images: ["https://optombazar.uz/image/cache/catalog/products/2024/02/10/photo_2024-02-10_13-09-51-500x500.jpg"],
+    stockQuantity: 120,
+    minQuantity: 1,
+    unit: "dona",
+    specifications: {
+      "Og'irligi": "1.5 kg",
+      "Turi": "Avtomat",
+      "Brend": "Ariel"
+    },
+    videoUrl: null
+  },
+  {
+    id: randomUUID(),
+    nameUz: "Plastik bir martali stakan 200ml",
+    nameRu: "Пластиковый одноразовый стакан 200мл",
+    descriptionUz: "Shaffof plastikdan yasalgan bir martali stakan",
+    descriptionRu: "Одноразовый стакан из прозрачного пластика",
+    slug: "plastik-bir-martali-stakan-200ml",
+    price: "12000.00",
+    wholesalePrice: "11000.00",
+    categoryId: "bir-martali-idishlar",
+    sellerId: "admin-user-1",
+    images: ["https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=500"],
+    stockQuantity: 1000,
+    minQuantity: 50,
+    unit: "paket",
+    specifications: {
+      "Hajmi": "200ml",
+      "Material": "PP plastik",
+      "Soni (paketda)": "50 dona",
+      "Ranglar": "Shaffof"
+    },
+    videoUrl: null
+  },
+  {
+    id: randomUUID(),
+    nameUz: "Qog'oz tarelka 23sm diametr",
+    nameRu: "Бумажная тарелка диаметр 23см",
+    descriptionUz: "Ekologik toza qog'ozdan yasalgan bir martali tarelka",
+    descriptionRu: "Одноразовая тарелка из экологически чистой бумаги",
+    slug: "qogoz-tarelka-23sm-diametr",
+    price: "15000.00",
+    wholesalePrice: "14000.00",
+    categoryId: "bir-martali-idishlar",
+    sellerId: "admin-user-1",
+    images: ["https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=500"],
+    stockQuantity: 500,
+    minQuantity: 25,
+    unit: "paket",
+    specifications: {
+      "Diametri": "23 sm",
+      "Material": "Karton qog'oz",
+      "Soni (paketda)": "25 dona",
+      "Ranglar": "Oq"
+    },
+    videoUrl: null
   }
-}
+];
 
-// Run seeding if this file is executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  seedDatabase()
-    .then(() => {
-      console.log('🎉 Seeding process completed!');
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.error('💥 Seeding process failed:', error);
-      process.exit(1);
-    });
-}
+export const realBlogPosts = [
+  {
+    id: randomUUID(),
+    title: "Moliyaviy savodxonlik bo'yicha to'liq tushuncha",
+    content: `Moliyaviy savodxonlik - bu shaxsning o'z moliyaviy resurslarini samarali boshqarish, investitsiya qilish va moliyaviy xavflardan himoyalanish bo'yicha bilim va ko'nikmalar majmuasidir.
+
+Bu maqolada moliyaviy savodxonlikning asosiy printsiplari, ahamiyati va uni oshirish yo'llari haqida batafsil ma'lumot beriladi.
+
+## Moliyaviy savodxonlikning asosiy qismlari:
+
+1. **Byudjet tuzish va nazorat qilish**
+2. **Jamg'arish va investitsiya**
+3. **Qarzlarni boshqarish**
+4. **Sug'urta va xavfsizlik**
+5. **Pensiya rejalashtirish**
+
+Moliyaviy savodxonlik bizning kundalik hayotimizda muhim rol o'ynaydi va kelajakda barqaror moliyaviy holatga erishishimizga yordam beradi.`,
+    excerpt: "Moliyaviy savodxonlik haqida bilish kerak bo'lgan barcha narsalar",
+    imageUrl: "https://optombazar.uz/image/cache/catalog/blog/2023/11/04/moliyaviy-savodxonlik-haqida-toliq-tushuncha-750x422.png",
+    slug: "moliyaviy-savodxonlik-bo-yicha-to-liq-tushuncha",
+    tags: ["moliya", "savodxonlik", "investitsiya", "byudjet"],
+    language: "uz",
+    isPublished: true,
+    isAutoGenerated: false,
+    source: "admin"
+  },
+  {
+    id: randomUUID(),
+    title: "Ramazon taqvimi 2024 Toshkent shahri",
+    content: `2024 yilgi Ramazon oyi taqvimi Toshkent shahri uchun tayyorlandi. Bu taqvim orqali siz har kunlik ro'za tutish vaqtlarini aniq bilib olishingiz mumkin.
+
+## Ramazon oyining ahamiyati
+
+Ramazon oyi musulmonlar uchun eng muqaddas oylardan biridir. Bu oyda ro'za tutish, Qur'on o'qish va ibodatga ko'proq vaqt ajratish tavsiya etiladi.
+
+## 2024 yil Ramazon taqvimi xususiyatlari:
+
+- Ramazon oyining boshlangichi
+- Saharlik va iftorlik vaqtlari
+- Laylat ul-Qadr kechalari
+- Hayit sanasi
+
+Toshkent shahri uchun ro'za vaqtlari mintaqaviy geografik joylashuvga qarab aniqlanadi.`,
+    excerpt: "2024 yil Ramazon oyi taqvimi Toshkent shahri uchun",
+    imageUrl: "https://optombazar.uz/image/cache/catalog/blog/2024/02/29/ramazon-taqvimi-2024-toshkent-750x422.png",
+    slug: "ramazon-taqvimi-2024-toshkent-shahri",
+    tags: ["ramazon", "taqvim", "toshkent", "roza"],
+    language: "uz",
+    isPublished: true,
+    isAutoGenerated: false,
+    source: "admin"
+  },
+  {
+    id: randomUUID(),
+    title: "Ulgurji savdo platformasida muvaffaqiyat sirlari",
+    content: `Optombazar.uz - O'zbekistondagi yetakchi ulgurji savdo platformasi. Bu maqolada platformada muvaffaqiyatli savdo qilish sirlari haqida gaplashamiz.
+
+## Platformaning afzalliklari:
+
+1. **Keng mahsulot assortimenti** - 10,000+ mahsulot
+2. **Raqobatbardosh narxlar** - To'g'ridan-to'g'ri ishlab chiqaruvchilardan
+3. **Tez yetkazib berish** - Butun O'zbekiston bo'ylab
+4. **Sifat kafolati** - Barcha mahsulotlar sertifikatlangan
+
+## Savdo qilish uchun maslahatlar:
+
+- Bozorni o'rganing
+- Sifatli mahsulotlarni tanlang
+- Mijozlar bilan aloqani rivojlantiring
+- Marketing strategiyasini ishlab chiqing
+
+Muvaffaqiyatli biznes uchun to'g'ri platformani tanlash muhim qadam hisoblanadi.`,
+    excerpt: "Ulgurji savdoda muvaffaqiyat qozonish yo'llari",
+    imageUrl: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=750&h=422",
+    slug: "ulgurji-savdo-platformasida-muvaffaqiyat-sirlari",
+    tags: ["ulgurji", "savdo", "biznes", "muvaffaqiyat"],
+    language: "uz",
+    isPublished: true,
+    isAutoGenerated: false,
+    source: "admin"
+  }
+];

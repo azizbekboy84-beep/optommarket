@@ -84,13 +84,13 @@ export const realProducts = [
     stockQuantity: 500,
     minQuantity: 100,
     unit: "dona",
-    specifications: {
+    specifications: JSON.stringify({
       "O'lchami": "40x50 sm",
       "Qalinligi": "50 mikron",
       "Material": "Yuqori bosimli polietilen (LDPE)",
       "Soni (blokda)": "100 dona",
       "Ishlab chiqaruvchi": "O'zbekiston"
-    },
+    }),
     videoUrl: null,
     isActive: true,
     isFeatured: true,
@@ -111,13 +111,13 @@ export const realProducts = [
     stockQuantity: 50,
     minQuantity: 1,
     unit: "rulon",
-    specifications: {
+    specifications: JSON.stringify({
       "Uzunligi": "300 m",
       "Eni": "29 sm",
       "Qalinligi": "8 mikron",
       "Brend": "Casper",
       "Ishlab chiqaruvchi": "O'zbekiston"
-    },
+    }),
     videoUrl: null,
     isActive: true,
     isFeatured: true,
@@ -138,12 +138,12 @@ export const realProducts = [
     stockQuantity: 1000,
     minQuantity: 50,
     unit: "paket",
-    specifications: {
+    specifications: JSON.stringify({
       "Hajmi": "200ml",
       "Material": "PP plastik",
       "Soni (paketda)": "50 dona",
       "Ranglar": "Shaffof"
-    },
+    }),
     videoUrl: null,
     isActive: true,
     isFeatured: true,

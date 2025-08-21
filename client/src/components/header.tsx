@@ -177,35 +177,7 @@ export function Header() {
             </Link>
           </nav>
 
-          {/* Main Categories Navigation - Only main categories */}
-          <nav className="hidden xl:flex items-center space-x-4 ml-8">
-            {/* Show only main categories (no parent) */}
-            {mainCategories.map((category) => {
-              const IconComponent = getIconComponent(category.icon);
-              
-              return (
-                <Link 
-                  key={category.id} 
-                  href={`/catalog?category=${category.slug}`} 
-                  className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm px-2 py-1 rounded hover:bg-gray-50 dark:hover:bg-gray-800 font-medium"
-                >
-                  <IconComponent className="h-4 w-4" />
-                  <span className="whitespace-nowrap">
-                    {language === 'uz' ? category.nameUz : category.nameRu}
-                  </span>
-                </Link>
-              );
-            })}
-            
-            {/* All Categories Link - More prominent */}
-            <Link 
-              href="/categories" 
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors text-sm flex items-center gap-1.5 bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-lg ml-2 border border-blue-200 dark:border-blue-800 font-medium"
-            >
-              <Folder className="h-4 w-4" />
-              {language === 'uz' ? 'Barcha kategoriyalar' : 'Все категории'}
-            </Link>
-          </nav>
+
 
           {/* Right Section */}
           <div className="flex items-center gap-2 md:gap-4">

@@ -11,6 +11,8 @@ import { Textarea } from '../../components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
 import { Switch } from '../../components/ui/switch';
 import { Badge } from '../../components/ui/badge';
+import { Header } from '../../components/header';
+import { Footer } from '../../components/footer';
 import { Plus, Edit, Trash2, ArrowLeft, Folder } from 'lucide-react';
 import { Link } from 'wouter';
 import { useToast } from '../../hooks/use-toast';

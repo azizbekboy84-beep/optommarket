@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/ca
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
 import { Badge } from '../../components/ui/badge';
+import { Header } from '../../components/header';
+import { Footer } from '../../components/footer';
 import { ArrowLeft, Package, User, Phone, MapPin } from 'lucide-react';
 import { Link } from 'wouter';
 import { useToast } from '../../hooks/use-toast';

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/components/language-provider';
+import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { ProductCard } from '@/components/product-card';
 import { CategoryCard } from '@/components/category-card';
@@ -52,7 +53,7 @@ export default function CategoryDetail({ params }: CategoryDetailProps) {
   if (!currentCategory) {
     return (
       <div className="min-h-screen bg-gray-50">
-  
+        <Header />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Kategoriya topilmadi</h1>
           <p className="text-gray-600">Ushbu kategoriya mavjud emas yoki o'chirilgan.</p>
@@ -67,8 +68,7 @@ export default function CategoryDetail({ params }: CategoryDetailProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-
-      
+      <Header />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Category Hero */}
         <div className="bg-white rounded-xl shadow-sm p-8 mb-8">

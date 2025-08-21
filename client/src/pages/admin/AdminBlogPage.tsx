@@ -10,6 +10,8 @@ import { Label } from '../../components/ui/label';
 import { Textarea } from '../../components/ui/textarea';
 import { Switch } from '../../components/ui/switch';
 import { Badge } from '../../components/ui/badge';
+import { Header } from '../../components/header';
+import { Footer } from '../../components/footer';
 import { Plus, Edit, Trash2, ArrowLeft, FileText, Calendar } from 'lucide-react';
 import { Link } from 'wouter';
 import { useToast } from '../../hooks/use-toast';
@@ -153,8 +155,9 @@ export default function AdminBlogPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4">
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
           <Link href="/admin">
@@ -336,6 +339,7 @@ export default function AdminBlogPage() {
           </CardContent>
         </Card>
       </div>
+      <Footer />
     </div>
   );
 }

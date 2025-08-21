@@ -8,6 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog';
 import { Switch } from '../../components/ui/switch';
 import { Badge } from '../../components/ui/badge';
+import { Header } from '../../components/header';
+import { Footer } from '../../components/footer';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -176,8 +178,9 @@ export default function AdminDiscountsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4">
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="mb-8 flex justify-between items-center">
           <div>
@@ -513,6 +516,7 @@ export default function AdminDiscountsPage() {
           </DialogContent>
         </Dialog>
       </div>
+      <Footer />
     </div>
   );
 }

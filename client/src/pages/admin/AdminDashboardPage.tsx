@@ -1,6 +1,8 @@
 import { Link } from 'wouter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
+import { Header } from '../../components/header';
+import { Footer } from '../../components/footer';
 import { Package, ShoppingCart, Users, BarChart3, Folder, FileText, Percent, Bell, Megaphone } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -8,8 +10,9 @@ export default function AdminDashboardPage() {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4">
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Panel</h1>
@@ -249,6 +252,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

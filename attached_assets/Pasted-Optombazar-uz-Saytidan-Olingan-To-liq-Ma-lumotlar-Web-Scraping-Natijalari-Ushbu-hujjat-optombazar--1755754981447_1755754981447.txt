@@ -1,0 +1,219 @@
+Optombazar.uz Saytidan Olingan To'liq Ma'lumotlar (Web Scraping Natijalari)
+Ushbu hujjat optombazar.uz saytini chuqur tahlil qilish (web scraping) natijasida olingan tuzilmaga solingan ma'lumotlarni o'z ichiga oladi. Bu ma'lumotlar yangi loyihaning ma'lumotlar bazasini (seed skriptlari orqali) to'ldirish uchun mo'ljallangan.
+
+1. Kategoriyalar Ierarxiyasi
+Quyida saytdagi barcha kategoriyalarning to'liq, ierarxik (daraxtsimon) tuzilmasi keltirilgan. Har bir kategoriya uchun ruscha va o'zbekcha nomlari ajratib ko'rsatilgan.
+
+Полиэтиленовые пакеты | Plastik paketlar
+
+Полиэтиленовый пакет "Майка" без рисунка | Rasmsiz mayka paketlar
+
+Фасовочные пакеты и рулоне | Qadoqlash paketlari va rulonlari
+
+Полиэтиленовый пакет с замком zip-lock (струна) | Zip paketlar
+
+Мусорные пакеты | Axlat uchun qoplari
+
+Пакеты с вырубной ручкой | Kesilgan tutqichli paketlar
+
+Пакеты с петлевой ручкой | Halqa tutqichili sumkalar
+
+Одноразовая посуда | Bir martali ishlatiladigan idishlar
+
+Одноразовая пластиковая посуда | Plastmassa idishlar
+
+Одноразовые бумажные стаканы, крышки и тарелки | Stakan va tarelkalar
+
+Контейнеры и тара для ягод, блистерная упаковка для пищевых продуктов | Oziq-ovqat va pishiriq idishlari
+
+Пластиковые лотки, пинетки, судки для ягод | Plastik tovoqlar, berry idishlari
+
+Товары для дома, для магазинов, кафе | Uy, do'konlar, kafe uchun tovarlar
+
+Влажные и сухие салфетки, туалетная бумага | Nam va quruq salfetkalar, hojatxona qog'ozi
+
+Фольга, рукав, пергамент, стрейч-пленка | Folga, pergament, strech plyonka
+
+Перчатки | Qo'lqoplar
+
+Трубочки, зубочистки, шпажки, маски | Naychalar, tish pichoqlari, shishlar, niqoblar
+
+Скотч, ценники, резинки для денег | Skotch, narx belgilari, pul uchun kauchuk bantlar
+
+Бытовая химия | Uy kimyoviy moddalari
+
+Товары для уборки (тряпки, губки, салфетки, скатерти) | Tozalash uchun tovarlar
+
+Средства для стирки | Yuvish vositalari
+
+Освежители и ароматизаторы воздуха | Havo spreyi va aromatlar
+
+Чистящие и моющие средства | Tozalash va yuvish vositalari
+
+Мыло | Sovunlar
+
+Средства для ухода за бытовой техникой | Maishiy texnika uchun parvarishlash vositalari
+
+Средства от насекомых и грызунов | Hasharotlar va kemiruvchilarga qarshi vositalar
+
+Электроника | Elektronika
+
+Бытовая техника для дома | Maishiy texnika
+
+Бытовая техника для кухни | Oshxona uchun maishiy texnika
+
+Красота и здоровье | Go'zallik va salomatlik
+
+Мелкая бытовая | Kichik uy xo'jaligi mahsulotlari
+
+Одежда | Kiyim-kechak
+
+Детская одежда | Bolalar kiyimlari
+
+Женская одежда | Ayollar kiyimlari
+
+Мужская одежда | Erkaklar kiyimlari
+
+Канцтовары | Kantstovarlar
+
+Раскраски | Bo'yoq kitoblari
+
+Пластилин, тесто, слайм | Plastilin, xamir, slaym
+
+Карандаши, фломастеры, краски, кисти | Qalamlar, flomasterlar, bo'yoqlar
+
+Детские ручки, ручки с игрушками, пиши-стирай | Bolalar ruchkalari, o'yinchoqli ruchkalar
+
+Наборы цветных ручек | Rangli ruchkalar to'plami
+
+Шариковые и гелевые ручки, стержни | Sharikli va gelli ruchkalar
+
+Товары для праздников | Bayramlar uchun tovarlar
+
+Оформление праздника | Bayramni bezatish
+
+Фейерверки и салюты | Feyerverk va salyutlar
+
+Новогодние товары | Yangi yil tovarlari
+
+Свадебные товары | To'y tovarlari
+
+Красота и уход | Go'zallik va parvarish
+
+Парфюмерия | Parfyumeriya
+
+Личная гигиена | Shaxsiy gigiena
+
+2. Mahsulotlar (Namunalar)
+Quyida bir nechta mahsulot haqidagi to'liq ma'lumotlar keltirilgan. Bu ma'lumotlar products jadvalini to'ldirish uchun shablon bo'lib xizmat qiladi.
+
+Mahsulot #1
+nameUz: "Louis Vuitton" tasvirli paket 40x50 sm
+
+nameRu: Пакеты с вырубной ручкой Louis Vuitton 40-50 см
+
+slug: pakety-s-vyrubnoy-ruchkoy-louis-vuitton-40-50-sm
+
+price: 1000.00
+
+min_quantity: 100
+
+unit: "dona"
+
+images:
+
+https://optombazar.uz/image/cache/catalog/products/2023/10/26/photo_2023-10-26_16-08-31-500x500.jpg
+
+specifications:
+
+{
+  "O'lchami": "40x50 sm",
+  "Qalinligi": "50 mikron",
+  "Material": "Yuqori bosimli polietilen (LDPE)",
+  "Soni (blokda)": "100 dona",
+  "Ishlab chiqaruvchi": "O'zbekiston"
+}
+
+categorySlug: pakety-s-vyrubnoy-ruchkoy-40-50-sm
+
+Mahsulot #2
+nameUz: Oziq-ovqat uchun streych plyonka Casper 300 m
+
+nameRu: Стрейч-пленка Casper 300 м
+
+slug: streych-plenka-casper-300-m
+
+price: 45000.00
+
+min_quantity: 1
+
+unit: "rulon"
+
+images:
+
+https://optombazar.uz/image/cache/catalog/products/2023/11/01/photo_2023-11-01_12-25-10-500x500.jpg
+
+specifications:
+
+{
+  "Uzunligi": "300 m",
+  "Eni": "29 sm",
+  "Qalinligi": "8 mikron",
+  "Brend": "Casper",
+  "Ishlab chiqaruvchi": "O'zbekiston"
+}
+
+categorySlug: streych-plenka
+
+Mahsulot #3
+nameUz: Ariel 1.5 kg kir yuvish kukuni
+
+nameRu: Ariel 1.5 кг стиральный порошок
+
+slug: ariel-15-kg-stiralnyy-poroshok
+
+price: 45000.00
+
+min_quantity: 1
+
+unit: "dona"
+
+images:
+
+https://optombazar.uz/image/cache/catalog/products/2024/02/10/photo_2024-02-10_13-09-51-500x500.jpg
+
+specifications:
+
+{
+  "Og'irligi": "1.5 kg",
+  "Turi": "Avtomat",
+  "Brend": "Ariel"
+}
+
+categorySlug: sredstva-dlya-stirki
+
+3. Blog Maqolalari (Namunalar)
+Sarlavha: Moliyaviy savodxonlik bo'yicha to'liq tushuncha
+
+Slug: moliyaviy-savodxonlik-bo-yicha-to-liq-tushuncha
+
+Rasm URL: https://optombazar.uz/image/cache/catalog/blog/2023/11/04/moliyaviy-savodxonlik-haqida-toliq-tushuncha-750x422.png
+
+Kontent: (Maqolaning to'liq matni)
+
+Sarlavha: Ramazon taqvimi 2024 Toshkent shahri
+
+Slug: ramazon-taqvimi-2024-toshkent-shahri
+
+Rasm URL: https://optombazar.uz/image/cache/catalog/blog/2024/02/29/ramazon-taqvimi-2024-toshkent-750x422.png
+
+Kontent: (Maqolaning to'liq matni)
+
+Keyingi Qadamlar
+Ushbu ma'lumotlar bilan siz quyidagilarni amalga oshirishingiz mumkin:
+
+server/seed.ts skriptini yaratish: Ushbu hujjatdagi kategoriya va mahsulot ma'lumotlarini o'qiydigan va ularni Drizzle ORM yordamida ma'lumotlar bazangizga avtomatik ravishda qo'shadigan skript yozing.
+
+Admin Panelini Test Qilish: Yaratilgan skript yordamida bazani to'ldirgandan so'ng, Admin Panelingiz orqali ushbu ma'lumotlarni ko'rib chiqishingiz, tahrirlashingiz va o'chirishingiz mumkinligini tekshiring.
+
+Frontend'ni Tekshirish: Saytingizning foydalanuvchi qismida barcha kategoriyalar va mahsulotlar to'g'ri, chiroyli va o'z joyida ko'rsatilayotganiga ishonch hosil qiling.

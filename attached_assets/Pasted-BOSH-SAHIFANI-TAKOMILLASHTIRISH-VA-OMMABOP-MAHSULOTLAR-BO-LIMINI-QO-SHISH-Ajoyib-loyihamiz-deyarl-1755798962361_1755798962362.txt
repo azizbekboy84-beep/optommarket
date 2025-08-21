@@ -1,0 +1,49 @@
+BOSH SAHIFANI TAKOMILLASHTIRISH VA "OMMABOP MAHSULOTLAR" BO'LIMINI QO'SHISH
+Ajoyib, loyihamiz deyarli tayyor. Endi bosh sahifadagi muhim bir mantiqiy xatolikni tuzatamiz va uni yanada samaraliroq qilamiz.
+
+Loyiha mazmuni (Kontekst):
+Hozirda bosh sahifada deyarli bir xil ma'lumotga ega bo'lgan ikkita "Afzalliklarimiz" bo'limi mavjud. Bu foydalanuvchini chalg'itadi. Maqsadimiz — bu takrorlanishni olib tashlash va uning o'rniga mijozlarni xarid qilishga undaydigan, dinamik "Ommabop Mahsulotlar" bo'limini qo'shish.
+
+Aniq qadamlar:
+
+1-QISM: BACKENDNI TAYYORLASH
+
+Baza Sxemasini Yangilash (shared/schema.ts):
+
+products jadvaliga yangi is_featured (boolean, standart qiymati false) nomli ustun qo'shing. Bu ustun qaysi mahsulotlarni bosh sahifada "ommabop" sifatida ko'rsatishni belgilash uchun ishlatiladi.
+
+Yangi API Endpoint Yaratish:
+
+GET /api/products/featured nomli yangi endpoint yarating.
+
+Bu endpoint bazadagi is_featured belgisi true bo'lgan barcha mahsulotlarni (masalan, 8-10 ta) qaytarsin.
+
+Admin Panelini Yangilash:
+
+AdminProductsPage.tsx sahifasidagi mahsulot qo'shish/tahrirlash formasiga "Bosh sahifada ko'rsatish" (is_featured) uchun yangi Checkbox qo'shing.
+
+/api/admin/products endpoint'larini bu yangi is_featured ma'lumotini qabul qiladigan qilib yangilang.
+
+2-QISM: FRONTENDNI QAYTA ISHLASH
+
+Bosh Sahifani Tozalash (HomePage.tsx):
+
+client/src/pages/HomePage.tsx faylini oching.
+
+"Bizning afzalliklarimiz" va "Nega Aynan Bizni Tanlash Kerak?" bo'limlaridan birini to'liq o'chirib tashlang.
+
+"Ommabop Mahsulotlar" Bo'limini Yaratish:
+
+O'chirilgan bo'lim o'rniga "Ommabop Mahsulotlar" sarlavhasi bilan yangi bo'lim yarating.
+
+TanStack Query yordamida yangi GET /api/products/featured endpoint'idan ma'lumotlarni oling.
+
+Olingan mahsulotlarni ProductCard.tsx komponenti yordamida chiroyli gorizontal karusel (carousel) yoki grid shaklida ko'rsating.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Bosh sahifadagi takrorlanuvchi "Afzalliklar" bo'limi olib tashlandimi?
+
+Admin endi mahsulotlarni "Bosh sahifada ko'rsatish" uchun belgilay olyaptimi?
+
+Bosh sahifada yangi "Ommabop Mahsulotlar" bo'limi paydo bo'ldimi va u yerda faqat admin tomonidan belgilangan mahsulotlar ko'rsatilyaptimi?

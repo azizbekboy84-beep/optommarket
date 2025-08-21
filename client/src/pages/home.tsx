@@ -18,7 +18,7 @@ export default function Home() {
   });
 
   const { data: featuredProducts = [], isLoading: productsLoading } = useQuery<Product[]>({
-    queryKey: ['/api/products', { featured: true }],
+    queryKey: ['/api/products/featured'],
   });
 
   const stats = [
@@ -127,30 +127,64 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Ommabop Mahsulotlar Section */}
       <section className="bg-background dark:bg-gray-900 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-4">Bizning afzalliklarimiz</h2>
-            <p className="text-xl text-muted-foreground">Nima uchun aynan Optombazar.uz ni tanlashingiz kerak</p>
+            <h2 className="text-4xl font-bold text-foreground mb-4">
+              {language === 'uz' ? 'Ommabop Mahsulotlar' : 'Популярные Товары'}
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              {language === 'uz' ? 
+                'Eng ko\'p sotib olinayotgan mahsulotlarimiz bilan tanishing' : 
+                'Познакомьтесь с нашими самыми продаваемыми товарами'
+              }
+            </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <div key={index} className="bg-card dark:bg-gray-800 rounded-2xl p-10 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-border" data-testid={`feature-${index}`}>
-                <div className="mb-6 flex justify-center">
-                  <div className="p-4 bg-gradient-to-br from-blue-100 to-red-100 dark:from-blue-900/30 dark:to-red-900/30 rounded-2xl">
-                    {feature.icon}
-                  </div>
+          
+          {productsLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="bg-card dark:bg-gray-800 rounded-2xl p-6 shadow-lg animate-pulse border border-border" data-testid={`skeleton-featured-${i}`}>
+                  <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-xl mb-4"></div>
+                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                  <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
                 </div>
-                <h3 className="text-2xl font-bold text-card-foreground mb-4 text-center" data-testid={`text-feature-title-${index}`}>
-                  {language === 'uz' ? feature.titleUz : feature.titleRu}
-                </h3>
-                <p className="text-muted-foreground text-center leading-relaxed" data-testid={`text-feature-description-${index}`}>
-                  {language === 'uz' ? feature.descriptionUz : feature.descriptionRu}
-                </p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : featuredProducts.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {featuredProducts.map((product) => (
+                <ProductCard 
+                  key={product.id} 
+                  product={product}
+                  onAddToCart={(product) => {
+                    console.log('Add to cart:', product);
+                  }}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground text-lg">
+                {language === 'uz' ? 
+                  'Hozircha ommabop mahsulotlar yo\'q' : 
+                  'Пока нет популярных товаров'
+                }
+              </p>
+            </div>
+          )}
+          
+          {featuredProducts.length > 0 && (
+            <div className="text-center mt-12">
+              <Link href="/catalog">
+                <button className="bg-gradient-to-r from-blue-600 to-red-500 hover:from-blue-700 hover:to-red-600 text-white px-8 py-3 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                  {language === 'uz' ? 'Barcha mahsulotlar' : 'Все товары'}
+                </button>
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
@@ -265,29 +299,32 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="bg-gray-50 py-20">
+      {/* Bizning Afzalliklarimiz */}
+      <section className="bg-gray-50 dark:bg-gray-800 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4" data-testid="text-why-choose-title">
-              {t('whyChooseUs')}
+            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+              {language === 'uz' ? 'Bizning Afzalliklarimiz' : 'Наши Преимущества'}
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto" data-testid="text-why-choose-description">
-              {t('whyDescription')}
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              {language === 'uz' ? 
+                'Nima uchun aynan Optombazar.uz ni tanlashingiz kerak' : 
+                'Почему стоит выбрать именно Optombazar.uz'
+              }
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="bg-white rounded-xl p-8 text-center shadow-sm hover:shadow-lg transition-shadow" data-testid={`feature-${index}`}>
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div key={index} className="bg-card dark:bg-gray-700 rounded-xl p-8 text-center shadow-sm hover:shadow-lg transition-all duration-300 transform hover:scale-105 border border-border" data-testid={`feature-${index}`}>
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-red-100 dark:from-blue-900/30 dark:to-red-900/30 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4" data-testid={`text-feature-title-${index}`}>
-                  {feature.titleUz}
+                <h3 className="text-xl font-semibold text-card-foreground mb-4" data-testid={`text-feature-title-${index}`}>
+                  {language === 'uz' ? feature.titleUz : feature.titleRu}
                 </h3>
-                <p className="text-gray-600" data-testid={`text-feature-description-${index}`}>
-                  {feature.descriptionUz}
+                <p className="text-muted-foreground" data-testid={`text-feature-description-${index}`}>
+                  {language === 'uz' ? feature.descriptionUz : feature.descriptionRu}
                 </p>
               </div>
             ))}

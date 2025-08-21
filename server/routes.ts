@@ -415,6 +415,16 @@ export async function registerRoutes(app: Express, customStorage?: any): Promise
     }
   });
 
+  // Featured products endpoint for homepage - Must be before :slug route
+  app.get("/api/products/featured", async (req, res) => {
+    try {
+      const products = await activeStorage.getProducts(undefined, true);
+      res.json(products.slice(0, 8)); // Limit to 8 featured products
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch featured products" });
+    }
+  });
+
   app.get("/api/products/:slug", async (req, res) => {
     try {
       // Try to get by slug first

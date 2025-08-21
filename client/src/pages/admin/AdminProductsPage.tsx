@@ -484,7 +484,7 @@ export default function AdminProductsPage() {
                         checked={formData.isFeatured}
                         onCheckedChange={(checked) => setFormData({ ...formData, isFeatured: checked })}
                       />
-                      <Label htmlFor="isFeatured" className="text-foreground">Tavsiya etiladi</Label>
+                      <Label htmlFor="isFeatured" className="text-foreground">Bosh sahifada ko'rsatish</Label>
                     </div>
                   </div>
                 </div>

@@ -8,6 +8,15 @@ Preferred communication style: Simple, everyday language.
 
 # Recent Changes (August 21, 2025)
 
+## Featured Products System Implementation Completed
+- ✓ Added "Bosh sahifada ko'rsatish" checkbox to admin panel for marking products as featured
+- ✓ Created dedicated `/api/products/featured` endpoint for home page
+- ✓ Implemented "Ommabop Mahsulotlar" (Popular Products) section on home page
+- ✓ Removed duplicate "Afzalliklarimiz" (Advantages) sections for cleaner design
+- ✓ Added bilingual support for featured products display (Uzbek/Russian)
+- ✓ Successfully tested with 3 featured products from database
+- ✓ Improved home page layout with better content organization
+
 ## AI Chatbot 2.0 Enhancement Completed
 - ✓ Enhanced AI chatbot with intelligent contact form collection (name/phone)
 - ✓ Integrated Telegram bot notifications for new conversations and messages

@@ -40,6 +40,71 @@ export default function ProductDetailsPage() {
 
   const { data: product, isLoading, error } = useProductBySlug(slug || '');
 
+  // All hooks must be called at the top level before any conditional returns
+  // Check if product is in favorites
+  const { data: favoriteStatus } = useQuery({
+    queryKey: ['/api/favorites/check', product?.id],
+    queryFn: async () => {
+      const response = await fetch(`/api/favorites/check/${product?.id}`);
+      if (!response.ok) throw new Error('Failed to check favorite status');
+      return response.json();
+    },
+    enabled: !!user && !!product?.id,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  // Add to favorites mutation
+  const addToFavoritesMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch('/api/favorites', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId: product?.id }),
+      });
+      if (!response.ok) throw new Error('Failed to add to favorites');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/favorites'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/favorites/check', product?.id] });
+      toast({
+        title: language === 'uz' ? "Sevimlilar ro'yxatiga qo'shildi" : "Добавлено в избранное",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: language === 'uz' ? "Xatolik" : "Ошибка",
+        description: error.message || (language === 'uz' ? "Sevimlilar ro'yxatiga qo'shishda xatolik" : "Ошибка при добавлении в избранное"),
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Remove from favorites mutation
+  const removeFromFavoritesMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch(`/api/favorites/${product?.id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to remove from favorites');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/favorites'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/favorites/check', product?.id] });
+      toast({
+        title: language === 'uz' ? "Sevimlilardan o'chirildi" : "Удалено из избранного",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: language === 'uz' ? "Xatolik" : "Ошибка",
+        description: error.message || (language === 'uz' ? "Sevimlilardan o'chirishda xatolik" : "Ошибка при удалении из избранного"),
+        variant: "destructive",
+      });
+    },
+  });
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background dark:bg-black">
@@ -94,57 +159,6 @@ export default function ProductDetailsPage() {
 
   const name = language === 'uz' ? product.nameUz : product.nameRu;
   const description = language === 'uz' ? product.descriptionUz : product.descriptionRu;
-
-  // Check if product is in favorites
-  const { data: favoriteStatus } = useQuery({
-    queryKey: ['/api/favorites/check', product.id],
-    queryFn: () => apiRequest(`/api/favorites/check/${product.id}`),
-    enabled: !!user,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
-
-  // Add to favorites mutation
-  const addToFavoritesMutation = useMutation({
-    mutationFn: () => apiRequest('/api/favorites', {
-      method: 'POST',
-      body: JSON.stringify({ productId: product.id }),
-    }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/favorites'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/favorites/check', product.id] });
-      toast({
-        title: language === 'uz' ? "Sevimlilar ro'yxatiga qo'shildi" : "Добавлено в избранное",
-      });
-    },
-    onError: (error: any) => {
-      toast({
-        title: language === 'uz' ? "Xatolik" : "Ошибка",
-        description: error.message || (language === 'uz' ? "Sevimlilar ro'yxatiga qo'shishda xatolik" : "Ошибка при добавлении в избранное"),
-        variant: "destructive",
-      });
-    },
-  });
-
-  // Remove from favorites mutation
-  const removeFromFavoritesMutation = useMutation({
-    mutationFn: () => apiRequest(`/api/favorites/${product.id}`, {
-      method: 'DELETE',
-    }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/favorites'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/favorites/check', product.id] });
-      toast({
-        title: language === 'uz' ? "Sevimlilar ro'yxatidan o'chirildi" : "Удалено из избранного",
-      });
-    },
-    onError: (error: any) => {
-      toast({
-        title: language === 'uz' ? "Xatolik" : "Ошибка",
-        description: error.message || (language === 'uz' ? "Sevimlilar ro'yxatidan o'chirishda xatolik" : "Ошибка при удалении из избранного"),
-        variant: "destructive",
-      });
-    },
-  });
 
   const handleToggleFavorite = () => {
     if (!user) {

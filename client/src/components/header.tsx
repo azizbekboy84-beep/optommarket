@@ -207,7 +207,7 @@ export function Header() {
             {/* Language Selector */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" data-testid="language-toggle">
                   {language === 'uz' ? '🇺🇿 O\'Z' : '🇷🇺 RU'}
                 </Button>
               </DropdownMenuTrigger>

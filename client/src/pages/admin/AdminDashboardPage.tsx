@@ -1,7 +1,7 @@
 import { Link } from 'wouter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
-import { Package, ShoppingCart, Users, BarChart3, Folder, FileText, Percent } from 'lucide-react';
+import { Package, ShoppingCart, Users, BarChart3, Folder, FileText, Percent, Bell } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export default function AdminDashboardPage() {
@@ -115,6 +115,26 @@ export default function AdminDashboardPage() {
               <Link href="/admin/discounts">
                 <Button className="w-full">
                   Chegirmalarni boshqarish
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          {/* Push Notifications */}
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Bell className="h-5 w-5 text-orange-600" />
+                Push Bildirishnomalar
+              </CardTitle>
+              <CardDescription>
+                Foydalanuvchilarga bildirishnomalar yuborish
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Link href="/admin/push-notifications">
+                <Button className="w-full">
+                  Bildirishnomalar yuborish
                 </Button>
               </Link>
             </CardContent>

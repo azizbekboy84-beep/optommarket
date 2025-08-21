@@ -1,0 +1,65 @@
+KEYINGI BOSQICH: PUSH NOTIFICATION TIZIMINI YARATISH (YANGI REJA)
+Ajoyib, biz endi sayt ichidagi oddiy bildirishnomalardan voz kechib, foydalanuvchilarni sayt yopiq bo'lganda ham yangiliklardan xabardor qilib turadigan professional Push Notification tizimini yaratamiz.
+
+Loyiha mazmuni (Kontekst):
+Maqsadimiz — foydalanuvchi ruxsat berganidan so'ng, uning brauzeriga to'g'ridan-to'g'ri bildirishnomalar yuborish imkoniyatiga ega bo'lish. Administrator yangi mahsulot yoki aksiya e'lon qilganda, obuna bo'lgan barcha foydalanuvchilarning qurilmalarida darhol bildirishnoma paydo bo'ladi. Bu foydalanuvchilarni saytga qayta jalb qilishning eng samarali usulidir.
+
+Aniq qadamlar:
+
+1-QISM: BACKENDNI TAYYORLASH (PUSH SERVER)
+
+Kerakli Kutubxonani O'rnatish:
+
+server papkasiga o'tib, web-push protokoli bilan ishlash uchun web-push kutubxonasini o'rnat: npm install web-push.
+
+VAPID Kalitlarini Yaratish va Saqlash:
+
+web-push yordamida bir juft VAPID kalitlarini (public va private) generatsiya qil.
+
+Bu kalitlarni Replit Secrets bo'limiga VAPID_PUBLIC_KEY va VAPID_PRIVATE_KEY nomlari bilan saqla. Bu kalitlar serverimizni bildirishnoma yuboruvchi sifatida tasdiqlaydi.
+
+Baza Sxemasini Yangilash (shared/schema.ts):
+
+Foydalanuvchilarning obunalarini saqlash uchun yangi push_subscriptions jadvalini qo'shing. Unda quyidagi ustunlar bo'lsin: id, user_id (ixtiyoriy), subscription (JSON formatida, brauzerdan keladigan to'liq obuna obyekti uchun).
+
+Yangi API Endpoint'lar Yaratish:
+
+/api/push prefiksi bilan yangi router yarating:
+
+POST /api/push/subscribe: Frontend'dan yangi obuna (subscription) obyektini qabul qilib, uni push_subscriptions jadvaliga saqlasin.
+
+GET /api/push/vapid-public-key: Frontend'ga VAPID_PUBLIC_KEY ni yuborib tursin.
+
+Admin API'sini Yangilash:
+
+POST /api/admin/products va POST /api/admin/blog endpoint'larini tahrirlang. Yangi ma'lumot bazaga saqlangandan so'ng, alohida funksiya ishga tushsin. Bu funksiya push_subscriptions jadvalidagi barcha obunalarni olib, web-push kutubxonasi yordamida har biriga yangilik haqida bildirishnoma (sarlavha, matn, ikona va havola bilan) yuborsin.
+
+2-QISM: FRONTENDNI SOZLASH (SERVICE WORKER VA RUXSAT SO'ROVI)
+
+Service Worker Faylini Yaratish:
+
+client/public papkasida service-worker.js nomli yangi fayl yarating.
+
+Bu fayl orqa fonda ishlab, push hodisasini tinglaydi va serverdan bildirishnoma kelganda, uni self.registration.showNotification() metodi yordamida foydalanuvchiga ko'rsatadi.
+
+Service Worker'ni Ro'yxatdan O'tkazish:
+
+client/src/main.tsx (yoki App.tsx) faylida ilova yuklanganda service-worker.js faylini ro'yxatdan o'tkazadigan kodni qo'shing.
+
+Obuna Bo'lish Mantig'ini Yaratish:
+
+Foydalanuvchi saytga birinchi marta kirganda yoki maxsus "Bildirishnomalarga obuna bo'lish" tugmasini bosganda, brauzerdan bildirishnomalarni ko'rsatish uchun ruxsat so'rovchi oyna (Notification.requestPermission()) chiqaring.
+
+Agar foydalanuvchi "Ruxsat berish" tugmasini bossa:
+a. Service Worker'dan pushManager.subscribe() metodi yordamida noyob obuna (subscription) obyektini oling.
+b. Bu obyektni backend'dagi POST /api/push/subscribe endpoint'iga yuborib, bazaga saqlang.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Foydalanuvchi saytga kirganda, brauzer undan bildirishnomalarni ko'rsatish uchun ruxsat so'rayaptimi?
+
+Foydalanuvchi "Ruxsat berish" tugmasini bosganda, uning obunasi ma'lumotlar bazasiga muvaffaqiyatli saqlanyaptimi?
+
+Admin panelidan yangi mahsulot yoki blog posti qo'shilganda, obuna bo'lgan foydalanuvchilarga (hatto sayt yopiq bo'lsa ham) brauzer bildirishnomasi (push notification) kelyaptimi?
+
+Bildirishnoma bosilganda, u foydalanuvchini yangi mahsulot yoki postning to'g'ri sahifasiga olib boryaptimi?

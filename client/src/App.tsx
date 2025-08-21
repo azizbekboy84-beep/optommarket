@@ -29,6 +29,7 @@ import AdminBlogPage from "@/pages/admin/AdminBlogPage";
 import AdminCategoriesPage from "@/pages/admin/AdminCategoriesPage";
 import AdminSEOPage from "@/pages/admin/AdminSEOPage";
 import AdminDiscountsPage from "@/pages/admin/AdminDiscountsPage";
+import AdminPushNotificationsPage from "@/pages/admin/AdminPushNotificationsPage";
 import ReportsPage from "@/pages/admin/ReportsPage";
 import BlogPage from "@/pages/BlogPage";
 import BlogPostPage from "@/pages/BlogPostPage";
@@ -39,6 +40,7 @@ import { AIChatWidget } from "@/components/AIChatWidget";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { Header } from "@/components/header";
 import { AppDownloadPrompt } from "@/components/AppDownloadPrompt";
+import { PushNotificationSetup } from "@/components/PushNotificationSetup";
 import { HelmetProvider } from 'react-helmet-async';
 
 function Router() {
@@ -122,6 +124,13 @@ function Router() {
           </AdminRoute>
         )}
       </Route>
+      <Route path="/admin/push-notifications">
+        {() => (
+          <AdminRoute>
+            <AdminPushNotificationsPage />
+          </AdminRoute>
+        )}
+      </Route>
       <Route path="/order-success" component={OrderSuccessPage} />
       <Route path="/contact" component={Contact} />
       <Route path="/blog" component={BlogPage} />
@@ -149,6 +158,7 @@ function App() {
                   <MobileBottomNav />
                   <AIChatWidget />
                   <AppDownloadPrompt />
+                  <PushNotificationSetup autoRequest={true} showCard={false} />
                 </TooltipProvider>
               </CartProvider>
             </AuthProvider>

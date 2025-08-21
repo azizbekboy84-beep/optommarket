@@ -9,7 +9,7 @@ import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { ThemeToggle } from './theme-toggle';
 import { Link, useLocation } from 'wouter';
-import { ChevronDown, ShoppingCart, User, Settings, Search, Phone, Facebook, Instagram, Mail, Folder, Package, Shirt, Utensils, Smartphone, Box } from 'lucide-react';
+import { ChevronDown, ShoppingCart, User, Settings, Search, Phone, Facebook, Instagram, Mail, Folder, Package, Shirt, Utensils, Smartphone, Box, BookOpen, MessageCircle } from 'lucide-react';
 import logoImage from '@assets/optombazar logo_1755690917356.png';
 import { Category } from '@shared/schema';
 
@@ -149,8 +149,36 @@ export function Header() {
             </Link>
           </div>
 
-          {/* Main Navigation - Categories */}
-          <nav className="hidden lg:flex items-center space-x-2">
+          {/* Main Navigation Menu */}
+          <nav className="hidden lg:flex items-center space-x-6 ml-8">
+            {/* Primary Navigation Links */}
+            <Link 
+              href="/catalog" 
+              className="flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
+            >
+              <Folder className="h-4 w-4" />
+              {language === 'uz' ? 'Katalog' : 'Каталог'}
+            </Link>
+            
+            <Link 
+              href="/blog" 
+              className="flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
+            >
+              <BookOpen className="h-4 w-4" />
+              {language === 'uz' ? 'Blog' : 'Блог'}
+            </Link>
+            
+            <Link 
+              href="/contact" 
+              className="flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
+            >
+              <MessageCircle className="h-4 w-4" />
+              {language === 'uz' ? 'Aloqa' : 'Контакты'}
+            </Link>
+          </nav>
+
+          {/* Categories Navigation - Compact */}
+          <nav className="hidden xl:flex items-center space-x-1 ml-8">
             {/* Main Categories - Ultra compact design */}
             {mainCategories.map((category) => {
               const IconComponent = getIconComponent(category.icon);

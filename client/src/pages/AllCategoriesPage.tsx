@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'wouter';
+import { useLanguage } from '@/components/language-provider';
+import { SEOHead } from '@/components/SEOHead';
+import { Footer } from '@/components/footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Link } from 'wouter';
-import { ChevronLeft, Package, Shirt, Utensils, Smartphone, Box, Folder, Grid3x3 } from 'lucide-react';
-import { useLanguage } from '@/components/language-provider';
+import { Folder, Package, Utensils, Smartphone, Shirt, Box } from 'lucide-react';
 import { Category } from '@shared/schema';
 
 // Icon mapping for categories
@@ -12,15 +13,13 @@ const getIconComponent = (iconName: string | null) => {
   const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
     Package,
     Shirt,
-    Utensils, 
+    Utensils,
     Smartphone,
     Box,
     Folder,
-    Grid3x3,
   };
   
-  const IconComponent = iconName ? iconMap[iconName] : Package;
-  return IconComponent || Package;
+  return iconMap[iconName || 'Package'] || Package;
 };
 
 export default function AllCategoriesPage() {
@@ -40,120 +39,167 @@ export default function AllCategoriesPage() {
 
   // Group categories by parent
   const mainCategories = categories.filter(cat => !cat.parentId);
-  const getCategoryChildren = (parentId: string) => 
-    categories.filter(cat => cat.parentId === parentId);
+  const subcategoriesByParent = categories
+    .filter(cat => cat.parentId)
+    .reduce((acc, cat) => {
+      if (!acc[cat.parentId!]) {
+        acc[cat.parentId!] = [];
+      }
+      acc[cat.parentId!].push(cat);
+      return acc;
+    }, {} as Record<string, Category[]>);
+
+  const pageTitle = language === 'uz' 
+    ? 'Barcha Kategoriyalar - Optombazar.uz' 
+    : 'Все Категории - Optombazar.uz';
+  
+  const pageDescription = language === 'uz'
+    ? 'Optombazar.uz da barcha mahsulot kategoriyalarini ko\'ring. Plastik paketlar, bir martalik idishlar, maishiy kimyo va boshqa ko\'plab kategoriyalar.'
+    : 'Просмотрите все категории товаров на Optombazar.uz. Пластиковые пакеты, одноразовая посуда, бытовая химия и многие другие категории.';
+
+  const seoMetaTags = {
+    title: pageTitle,
+    description: pageDescription,
+    keywords: language === 'uz' 
+      ? ['kategoriyalar', 'mahsulotlar', 'optom', 'plastik paketlar', 'idishlar', 'maishiy kimyo']
+      : ['категории', 'товары', 'оптом', 'пластиковые пакеты', 'посуда', 'бытовая химия'],
+    canonicalUrl: 'https://optombazar.uz/categories',
+    ogTitle: pageTitle,
+    ogDescription: pageDescription,
+    ogImage: 'https://optombazar.uz/logo.png',
+    ogUrl: 'https://optombazar.uz/categories',
+    twitterCard: 'summary_large_image' as const,
+    twitterTitle: pageTitle,
+    twitterDescription: pageDescription,
+    twitterImage: 'https://optombazar.uz/logo.png',
+    structuredData: {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: pageTitle,
+      description: pageDescription,
+      url: 'https://optombazar.uz/categories'
+    }
+  };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
-        <div className="max-w-7xl mx-auto px-4">
+      <div className="min-h-screen bg-background dark:bg-black">
+        <SEOHead seo={seoMetaTags} />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-8"></div>
+            <div className="h-8 bg-muted rounded w-1/3 mb-8"></div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="h-48 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+                <div key={i} className="h-48 bg-muted rounded-lg"></div>
               ))}
             </div>
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
-        <div className="max-w-7xl mx-auto px-4">
+      <div className="min-h-screen bg-background dark:bg-black">
+        <SEOHead seo={seoMetaTags} />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              {language === 'uz' ? 'Xatolik yuz berdi' : 'Произошла ошибка'}
+            <h1 className="text-2xl font-bold text-foreground mb-4" data-testid="text-error-title">
+              {language === 'uz' ? 'Kategoriyalarni yuklashda xatolik' : 'Ошибка загрузки категорий'}
             </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              {language === 'uz' ? 'Kategoriyalarni yuklab bo\'lmadi' : 'Не удалось загрузить категории'}
+            <p className="text-muted-foreground" data-testid="text-error-message">
+              {language === 'uz' 
+                ? 'Kategoriyalarni yuklashda muammo yuz berdi. Sahifani qaytadan yuklang.'
+                : 'Произошла ошибка при загрузке категорий. Обновите страницу.'}
             </p>
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
-      <div className="max-w-7xl mx-auto px-4">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <Link href="/">
-            <Button variant="ghost" size="sm">
-              <ChevronLeft className="h-4 w-4 mr-2" />
-              {language === 'uz' ? 'Bosh sahifa' : 'Главная'}
-            </Button>
-          </Link>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              {language === 'uz' ? 'Barcha kategoriyalar' : 'Все категории'}
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">
-              {language === 'uz' 
-                ? 'Bizning mahsulotlar katalogini ko\'rib chiqing'
-                : 'Просмотрите наш каталог товаров'
-              }
-            </p>
-          </div>
+    <div className="min-h-screen bg-background dark:bg-black">
+      <SEOHead seo={seoMetaTags} />
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Page Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-3xl font-bold text-foreground mb-4" data-testid="text-page-title">
+            {language === 'uz' ? 'Barcha Kategoriyalar' : 'Все Категории'}
+          </h1>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto" data-testid="text-page-description">
+            {language === 'uz' 
+              ? 'Bizning keng qamrovli mahsulot kategoriyalarimiz bilan tanishib chiqing'
+              : 'Ознакомьтесь с нашим широким ассортиментом категорий товаров'}
+          </p>
         </div>
 
-        {/* Categories Grid - Ultra compact for 12 items */}
-        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-3">
-          {mainCategories.map((category) => {
-            const children = getCategoryChildren(category.id);
-            const IconComponent = getIconComponent(category.icon);
+        {/* Categories Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {mainCategories.map((mainCategory) => {
+            const IconComponent = getIconComponent(mainCategory.icon);
+            const subcategories = subcategoriesByParent[mainCategory.id] || [];
             
             return (
-              <Card key={category.id} className="hover:shadow-lg transition-shadow h-40">
-                <CardHeader className="pb-1 pt-2 px-2">
-                  <CardTitle className="flex flex-col items-center gap-1 text-center">
-                    <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <Card 
+                key={mainCategory.id} 
+                className="h-full hover:shadow-lg transition-shadow duration-200 border-2 hover:border-blue-200 dark:hover:border-blue-800"
+                data-testid={`card-category-${mainCategory.id}`}
+              >
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center gap-3 text-lg">
+                    <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
                       <IconComponent className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-xs leading-tight line-clamp-2 h-8">
-                        {language === 'uz' ? category.nameUz : category.nameRu}
-                      </h3>
+                      <Link 
+                        href={`/catalog?category=${mainCategory.slug}`}
+                        className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                        data-testid={`link-main-category-${mainCategory.id}`}
+                      >
+                        {language === 'uz' ? mainCategory.nameUz : mainCategory.nameRu}
+                      </Link>
+                      <Badge variant="secondary" className="ml-2 text-xs">
+                        {subcategories.length} {language === 'uz' ? 'kategoriya' : 'категорий'}
+                      </Badge>
                     </div>
                   </CardTitle>
                 </CardHeader>
                 
-                <CardContent className="space-y-1 px-2 pb-2">
-                  {children.length > 0 ? (
-                    <>
-                      <div className="flex items-center justify-center mb-1">
-                        <Badge variant="secondary" className="text-[10px] px-1 py-0">
-                          {children.length}
-                        </Badge>
+                <CardContent>
+                  {subcategories.length > 0 ? (
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium text-muted-foreground mb-3">
+                        {language === 'uz' ? 'Ichki kategoriyalar:' : 'Подкатегории:'}
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {subcategories.map((subcategory) => (
+                          <Link
+                            key={subcategory.id}
+                            href={`/catalog?category=${subcategory.slug}`}
+                            className="inline-block"
+                            data-testid={`link-subcategory-${subcategory.id}`}
+                          >
+                            <Badge 
+                              variant="outline" 
+                              className="hover:bg-blue-50 dark:hover:bg-blue-950 hover:border-blue-300 dark:hover:border-blue-700 transition-colors cursor-pointer text-xs py-1 px-2"
+                            >
+                              {language === 'uz' ? subcategory.nameUz : subcategory.nameRu}
+                            </Badge>
+                          </Link>
+                        ))}
                       </div>
-                      
-                      <div className="text-center">
-                        <div className="text-[10px] text-gray-600 dark:text-gray-400 line-clamp-1">
-                          {children.slice(0, 1).map((child) => (
-                            language === 'uz' ? child.nameUz : child.nameRu
-                          )).join('')}
-                          {children.length > 1 && ' +' + (children.length - 1)}
-                        </div>
-                      </div>
-                      
-                      <Link href={`/catalog?category=${category.slug}`}>
-                        <Button variant="outline" size="sm" className="w-full mt-1 text-[10px] h-5">
-                          {language === 'uz' ? 'Ko\'rish' : 'См.'} →
-                        </Button>
-                      </Link>
-                    </>
-                  ) : (
-                    <div className="py-1 flex-1 flex items-end">
-                      <Link href={`/catalog?category=${category.slug}`} className="w-full">
-                        <Button variant="default" size="sm" className="w-full text-[10px] h-5">
-                          {language === 'uz' ? 'Ko\'rish' : 'См.'} →
-                        </Button>
-                      </Link>
                     </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground italic">
+                      {language === 'uz' 
+                        ? 'Ichki kategoriyalar mavjud emas'
+                        : 'Нет подкategories'}
+                    </p>
                   )}
                 </CardContent>
               </Card>
@@ -161,18 +207,40 @@ export default function AllCategoriesPage() {
           })}
         </div>
 
-        {mainCategories.length === 0 && (
-          <div className="text-center py-12">
-            <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              {language === 'uz' ? 'Kategoriyalar topilmadi' : 'Категории не найдены'}
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400">
-              {language === 'uz' ? 'Hozircha kategoriyalar qo\'shilmagan' : 'Пока что категории не добавлены'}
-            </p>
+        {/* Stats Section */}
+        <div className="mt-16 text-center">
+          <div className="bg-blue-50 dark:bg-blue-950/50 rounded-lg p-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400" data-testid="text-main-categories-count">
+                  {mainCategories.length}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {language === 'uz' ? 'Asosiy kategoriya' : 'Основных категорий'}
+                </div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400" data-testid="text-total-categories-count">
+                  {categories.length}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {language === 'uz' ? 'Jami kategoriya' : 'Всего категорий'}
+                </div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                  {language === 'uz' ? '2000+' : '2000+'}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {language === 'uz' ? 'Mahsulot' : 'Товаров'}
+                </div>
+              </div>
+            </div>
           </div>
-        )}
+        </div>
       </div>
+      
+      <Footer />
     </div>
   );
 }

@@ -1,0 +1,83 @@
+KEYINGI BOSQICH: IKKI TILLI NAVIGATSIYANI QAYTA QURISH VA BAZANI HAQIQIY MA'LUMOTLAR BILAN TO'LDIRISH
+Ajoyib, loyihamiz deyarli tayyor, lekin hozirgi kunda sayt navigatsiyasi kategoriyalarning ko'pligidan foydalanish uchun noqulay. Keling, buni tuzatamiz va bir yo'la ma'lumotlar bazamizni haqiqiy, ikki tilli ma'lumotlar bilan to'ldiramiz.
+
+Loyiha mazmuni (Kontekst):
+Maqsadimiz — foydalanuvchi uchun sayt bo'ylab harakatlanishni osonlashtirish va platformamizni haqiqiy ma'lumotlar bilan ishlashga o'tkazish. Buning uchun biz Headerdagi kategoriyalar ro'yxatini qisqartiramiz, barcha kategoriyalarni ko'rish uchun alohida sahifa yaratamiz va ma'lumotlar bazasini siz taqdim etgan ro'yxatga asosan, rus va o'zbek tillariga ajratgan holda to'ldiramiz.
+
+Aniq qadamlar:
+
+1-QISM: BAZANI HAQIQIY, IKKI TILLI MA'LUMOTLAR BILAN TO'LDIRISH
+
+server/seed.ts Faylini To'liq Qayta Yozish:
+
+Mavjud seed.ts faylini ochib, uning tarkibini tozalang.
+
+Yangi skript yozing. Bu skript quyidagi kategoriya ro'yxatini o'qib, ularni categories jadvaliga ierarxik tarzda (parentId'larni to'g'ri o'rnatgan holda) qo'shishi kerak.
+
+Eng muhim qoida: Skriptni yozishda, berilgan kategoriya nomlarini ('|' belgisi bilan ajratilgan) to'g'ri tahlil qilishing kerak. Masalan, "Полиэтиленовые пакеты | Plastik paketlar" qatorida:
+
+'|' belgisidan oldingi qism (Полиэтиленовые пакеты) nameRu ustuniga yozilishi kerak.
+
+'|' belgisidan keyingi qism (Plastik paketlar) nameUz ustuniga yozilishi kerak.
+
+Kategoriyalar ro'yxati:
+
+Asosiy: Полиэтиленовые пакеты | Plastik paketlar
+
+Ichki: Полиэтиленовый пакет "Майка" без рисунка | Rasmsiz mayka paketlar
+
+Ichki: Фасовочные пакеты и рулоне | Qadoqlash paketlari va rulonlari
+
+Ichki: Полиэтиленовый пакет с замком zip-lock (струна) | Zip paketlar
+
+Ichki: Мусорные пакеты | Axlat uchun qoplari
+
+Ichki: Пакеты с вырубной ручкой | Kesilgan tutqichli paketlar
+
+Ichki: Пакеты с петлевой ручкой | Halqa tutqichili sumkalar
+
+Asosiy: Одноразовая посуда | Bir martali ishlatiladigan idishlar
+
+Ichki: Одноразовая пластиковая посуда | Plastmassa idishlar
+
+Ichki: Одноразовые бумажные стаканы, крышки и тарелки | Stakan va tarelkalar
+
+Ichki: Контейнеры и тара для ягод, блистерная упаковка для пищевых продуктов | Oziq-ovqat va pishiriq idishlari
+
+... (va siz taqdim etgan boshqa barcha kategoriyalar shu formatda)
+
+package.json dagi "db:seed" skriptini ishga tushirib, bazani yangi, haqiqiy ma'lumotlar bilan to'ldir.
+
+2-QISM: FRONTEND NAVIGATSIYASINI TO'LIQ QAYTA QURISH
+
+Header.tsx Komponentini Sodda va Aniq Qilish:
+
+Headerdagi mavjud kategoriyalar menyusini olib tashlang.
+
+Uning o'rniga, faqat yuqorida sanab o'tilgan asosiy kategoriyalarning nomini (saytning joriy tiliga qarab nameUz yoki nameRu dan olingan) to'g'ridan-to'g'ri havola (Link) sifatida joylashtiring.
+
+Bu havolalar qatorining oxirida "Barcha kategoriyalar" nomli alohida, ajralib turadigan havolani qo'shing va uni yangi /categories sahifasiga yo'naltiring.
+
+"Barcha Kategoriyalar" Sahifasini Yaratish (AllCategoriesPage.tsx):
+
+client/src/pages/AllCategoriesPage.tsx nomli yangi sahifa yarating va /categories uchun marshrut (route) qo'shing.
+
+Sahifaning sarlavhasiga "Barcha Kategoriyalar" deb yozing.
+
+GET /api/categories endpoint'idan barcha ierarxik kategoriya ma'lumotlarini oling.
+
+Ma'lumotlarni chiroyli grid (grid-cols-1 md:grid-cols-2 lg:grid-cols-3) shaklida chiqaring. Har bir grid elementi bitta asosiy kategoriyaga tegishli bo'lsin.
+
+Har bir asosiy kategoriya kartochkasi (Card) ichida:
+
+Kategoriya nomi (sarlavha sifatida).
+
+Uning ostida esa o'sha kategoriyaga tegishli barcha ichki kategoriyalarning ro'yxatini bosiladigan havolalar (Link) shaklida chiqaring.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Ma'lumotlar bazasidagi categories jadvali nameUz va nameRu ustunlariga to'g'ri ajratilgan holda, to'liq va ierarxik ro'yxat bilan yangilandimi?
+
+Header endi faqat asosiy kategoriyalarni ko'rsatyaptimi va "Barcha kategoriyalar" tugmasi ishlayaptimi?
+
+Yangi /categories sahifasi yaratildimi va u yerda barcha asosiy kategoriyalar o'zining ichki kategoriyalari bilan birga chiroyli kartochkalar shaklida ko'rsatilyaptimi?

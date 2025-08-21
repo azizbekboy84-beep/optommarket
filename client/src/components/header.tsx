@@ -177,9 +177,9 @@ export function Header() {
             </Link>
           </nav>
 
-          {/* Categories Navigation - Compact */}
-          <nav className="hidden xl:flex items-center space-x-1 ml-8">
-            {/* Main Categories - Ultra compact design */}
+          {/* Main Categories Navigation - Only main categories */}
+          <nav className="hidden xl:flex items-center space-x-4 ml-8">
+            {/* Show only main categories (no parent) */}
             {mainCategories.map((category) => {
               const IconComponent = getIconComponent(category.icon);
               
@@ -187,23 +187,23 @@ export function Header() {
                 <Link 
                   key={category.id} 
                   href={`/catalog?category=${category.slug}`} 
-                  className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-xs px-1.5 py-1 rounded hover:bg-gray-50 dark:hover:bg-gray-800"
+                  className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm px-2 py-1 rounded hover:bg-gray-50 dark:hover:bg-gray-800 font-medium"
                 >
-                  <IconComponent className="h-2.5 w-2.5" />
-                  <span className="truncate max-w-[70px] text-[11px]">
+                  <IconComponent className="h-4 w-4" />
+                  <span className="whitespace-nowrap">
                     {language === 'uz' ? category.nameUz : category.nameRu}
                   </span>
                 </Link>
               );
             })}
             
-            {/* All Categories Link */}
+            {/* All Categories Link - More prominent */}
             <Link 
               href="/categories" 
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors text-[11px] flex items-center gap-1 bg-blue-50 dark:bg-blue-900/20 px-1.5 py-1 rounded ml-1 border-l border-gray-200 dark:border-gray-700 pl-2"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors text-sm flex items-center gap-1.5 bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-lg ml-2 border border-blue-200 dark:border-blue-800 font-medium"
             >
-              <Folder className="h-2.5 w-2.5" />
-              {language === 'uz' ? 'Barcha' : 'Все'}
+              <Folder className="h-4 w-4" />
+              {language === 'uz' ? 'Barcha kategoriyalar' : 'Все категории'}
             </Link>
           </nav>
 

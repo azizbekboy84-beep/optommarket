@@ -102,7 +102,7 @@ export default function Contact() {
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => handleInputChange('phone', e.target.value)}
-                      placeholder="+998 90 123 45 67"
+                      placeholder="+998996448444"
                       data-testid="input-phone"
                     />
                   </div>
@@ -172,8 +172,7 @@ export default function Contact() {
                   <Phone className="w-6 h-6 text-primary mt-1" />
                   <div>
                     <h3 className="font-semibold text-gray-900">Telefon</h3>
-                    <p className="text-gray-600" data-testid="text-phone">+998 90 123 45 67</p>
-                    <p className="text-gray-600">+998 71 123 45 67</p>
+                    <p className="text-gray-600" data-testid="text-phone">+998996448444</p>
                   </div>
                 </div>
 
@@ -181,8 +180,7 @@ export default function Contact() {
                   <Mail className="w-6 h-6 text-primary mt-1" />
                   <div>
                     <h3 className="font-semibold text-gray-900">Email</h3>
-                    <p className="text-gray-600" data-testid="text-email">info@optombazar.uz</p>
-                    <p className="text-gray-600">support@optombazar.uz</p>
+                    <p className="text-gray-600" data-testid="text-email">akramjon2504@gmail.com</p>
                   </div>
                 </div>
 
@@ -219,7 +217,7 @@ export default function Contact() {
                 </p>
                 <div className="space-y-2">
                   <p className="text-sm"><strong>Telegram:</strong> @optombazar_wholesale</p>
-                  <p className="text-sm"><strong>WhatsApp:</strong> +998 90 123 45 67</p>
+                  <p className="text-sm"><strong>WhatsApp:</strong> +998996448444</p>
                   <p className="text-sm"><strong>Minimal buyurtma:</strong> 100,000 so'm</p>
                 </div>
               </CardContent>

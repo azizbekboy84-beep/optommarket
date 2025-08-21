@@ -67,11 +67,11 @@ export function Header() {
             <div className="flex items-center space-x-6">
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4" />
-                <span>+998 71 123-45-67</span>
+                <span>+998996448444</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4" />
-                <span>info@optombazar.uz</span>
+                <span>akramjon2504@gmail.com</span>
               </div>
             </div>
             
@@ -208,7 +208,7 @@ export function Header() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm">
-                  {language === 'uz' ? '🇺🇿 Uz' : '🇷🇺 Ru'}
+                  {language === 'uz' ? '🇺🇿 O\'z' : '🇷🇺 Ru'}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">

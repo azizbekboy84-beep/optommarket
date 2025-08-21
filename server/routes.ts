@@ -33,18 +33,28 @@ async function sendTelegramNotification(message: string): Promise<void> {
       return;
     }
 
+    // Clean chat ID to extract numeric part if there's extra text
+    const cleanChatId = chatId.replace(/[^-0-9]/g, '');
+    console.log('Original chat ID:', chatId);
+    console.log('Cleaned chat ID:', cleanChatId);
+    
     const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        chat_id: chatId,
+        chat_id: cleanChatId,
         text: message,
         parse_mode: 'HTML'
       })
     });
 
     if (!response.ok) {
-      console.error('Telegram notification failed:', await response.text());
+      const errorText = await response.text();
+      console.error('Telegram notification failed:', errorText);
+      console.error('Bot Token length:', botToken?.length);
+      console.error('Chat ID:', chatId);
+    } else {
+      console.log('Telegram notification sent successfully');
     }
   } catch (error) {
     console.error('Telegram notification error:', error);
@@ -52,11 +62,11 @@ async function sendTelegramNotification(message: string): Promise<void> {
 }
 
 // Helper function to build context for intelligent responses
-async function buildChatContext(userMessage: string): Promise<string> {
+async function buildChatContext(userMessage: string, storage: IStorage): Promise<string> {
   try {
     // Get categories and products for context
-    const categories = await activeStorage.getCategories();
-    const products = await activeStorage.getProducts();
+    const categories = await storage.getCategories();
+    const products = await storage.getProducts();
     
     let context = "Bizning platformamizda quyidagi kategoriyalar mavjud:\n";
     
@@ -786,7 +796,7 @@ export async function registerRoutes(app: Express, customStorage?: any): Promise
       });
 
       // Get context for intelligent response
-      const context = await buildChatContext(message);
+      const context = await buildChatContext(message, activeStorage);
       
       // Generate AI response using Google Gemini with context
       const aiResponse = await generateIntelligentResponse(message, context);
@@ -1027,6 +1037,16 @@ export async function registerRoutes(app: Express, customStorage?: any): Promise
     } catch (error) {
       console.error('Sitemap index generatsiya xatoligi:', error);
       res.status(500).send('Sitemap index generatsiya qilib bo\'lmadi');
+    }
+  });
+
+  // Test Telegram notification
+  app.get("/api/test-telegram", async (req, res) => {
+    try {
+      await sendTelegramNotification("🧪 Test notification from Optombazar.uz");
+      res.json({ success: true, message: "Telegram test sent" });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   });
 

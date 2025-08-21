@@ -196,7 +196,7 @@ export function AIChatWidget() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-50 md:bottom-6 w-96 sm:w-80 xs:w-72 h-[520px] bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col max-w-[calc(100vw-3rem)]">
+        <div className="fixed bottom-24 right-6 z-50 md:bottom-6 w-96 sm:w-80 xs:w-72 h-[520px] bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col max-w-[calc(100vw-3rem)]">
           {/* Header */}
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-blue-600 to-red-500 text-white rounded-t-lg">
             <CardTitle className="text-sm font-medium">
@@ -229,12 +229,12 @@ export function AIChatWidget() {
               <div className="flex flex-col justify-center h-full px-6 py-4">
                 <div className="text-center mb-6">
                   <Bot className="h-12 w-12 mx-auto mb-4 text-blue-600" />
-                  <h3 className="text-lg font-semibold mb-2">
+                  <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
                     {language === 'uz' 
                       ? 'Salam! Sizga yordam berishga tayyorman' 
                       : 'Привет! Я готов помочь вам'}
                   </h3>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
                     {language === 'uz' 
                       ? 'Suhbatni boshlash uchun ismingiz va telefon raqamingizni kiriting' 
                       : 'Введите ваше имя и номер телефона для начала разговора'}
@@ -309,7 +309,7 @@ export function AIChatWidget() {
                     className={`max-w-[85%] p-3 rounded-lg text-sm leading-[1.5] ${
                       message.isUser
                         ? 'bg-gradient-to-r from-blue-600 to-red-500 text-white'
-                        : 'bg-gray-100 text-gray-800 border border-gray-200'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white border border-gray-200 dark:border-gray-600'
                     }`}
                   >
                     <div className="whitespace-pre-wrap break-words font-medium">
@@ -328,7 +328,7 @@ export function AIChatWidget() {
               {chatMutation.isPending && (
                 <div className="flex items-start gap-2 mb-4">
                   <Bot className="h-6 w-6 text-blue-600" />
-                  <div className="bg-gray-100 p-3 rounded-lg text-sm">
+                  <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-sm">
                     <div className="flex items-center gap-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
                       {language === 'uz' ? 'AI yozmoqda...' : 'AI печатает...'}
@@ -344,7 +344,7 @@ export function AIChatWidget() {
 
           {/* Input - Only show when chat started */}
           {chatStarted && (
-            <div className="p-4 border-t border-gray-200 bg-gray-50 mt-auto">
+            <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 mt-auto">
             <form onSubmit={handleSendMessage} className="flex gap-2">
               <Input
                 value={inputMessage}

@@ -22,6 +22,114 @@ declare module 'express-session' {
   }
 }
 
+// Helper function to send Telegram notifications
+async function sendTelegramNotification(message: string): Promise<void> {
+  try {
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+    
+    if (!botToken || !chatId) {
+      console.warn('Telegram credentials not configured');
+      return;
+    }
+
+    const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: message,
+        parse_mode: 'HTML'
+      })
+    });
+
+    if (!response.ok) {
+      console.error('Telegram notification failed:', await response.text());
+    }
+  } catch (error) {
+    console.error('Telegram notification error:', error);
+  }
+}
+
+// Helper function to build context for intelligent responses
+async function buildChatContext(userMessage: string): Promise<string> {
+  try {
+    // Get categories and products for context
+    const categories = await activeStorage.getCategories();
+    const products = await activeStorage.getProducts();
+    
+    let context = "Bizning platformamizda quyidagi kategoriyalar mavjud:\n";
+    
+    categories.forEach((category: any) => {
+      context += `- ${category.nameUz} (${category.nameRu}): ${category.descriptionUz}\n`;
+    });
+    
+    // Add product information if user asks about specific products
+    const lowerMessage = userMessage.toLowerCase();
+    if (lowerMessage.includes('paket') || lowerMessage.includes('пакет')) {
+      const packageProducts = products.filter((product: any) => 
+        product.categoryId === 'polietilen-paketlar'
+      ).slice(0, 5);
+      
+      if (packageProducts.length > 0) {
+        context += "\nPolietilen paketlar:\n";
+        packageProducts.forEach((product: any) => {
+          context += `- ${product.nameUz}: ${product.wholesalePrice} so'm (minimal: ${product.minQuantity} ${product.unit})\n`;
+        });
+      }
+    }
+    
+    return context;
+  } catch (error) {
+    console.error('Context building error:', error);
+    return "Bizning platformamizda turli xil ulgurji mahsulotlar mavjud.";
+  }
+}
+
+// Helper function to generate intelligent AI response
+async function generateIntelligentResponse(userMessage: string, context: string): Promise<string> {
+  try {
+    const apiKey = process.env.GOOGLE_API_KEY;
+    if (!apiKey) {
+      throw new Error('GOOGLE_API_KEY environment variable is not set');
+    }
+
+    const prompt = `Sen Optombazar.uz yordamchisisan. Javoblaringni qisqa va 2-3 gapdan oshirma. 
+
+Kontekst: ${context}
+
+Mijoz savoli: ${userMessage}
+
+Javobingiz o'zbek tilida bo'lsin va qisqa, aniq bo'lsin.`;
+
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{
+          parts: [{ text: prompt }]
+        }],
+        generationConfig: {
+          temperature: 0.7,
+          topK: 1,
+          topP: 1,
+          maxOutputTokens: 200, // Shorter responses
+        },
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Gemini API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Kechirasiz, hozir javob bera olmayapman.";
+  } catch (error) {
+    console.error('Intelligent response error:', error);
+    return "Kechirasiz, texnik xatolik tufayli javob bera olmayapman. Iltimos keyinroq urinib ko'ring.";
+  }
+}
+
 // Helper function to generate AI response using Google Gemini
 async function generateAIResponse(userMessage: string): Promise<string> {
   try {
@@ -633,28 +741,61 @@ export async function registerRoutes(app: Express, customStorage?: any): Promise
   });
 
 
-  // Chat API
-  app.post("/api/chat", async (req, res) => {
+  // Start new chat session
+  app.post("/api/chat/start", async (req, res) => {
     try {
-      const { message, sessionId } = req.body;
+      const { name, phone } = req.body;
+      
+      if (!name || !phone) {
+        return res.status(400).json({ message: "Name and phone are required" });
+      }
+
+      // Generate unique session ID
+      const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+      // Send notification to Telegram
+      await sendTelegramNotification(`🆕 Yangi suhbat boshlandi!\n\n👤 Mijoz: ${name}\n📞 Telefon: ${phone}\n🔗 Session: ${sessionId}`);
+
+      res.json({ sessionId, name, phone });
+    } catch (error) {
+      console.error('Chat start error:', error);
+      res.status(500).json({ 
+        message: "Suhbatni boshlashda xatolik", 
+        error: error instanceof Error ? error.message : "Unknown error" 
+      });
+    }
+  });
+
+  // Send chat message
+  app.post("/api/chat/message", async (req, res) => {
+    try {
+      const { message, sessionId, userName, userPhone } = req.body;
       
       if (!message || !sessionId) {
         return res.status(400).json({ message: "Message and sessionId are required" });
       }
 
-      // Save user message
+      // Save user message with name and phone
       const userMessage = await activeStorage.saveChatMessage({
         sessionId,
         userId: req.session.userId || null,
+        userName,
+        userPhone,
         message,
         response: null,
       });
 
-      // Generate AI response using Google Gemini
-      const aiResponse = await generateAIResponse(message);
+      // Get context for intelligent response
+      const context = await buildChatContext(message);
+      
+      // Generate AI response using Google Gemini with context
+      const aiResponse = await generateIntelligentResponse(message, context);
       
       // Update the message with AI response
       const updatedMessage = await activeStorage.updateChatResponse(userMessage.id, aiResponse);
+
+      // Send conversation to Telegram
+      await sendTelegramNotification(`💬 Suhbat:\n\n👤 ${userName || 'Anonim'}: ${message}\n🤖 Javob: ${aiResponse}`);
 
       res.json({
         id: updatedMessage?.id,
@@ -663,9 +804,9 @@ export async function registerRoutes(app: Express, customStorage?: any): Promise
         createdAt: updatedMessage?.createdAt,
       });
     } catch (error) {
-      console.error('Chat API error:', error);
+      console.error('Chat message error:', error);
       res.status(500).json({ 
-        message: "Chat API'da xatolik yuz berdi", 
+        message: "Xabar yuborishda xatolik", 
         error: error instanceof Error ? error.message : "Unknown error" 
       });
     }

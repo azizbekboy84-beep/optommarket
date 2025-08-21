@@ -27,7 +27,10 @@ export function AIChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [inputMessage, setInputMessage] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [sessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+  const [sessionId, setSessionId] = useState<string>('');
+  const [chatStarted, setChatStarted] = useState(false);
+  const [userName, setUserName] = useState('');
+  const [userPhone, setUserPhone] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { language } = useLanguage();
 
@@ -39,10 +42,10 @@ export function AIChatWidget() {
     scrollToBottom();
   }, [messages]);
 
-  // Load chat history
+  // Load chat history when session starts
   const { data: chatHistory } = useQuery({
     queryKey: ['/api/chat/history', sessionId],
-    enabled: isOpen,
+    enabled: isOpen && chatStarted && sessionId !== '',
   });
 
   useEffect(() => {
@@ -72,13 +75,33 @@ export function AIChatWidget() {
     }
   }, [chatHistory]);
 
-  const chatMutation = useMutation({
-    mutationFn: async (data: { message: string; sessionId: string }) => {
-      const response = await fetch('/api/chat', {
+  // Start chat session mutation
+  const startChatMutation = useMutation({
+    mutationFn: async (data: { name: string; phone: string }) => {
+      const response = await fetch('/api/chat/start', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) throw new Error('Failed to start chat');
+      return response.json();
+    },
+    onSuccess: (data) => {
+      setSessionId(data.sessionId);
+      setChatStarted(true);
+      setUserName(data.name);
+      setUserPhone(data.phone);
+    },
+    onError: (error) => {
+      console.error('Chat start error:', error);
+    }
+  });
+
+  const chatMutation = useMutation({
+    mutationFn: async (data: { message: string; sessionId: string; userName: string; userPhone: string }) => {
+      const response = await fetch('/api/chat/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
       
@@ -119,6 +142,16 @@ export function AIChatWidget() {
     }
   });
 
+  const handleStartChat = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!userName.trim() || !userPhone.trim() || startChatMutation.isPending) return;
+    
+    startChatMutation.mutate({
+      name: userName.trim(),
+      phone: userPhone.trim(),
+    });
+  };
+
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputMessage.trim() || chatMutation.isPending) return;
@@ -141,6 +174,8 @@ export function AIChatWidget() {
     chatMutation.mutate({
       message: userMessage,
       sessionId,
+      userName,
+      userPhone,
     });
   };
 
@@ -165,31 +200,97 @@ export function AIChatWidget() {
           {/* Header */}
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-blue-600 to-red-500 text-white rounded-t-lg">
             <CardTitle className="text-sm font-medium">
-              {language === 'uz' ? 'AI Yordamchi' : 'AI Помощник'}
+              {!chatStarted 
+                ? (language === 'uz' ? 'Suhbatni boshlash' : 'Начать разговор')
+                : (language === 'uz' ? 'AI Yordamchi' : 'AI Помощник')
+              }
             </CardTitle>
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                setIsOpen(false);
+                setChatStarted(false);
+                setUserName('');
+                setUserPhone('');
+                setMessages([]);
+                setSessionId('');
+              }}
               className="h-6 w-6 p-0 text-white hover:bg-white/20"
             >
               <X className="h-4 w-4" />
             </Button>
           </CardHeader>
 
-          {/* Messages */}
+          {/* Content - Form or Messages */}
           <CardContent className="flex-1 p-0 overflow-hidden">
-            <ScrollArea className="h-full px-4 py-3 max-h-[380px]">
-              {messages.length === 0 && (
-                <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
-                  <Bot className="h-8 w-8 mb-2" />
-                  <p className="text-sm">
+            {!chatStarted ? (
+              // Start Chat Form
+              <div className="flex flex-col justify-center h-full px-6 py-4">
+                <div className="text-center mb-6">
+                  <Bot className="h-12 w-12 mx-auto mb-4 text-blue-600" />
+                  <h3 className="text-lg font-semibold mb-2">
                     {language === 'uz' 
-                      ? 'Salom! Sizga qanday yordam bera olaman?' 
-                      : 'Привет! Как я могу вам помочь?'}
+                      ? 'Salam! Sizga yordam berishga tayyorman' 
+                      : 'Привет! Я готов помочь вам'}
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    {language === 'uz' 
+                      ? 'Suhbatni boshlash uchun ismingiz va telefon raqamingizni kiriting' 
+                      : 'Введите ваше имя и номер телефона для начала разговора'}
                   </p>
                 </div>
-              )}
+                
+                <form onSubmit={handleStartChat} className="space-y-4">
+                  <div>
+                    <Input
+                      type="text"
+                      placeholder={language === 'uz' ? "Ismingiz" : "Ваше имя"}
+                      value={userName}
+                      onChange={(e) => setUserName(e.target.value)}
+                      required
+                      className="w-full"
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      type="tel"
+                      placeholder={language === 'uz' ? "Telefon raqam (+998901234567)" : "Номер телефона (+998901234567)"}
+                      value={userPhone}
+                      onChange={(e) => setUserPhone(e.target.value)}
+                      required
+                      className="w-full"
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-blue-600 to-red-500 hover:from-red-500 hover:to-blue-600"
+                    disabled={startChatMutation.isPending || !userName.trim() || !userPhone.trim()}
+                  >
+                    {startChatMutation.isPending ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        {language === 'uz' ? 'Boshlanmoqda...' : 'Начинается...'}
+                      </>
+                    ) : (
+                      language === 'uz' ? 'Suhbatni boshlash' : 'Начать разговор'
+                    )}
+                  </Button>
+                </form>
+              </div>
+            ) : (
+              // Messages Area
+              <ScrollArea className="h-full px-4 py-3 max-h-[380px]">
+                {messages.length === 0 && (
+                  <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
+                    <Bot className="h-8 w-8 mb-2" />
+                    <p className="text-sm">
+                      {language === 'uz' 
+                        ? `Salom ${userName}! Sizga qanday yordam bera olaman?` 
+                        : `Привет ${userName}! Как я могу вам помочь?`}
+                    </p>
+                  </div>
+                )}
               
               {messages.map((message) => (
                 <div
@@ -236,12 +337,14 @@ export function AIChatWidget() {
                 </div>
               )}
               
-              <div ref={messagesEndRef} />
-            </ScrollArea>
+                <div ref={messagesEndRef} />
+              </ScrollArea>
+            )}
           </CardContent>
 
-          {/* Input */}
-          <div className="p-4 border-t border-gray-200 bg-gray-50 mt-auto">
+          {/* Input - Only show when chat started */}
+          {chatStarted && (
+            <div className="p-4 border-t border-gray-200 bg-gray-50 mt-auto">
             <form onSubmit={handleSendMessage} className="flex gap-2">
               <Input
                 value={inputMessage}
@@ -267,7 +370,8 @@ export function AIChatWidget() {
                 )}
               </Button>
             </form>
-          </div>
+            </div>
+          )}
         </div>
       )}
     </>

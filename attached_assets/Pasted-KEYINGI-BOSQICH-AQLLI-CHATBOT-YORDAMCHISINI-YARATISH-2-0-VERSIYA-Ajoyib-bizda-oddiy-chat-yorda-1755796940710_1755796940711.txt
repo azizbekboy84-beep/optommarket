@@ -1,0 +1,67 @@
+KEYINGI BOSQICH: "AQLLI" CHATBOT YORDAMCHISINI YARATISH (2.0 VERSIYA)
+Ajoyib, bizda oddiy chat yordamchisi bor. Endi uni haqiqiy biznes vositasiga aylantiramiz.
+
+Loyiha mazmuni (Kontekst):
+Maqsadimiz — chatbotimizni to'liq qayta ishlab chiqish. U endi:
+
+Suhbat boshida mijozning ismini va telefon raqamini so'raydigan bo'ladi.
+
+Barcha yangi suhbatlar haqida ma'muriyatni Telegram orqali xabardor qiladi.
+
+Saytdagi haqiqiy ma'lumotlarga (kategoriyalar, mahsulotlar) asoslanib javob beradi.
+
+Javoblari qisqa, aniq va lўnda bo'ladi.
+
+Aniq qadamlar:
+
+1-QISM: BACKENDNI KUCHAYTIRISH
+
+Baza Sxemasini Yangilash (shared/schema.ts):
+
+chat_messages jadvaliga user_name (matn) va user_phone (matn) nomli yangi ustunlarni qo'shing.
+
+Telegram Integratsiyasi Uchun Sozlamalar:
+
+Replit Secrets bo'limiga ikkita yangi maxfiy kalit qo'shing:
+
+TELEGRAM_BOT_TOKEN: Sizning Telegram botingizning tokeni.
+
+TELEGRAM_CHAT_ID: Suhbatlar haqidagi xabarlar yuborilishi kerak bo'lgan Telegram kanali yoki guruhingizning ID'si.
+
+server papkasiga node-fetch kabi kutubxonani o'rnating.
+
+Chat API'sini To'liq Qayta Yozish (server/routes.ts):
+
+POST /api/chat/start: Yangi endpoint yarating. U frontend'dan name va phone qabul qilib, yangi suhbat sessiyasini yaratsin va bu ma'lumotlarni bazaga saqlasin. Muvaffaqiyatli bo'lsa, frontend'ga session_id qaytarsin.
+
+Telegramga Xabar Yuborish: Suhbat boshlanganda, Telegram Bot API'ga fetch so'rovi yuborib, TELEGRAM_CHAT_ID ga quyidagi xabarni jo'nating: "Yangi suhbat boshlandi! Mijoz: [ismi], Telefon: [raqami]".
+
+POST /api/chat/message: Mavjud endpoint'ni yangilang. Endi u session_id va message qabul qilsin.
+
+"Aqlli" Javob Mantig'i: Foydalanuvchi savolini Gemini'ga yuborishdan oldin, unga kontekst bering. Masalan, agar foydalanuvchi "paketlar" haqida so'rasa, avval bazadan barcha paket kategoriyalarini oling va Gemini'ga yuboriladigan promptni quyidagicha tuzing:
+
+"Sen Optombazar.uz yordamchisisan. Javoblaringni qisqa va 2-3 gapdan oshirma. Kontekst: Bizda quyidagi paketlar bor: [kategoriyalar ro'yxati]. Mijoz savoli: [mijozning savoli]"
+
+Suhbatni Telegramga Yuborish: Har bir yangi savol-javobni ham Telegramga yuborib turing.
+
+2-QISM: FRONTEND CHAT INTERFEYSINI YANGILASH
+
+AIChatWidget.tsx Komponentini Qayta Ishlab Chiqish:
+
+Boshlang'ich Holat: Endi chat oynasi ochilganda, suhbat tarixi o'rniga "Suhbatni boshlash uchun ismingiz va telefon raqamingizni kiriting" degan sarlavha va ikkita maydondan (Ism, Telefon) iborat forma ko'rinsin.
+
+Suhbatni Boshlash: Forma to'ldirilib, "Boshlash" tugmasi bosilganda, POST /api/chat/start endpoint'iga so'rov yuboring.
+
+Asosiy Chat Oynasi: Muvaffaqiyatli javob kelgach (session_id bilan), formani yashirib, asosiy chat interfeysini (xabar yuborish maydoni bilan) ko'rsating.
+
+Xabarlarni Yuborish: Keyingi barcha xabarlar POST /api/chat/message endpoint'iga session_id bilan birga yuborilsin.
+
+Vazifa yakunida menga quyidagi formatda hisobot ber:
+
+Chat oynasi endi suhbat boshida ism va telefon raqamini so'rayaptimi?
+
+Yangi suhbat boshlanganda va har bir xabar yozilganda, mening Telegram kanalimga xabar kelyaptimi?
+
+Chatbot endi saytdagi mahsulotlar haqida berilgan savollarga aniqroq javob beryaptimi?
+
+Chatbotning javoblari endi qisqaroq va aniqroqmi?

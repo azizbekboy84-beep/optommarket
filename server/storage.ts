@@ -708,6 +708,8 @@ export class MemStorage implements IStorage {
       ...insertMessage,
       id,
       userId: insertMessage.userId || null,
+      userName: insertMessage.userName || null,
+      userPhone: insertMessage.userPhone || null,
       response: insertMessage.response || null,
       createdAt: new Date(),
     };

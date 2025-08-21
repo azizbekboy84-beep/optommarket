@@ -236,6 +236,8 @@ export const chatMessages = pgTable("chat_messages", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   sessionId: text("session_id").notNull(),
   userId: varchar("user_id"), // Optional - for logged-in users
+  userName: text("user_name"), // User's name from chat form
+  userPhone: text("user_phone"), // User's phone from chat form
   message: text("message").notNull(), // User message
   response: text("response"), // AI response
   createdAt: timestamp("created_at").defaultNow(),

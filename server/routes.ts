@@ -106,6 +106,7 @@ async function generateIntelligentResponse(userMessage: string, context: string)
 
     const prompt = `Sen Optombazar.uz yordamchisisan. Javoblaringni qisqa va 2-3 gapdan oshirma. 
 
+O'zbek tilida salom berish: "Salam!" (Salom! emas)
 Kontekst: ${context}
 
 Mijoz savoli: ${userMessage}

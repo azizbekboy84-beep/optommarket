@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useRoute } from 'wouter';
 import { Footer } from '../components/footer';
+import { Header } from '../components/header';
 import { SEOHead } from '../components/SEOHead';
 import { generateBlogPostMetaTags } from '@shared/seo';
 import { Button } from '../components/ui/button';
@@ -33,7 +34,7 @@ export default function BlogPostPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-
+        <Header />
         <div className="py-12">
           <div className="max-w-4xl mx-auto px-4">
             <div className="text-center py-16">
@@ -50,7 +51,7 @@ export default function BlogPostPage() {
   if (error || !post) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-
+        <Header />
         <div className="py-12">
           <div className="max-w-4xl mx-auto px-4">
             <div className="text-center py-16">
@@ -94,7 +95,7 @@ export default function BlogPostPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
       {blogPostSEO && <SEOHead seo={blogPostSEO} />}
-      
+      <Header />
       <div className="py-8">
         <div className="max-w-4xl mx-auto px-4">
           {/* Back Button */}

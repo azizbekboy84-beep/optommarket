@@ -1,6 +1,7 @@
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { useLanguage } from "@/components/language-provider";
+import { Header } from "@/components/header";
 import { ProductCard } from "@/components/product-card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -66,7 +67,9 @@ export default function SearchPage() {
   );
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      <div className="container mx-auto px-4 py-8">
       {/* Search form */}
       <form onSubmit={handleSearch} className="mb-8">
         <div className="flex gap-2 max-w-md mx-auto">
@@ -182,6 +185,7 @@ export default function SearchPage() {
           </p>
         </div>
       )}
+      </div>
     </div>
   );
 }

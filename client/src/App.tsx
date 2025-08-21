@@ -30,6 +30,7 @@ import AdminCategoriesPage from "@/pages/admin/AdminCategoriesPage";
 import AdminSEOPage from "@/pages/admin/AdminSEOPage";
 import AdminDiscountsPage from "@/pages/admin/AdminDiscountsPage";
 import AdminPushNotificationsPage from "@/pages/admin/AdminPushNotificationsPage";
+import AdminAnalyticsPage from "@/pages/admin/AdminAnalyticsPage";
 import ReportsPage from "@/pages/admin/ReportsPage";
 import BlogPage from "@/pages/BlogPage";
 import BlogPostPage from "@/pages/BlogPostPage";
@@ -128,6 +129,13 @@ function Router() {
         {() => (
           <AdminRoute>
             <AdminPushNotificationsPage />
+          </AdminRoute>
+        )}
+      </Route>
+      <Route path="/admin/analytics">
+        {() => (
+          <AdminRoute>
+            <AdminAnalyticsPage />
           </AdminRoute>
         )}
       </Route>

@@ -140,6 +140,26 @@ export default function AdminDashboardPage() {
             </CardContent>
           </Card>
 
+          {/* Analytics & SEO */}
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5 text-green-600" />
+                Analytics va SEO
+              </CardTitle>
+              <CardDescription>
+                Google Analytics va SEO monitoring
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Link href="/admin/analytics">
+                <Button className="w-full">
+                  Analytics ko'rish
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
           {/* Quick Stats Card */}
           <Card className="hover:shadow-lg transition-shadow">
             <CardHeader>

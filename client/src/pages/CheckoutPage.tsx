@@ -15,7 +15,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, CheckCircle, Percent, Tag, Truck, CreditCard } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Percent, Tag, Truck, CreditCard, QrCode } from 'lucide-react';
+import qrCodeImage from '@assets/QR to\'lov_1755750030820.jpg';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -146,15 +147,21 @@ export default function CheckoutPage() {
     
     setIsApplyingDiscount(true);
     try {
-      const discount = await apiRequest('/api/discounts/apply', {
+      const response = await fetch('/api/discounts/apply', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code: discountCode.trim().toUpperCase() }),
       });
       
+      if (!response.ok) {
+        throw new Error('Discount code not found');
+      }
+      
+      const discount = await response.json();
       setAppliedDiscount(discount);
       toast({
         title: language === 'uz' ? "Muvaffaqiyat!" : "Успешно!",
-        description: discount.message || (language === 'uz' ? "Chegirma qo'llandi" : "Скидка применена"),
+        description: language === 'uz' ? "Chegirma qo'llandi" : "Скидка применена",
       });
     } catch (error: any) {
       toast({
@@ -436,18 +443,21 @@ export default function CheckoutPage() {
                                   </div>
                                 </Label>
                               </div>
-                              <div className="flex items-center space-x-2 border rounded-lg p-4 hover:bg-gray-50">
+                              <div className="flex items-center space-x-2 border rounded-lg p-4 hover:bg-gray-50 hover:border-blue-200">
                                 <RadioGroupItem value="qr_kod" id="qr" />
                                 <Label htmlFor="qr" className="flex-1 cursor-pointer">
-                                  <div>
-                                    <div className="font-medium">
-                                      {language === 'uz' ? 'QR kod' : 'QR код'}
-                                    </div>
-                                    <div className="text-sm text-gray-500">
-                                      {language === 'uz' 
-                                        ? 'QR kod orqali to\'lash' 
-                                        : 'Оплата через QR код'
-                                      }
+                                  <div className="flex items-center space-x-3">
+                                    <QrCode className="w-5 h-5 text-blue-600" />
+                                    <div>
+                                      <div className="font-medium">
+                                        {language === 'uz' ? 'QR kod orqali to\'lash' : 'Оплата через QR код'}
+                                      </div>
+                                      <div className="text-sm text-gray-500">
+                                        {language === 'uz' 
+                                          ? 'Akram Farmonov - Mobil bank orqali' 
+                                          : 'Акрам Фармонов - Через мобильный банк'
+                                        }
+                                      </div>
                                     </div>
                                   </div>
                                 </Label>
@@ -458,6 +468,88 @@ export default function CheckoutPage() {
                         </FormItem>
                       )}
                     />
+
+                    {/* QR Code Display - Show when QR payment is selected */}
+                    {form.watch('paymentMethod') === 'qr_kod' && (
+                      <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">
+                        <CardHeader className="pb-4">
+                          <CardTitle className="flex items-center space-x-2 text-blue-700 dark:text-blue-300">
+                            <QrCode className="w-5 h-5" />
+                            <span>{language === 'uz' ? 'QR kod orqali to\'lash' : 'Оплата через QR код'}</span>
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          <div className="text-center">
+                            <div className="inline-block bg-white p-4 rounded-lg shadow-sm border">
+                              <img 
+                                src={qrCodeImage} 
+                                alt="QR Code for payment" 
+                                className="w-48 h-48 mx-auto"
+                                data-testid="img-qr-code"
+                              />
+                            </div>
+                            <div className="mt-4 space-y-2">
+                              <p className="font-semibold text-lg text-gray-900 dark:text-gray-100">
+                                Akram Farmonov
+                              </p>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                {language === 'uz' 
+                                  ? 'Mobil ilovangizda QR kodni skaner qiling va to\'lovni amalga oshiring'
+                                  : 'Отсканируйте QR код в мобильном приложении и совершите платеж'
+                                }
+                              </p>
+                            </div>
+                          </div>
+                          
+                          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border">
+                            <h4 className="font-medium mb-2 text-gray-900 dark:text-gray-100">
+                              {language === 'uz' ? 'To\'lov ko\'rsatmalari:' : 'Инструкции по оплате:'}
+                            </h4>
+                            <ol className="text-sm text-gray-600 dark:text-gray-400 space-y-1 list-decimal list-inside">
+                              <li>
+                                {language === 'uz' 
+                                  ? 'Mobil bank ilovangizni oching'
+                                  : 'Откройте приложение мобильного банка'
+                                }
+                              </li>
+                              <li>
+                                {language === 'uz' 
+                                  ? 'QR kod skanerini faollashtiring'
+                                  : 'Активируйте сканер QR кодов'
+                                }
+                              </li>
+                              <li>
+                                {language === 'uz' 
+                                  ? 'Yuqoridagi QR kodni skaner qiling'
+                                  : 'Отсканируйте QR код выше'
+                                }
+                              </li>
+                              <li>
+                                {language === 'uz' 
+                                  ? `To'lov miqdorini tasdiqlang: ${finalAmount.toLocaleString()} so'm`
+                                  : `Подтвердите сумму платежа: ${finalAmount.toLocaleString()} сум`
+                                }
+                              </li>
+                              <li>
+                                {language === 'uz' 
+                                  ? 'To\'lovni tasdiqlang va amalga oshiring'
+                                  : 'Подтвердите и совершите платеж'
+                                }
+                              </li>
+                            </ol>
+                          </div>
+                          
+                          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+                            <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                              {language === 'uz' 
+                                ? '💡 To\'lovni amalga oshirgandan so\'ng, buyurtmangiz avtomatik tasdiqlash uchun yuboriladi.'
+                                : '💡 После совершения платежа ваш заказ будет автоматически отправлен на подтверждение.'
+                              }
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
 
                     <FormField
                       control={form.control}

@@ -8,6 +8,15 @@ Preferred communication style: Simple, everyday language.
 
 # Recent Changes (August 21, 2025)
 
+## AI Chatbot 2.0 Enhancement Completed
+- ✓ Enhanced AI chatbot with intelligent contact form collection (name/phone)
+- ✓ Integrated Telegram bot notifications for new conversations and messages
+- ✓ Implemented intelligent responses using business context and product data
+- ✓ Added complete dark mode support for chat widget interface
+- ✓ Enhanced database schema with userName and userPhone fields
+- ✓ Successfully tested Telegram integration with live notifications
+- ✓ Improved chat UI with bilingual support and responsive design
+
 ## Migration to Replit Environment Completed
 - ✓ Successfully migrated project from Replit Agent to Replit environment
 - ✓ All packages installed and configured properly
@@ -73,7 +82,7 @@ While authentication infrastructure is defined in the schema, the current implem
 - **Multilingual Support**: Full Uzbek/Russian localization throughout the application
 - **Product Management**: Comprehensive product catalog with categories, pricing tiers (retail/wholesale), and inventory tracking
 - **Search Functionality**: Product search capabilities across multiple criteria
-- **AI Chat Assistant**: Google Gemini-powered chat widget providing real-time customer support in Uzbek language
+- **AI Chat Assistant 2.0**: Google Gemini-powered intelligent chat widget with contact form collection, Telegram integration, and contextual business responses in Uzbek language
 - **Push Notifications**: Web push notification system with VAPID keys for user engagement
 - **SEO & Analytics**: Google Analytics 4 integration with comprehensive SEO monitoring dashboard
 - **Admin Analytics**: Real-time analytics dashboard with SEO metrics, Google Analytics data, and Search Console integration

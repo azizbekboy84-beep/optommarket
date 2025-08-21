@@ -98,10 +98,10 @@ export class MemStorage implements IStorage {
     this.chatMessages = new Map();
     this.userActivities = new Map();
     this.favorites = new Map();
-    this.seedData();
+    this.seedData().catch(console.error);
   }
 
-  private seedData() {
+  private async seedData() {
     // Seed admin user for testing
     const adminUser: User = {
       id: "admin-user-1",
@@ -115,7 +115,7 @@ export class MemStorage implements IStorage {
     this.users.set("admin-user-1", adminUser);
     
     // Import real categories from seed data
-    const { realCategories, realProducts, realBlogPosts } = this.loadSeedData();
+    const { realCategories, realProducts, realBlogPosts } = await this.loadSeedData();
     
     // Seed categories from real Optombazar.uz data
     realCategories.forEach((category: any) => {
@@ -149,13 +149,23 @@ export class MemStorage implements IStorage {
     });
   }
 
-  private loadSeedData() {
-    // Use fallback data for now - direct import will be implemented in production
-    return {
-      realCategories: this.getFallbackCategories(),
-      realProducts: [],
-      realBlogPosts: []
-    };
+  private async loadSeedData() {
+    // Import real data using dynamic import for ESM compatibility
+    try {
+      const { realCategories, realProducts, realBlogPosts } = await import('./realData.js');
+      return {
+        realCategories: realCategories || this.getFallbackCategories(),
+        realProducts: realProducts || [],
+        realBlogPosts: realBlogPosts || []
+      };
+    } catch (error) {
+      console.warn('Real seed data not available, using fallback:', error);
+      return {
+        realCategories: this.getFallbackCategories(),
+        realProducts: [],
+        realBlogPosts: []
+      };
+    }
   }
 
   private getFallbackCategories() {

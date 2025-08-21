@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import { SEOHead } from '@/components/SEOHead';
 import { generateProductMetaTags } from '@shared/seo';
 import { Footer } from '@/components/footer';
+import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -230,6 +231,7 @@ export default function ProductDetailsPage() {
   return (
     <div className="min-h-screen bg-background dark:bg-black">
       <SEOHead seo={seoMetaTags} />
+      <Header />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Navigation */}
@@ -392,31 +394,6 @@ export default function ProductDetailsPage() {
               </div>
             </div>
 
-            {/* Description */}
-            <div>
-              <h3 className="text-xl font-semibold text-foreground mb-3">Tavsif</h3>
-              <p className="text-muted-foreground leading-relaxed" data-testid="product-description">
-                {description || 'Mahsulot tavsifi mavjud emas.'}
-              </p>
-            </div>
-
-            {/* Specifications */}
-            {(product as any).specifications && Object.keys((product as any).specifications).length > 0 && (
-              <div>
-                <h3 className="text-xl font-semibold text-foreground mb-3">Xususiyatlari</h3>
-                <div className="bg-card dark:bg-gray-800 rounded-2xl p-6 border border-border">
-                  <div className="grid grid-cols-1 gap-3">
-                    {Object.entries((product as any).specifications).map(([key, value]) => (
-                      <div key={key} className="flex justify-between border-b border-border/50 pb-2">
-                        <span className="text-muted-foreground">{key}:</span>
-                        <span className="text-foreground font-medium">{String(value)}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
             {/* Quantity and Add to Cart */}
             <div className="space-y-4">
               <div>
@@ -472,6 +449,31 @@ export default function ProductDetailsPage() {
                 </span>
               </Button>
             </div>
+
+            {/* Description - Moved after Add to Cart button */}
+            <div>
+              <h3 className="text-xl font-semibold text-foreground mb-3">Tavsif</h3>
+              <p className="text-muted-foreground leading-relaxed" data-testid="product-description">
+                {description || 'Mahsulot tavsifi mavjud emas.'}
+              </p>
+            </div>
+
+            {/* Specifications - Moved after Add to Cart button */}
+            {(product as any).specifications && Object.keys((product as any).specifications).length > 0 && (
+              <div>
+                <h3 className="text-xl font-semibold text-foreground mb-3">Xususiyatlari</h3>
+                <div className="bg-card dark:bg-gray-800 rounded-2xl p-6 border border-border">
+                  <div className="grid grid-cols-1 gap-3">
+                    {Object.entries((product as any).specifications).map(([key, value]) => (
+                      <div key={key} className="flex justify-between border-b border-border/50 pb-2">
+                        <span className="text-muted-foreground">{key}:</span>
+                        <span className="text-foreground font-medium">{String(value)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

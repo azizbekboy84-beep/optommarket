@@ -8,11 +8,16 @@ const router = Router();
 
 // VAPID kalitlarini sozlash
 if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
-  webpush.setVapidDetails(
-    'mailto:support@optombazar.uz',
-    process.env.VAPID_PUBLIC_KEY,
-    process.env.VAPID_PRIVATE_KEY
-  );
+  try {
+    webpush.setVapidDetails(
+      'mailto:support@optombazar.uz',
+      process.env.VAPID_PUBLIC_KEY,
+      process.env.VAPID_PRIVATE_KEY
+    );
+    console.log('VAPID kalitlari muvaffaqiyatli sozlandi.');
+  } catch (error) {
+    console.warn('VAPID kalitlari noto\'g\'ri. Push notification ishlamaydi:', error);
+  }
 } else {
   console.warn('VAPID kalitlari topilmadi. Push notification ishlamaydi.');
 }

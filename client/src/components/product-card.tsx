@@ -37,17 +37,17 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   // Check if product is in favorites
   const { data: favoriteStatus } = useQuery({
     queryKey: ['/api/favorites/check', product.id],
-    queryFn: () => apiRequest(`/api/favorites/check/${product.id}`),
+    queryFn: async () => {
+      const response = await apiRequest('GET', `/api/favorites/check/${product.id}`);
+      return response.json();
+    },
     enabled: !!user,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   // Add to favorites mutation
   const addToFavoritesMutation = useMutation({
-    mutationFn: () => apiRequest('/api/favorites', {
-      method: 'POST',
-      body: JSON.stringify({ productId: product.id }),
-    }),
+    mutationFn: () => apiRequest('POST', '/api/favorites', { productId: product.id }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/favorites'] });
       queryClient.invalidateQueries({ queryKey: ['/api/favorites/check', product.id] });
@@ -66,9 +66,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
 
   // Remove from favorites mutation
   const removeFromFavoritesMutation = useMutation({
-    mutationFn: () => apiRequest(`/api/favorites/${product.id}`, {
-      method: 'DELETE',
-    }),
+    mutationFn: () => apiRequest('DELETE', `/api/favorites/${product.id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/favorites'] });
       queryClient.invalidateQueries({ queryKey: ['/api/favorites/check', product.id] });

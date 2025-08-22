@@ -1,8 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { eq, and } from "drizzle-orm";
-import { db } from "../db.js";
-import { favorites, insertFavoriteSchema, products } from "../../shared/schema.js";
+import { storage } from "../storage.js";
 import { requireAuth } from "../middleware/auth";
 
 const router = Router();
@@ -12,35 +10,21 @@ router.get("/", requireAuth, async (req, res) => {
   try {
     const userId = req.user!.id;
     
-    // Sevimli mahsulotlarni mahsulot ma'lumotlari bilan birga olish
-    const userFavorites = await db
-      .select({
-        id: favorites.id,
-        productId: favorites.productId,
-        createdAt: favorites.createdAt,
-        product: {
-          id: products.id,
-          nameUz: products.nameUz,
-          nameRu: products.nameRu,
-          descriptionUz: products.descriptionUz,
-          descriptionRu: products.descriptionRu,
-          price: products.price,
-          wholesalePrice: products.wholesalePrice,
-          images: products.images,
-          slug: products.slug,
-          categoryId: products.categoryId,
-          unit: products.unit,
-          stockQuantity: products.stockQuantity,
-          isActive: products.isActive,
-          isFeatured: products.isFeatured,
-        }
+    // Sevimli mahsulotlarni storage orqali olish
+    const userFavorites = await storage.getFavorites(userId);
+    
+    // Har bir sevimli mahsulot uchun mahsulot ma'lumotlarini olish
+    const favoritesWithProducts = await Promise.all(
+      userFavorites.map(async (favorite) => {
+        const product = await storage.getProduct(favorite.productId);
+        return {
+          ...favorite,
+          product
+        };
       })
-      .from(favorites)
-      .innerJoin(products, eq(favorites.productId, products.id))
-      .where(eq(favorites.userId, userId))
-      .orderBy(favorites.createdAt);
+    );
 
-    res.json(userFavorites);
+    res.json(favoritesWithProducts);
   } catch (error) {
     console.error("Sevimli mahsulotlarni olishda xatolik:", error);
     res.status(500).json({ message: "Server xatoligi" });
@@ -54,42 +38,24 @@ router.post("/", requireAuth, async (req, res) => {
     const { productId } = z.object({ productId: z.string() }).parse(req.body);
     
     // Mahsulot mavjudligini tekshirish
-    const product = await db
-      .select()
-      .from(products)
-      .where(eq(products.id, productId))
-      .limit(1);
-
-    if (product.length === 0) {
+    const product = await storage.getProduct(productId);
+    if (!product) {
       return res.status(404).json({ message: "Mahsulot topilmadi" });
     }
 
     // Allaqachon sevimlilar ro'yxatida emasligini tekshirish
-    const existingFavorite = await db
-      .select()
-      .from(favorites)
-      .where(
-        and(
-          eq(favorites.userId, userId),
-          eq(favorites.productId, productId)
-        )
-      )
-      .limit(1);
-
-    if (existingFavorite.length > 0) {
+    const isAlreadyFavorite = await storage.isFavorite(userId, productId);
+    if (isAlreadyFavorite) {
       return res.status(409).json({ 
         message: "Mahsulot allaqachon sevimlilar ro'yxatida" 
       });
     }
 
     // Sevimlilar ro'yxatiga qo'shish
-    const newFavorite = await db
-      .insert(favorites)
-      .values({ userId, productId })
-      .returning();
+    const newFavorite = await storage.addToFavorites({ userId, productId });
 
     res.status(201).json({
-      ...newFavorite[0],
+      ...newFavorite,
       message: "Mahsulot sevimlilar ro'yxatiga qo'shildi"
     });
   } catch (error) {
@@ -110,17 +76,9 @@ router.delete("/:productId", requireAuth, async (req, res) => {
     const userId = req.user!.id;
     const { productId } = req.params;
     
-    const deletedFavorite = await db
-      .delete(favorites)
-      .where(
-        and(
-          eq(favorites.userId, userId),
-          eq(favorites.productId, productId)
-        )
-      )
-      .returning();
+    const isRemoved = await storage.removeFromFavorites(userId, productId);
 
-    if (deletedFavorite.length === 0) {
+    if (!isRemoved) {
       return res.status(404).json({ 
         message: "Sevimlilar ro'yxatida bunday mahsulot topilmadi" 
       });
@@ -139,20 +97,13 @@ router.get("/check/:productId", requireAuth, async (req, res) => {
     const userId = req.user!.id;
     const { productId } = req.params;
     
-    const favorite = await db
-      .select()
-      .from(favorites)
-      .where(
-        and(
-          eq(favorites.userId, userId),
-          eq(favorites.productId, productId)
-        )
-      )
-      .limit(1);
+    const isFavorite = await storage.isFavorite(userId, productId);
+    const userFavorites = await storage.getFavorites(userId);
+    const favorite = userFavorites.find(f => f.productId === productId);
 
     res.json({ 
-      isFavorite: favorite.length > 0,
-      favoriteId: favorite.length > 0 ? favorite[0].id : null
+      isFavorite,
+      favoriteId: favorite ? favorite.id : null
     });
   } catch (error) {
     console.error("Sevimlilar holatini tekshirishda xatolik:", error);

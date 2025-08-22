@@ -6,11 +6,19 @@ import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { ShoppingBag, Minus, Plus, Trash2, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { ShoppingBag, Minus, Plus, Trash2, ArrowLeft, ArrowRight, AlertTriangle } from 'lucide-react';
+
+// Minimal zakaz miqdori (500,000 so'm)
+const MINIMUM_ORDER_AMOUNT = 500000;
 
 export default function CartPage() {
   const { language } = useLanguage();
   const { cartItems, isLoading, itemCount, totalAmount, updateQuantity, removeFromCart } = useCart();
+  
+  // Minimal zakaz miqdorini tekshirish
+  const isMinimumOrderMet = totalAmount >= MINIMUM_ORDER_AMOUNT;
+  const remainingAmount = MINIMUM_ORDER_AMOUNT - totalAmount;
 
   if (isLoading) {
     return (
@@ -219,12 +227,39 @@ export default function CartPage() {
                   </span>
                 </div>
                 
-                <Link href="/checkout">
-                  <Button size="lg" className="w-full" data-testid="button-checkout">
+                {/* Minimal zakaz ogohlantirishi */}
+                {!isMinimumOrderMet && (
+                  <Alert className="bg-yellow-50 border-yellow-200 dark:bg-yellow-900/20 dark:border-yellow-800">
+                    <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                    <AlertDescription className="text-yellow-700 dark:text-yellow-300">
+                      {language === 'uz' ? (
+                        <>
+                          <strong>Optom zakaz:</strong> Minimal zakaz miqdori 500,000 so'm. 
+                          Yana <strong>{remainingAmount.toLocaleString()} so'm</strong> mahsulot qo'shing.
+                        </>
+                      ) : (
+                        <>
+                          <strong>Оптовый заказ:</strong> Минимальная сумма заказа 500,000 сум. 
+                          Добавьте ещё товаров на <strong>{remainingAmount.toLocaleString()} сум</strong>.
+                        </>
+                      )}
+                    </AlertDescription>
+                  </Alert>
+                )}
+                
+                {isMinimumOrderMet ? (
+                  <Link href="/checkout">
+                    <Button size="lg" className="w-full bg-gradient-to-r from-blue-600 to-red-500 hover:from-red-500 hover:to-blue-600 text-white" data-testid="button-checkout">
+                      {language === 'uz' ? 'Buyurtma berish' : 'Оформить заказ'}
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button size="lg" className="w-full" disabled data-testid="button-checkout-disabled">
                     {language === 'uz' ? 'Buyurtma berish' : 'Оформить заказ'}
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
-                </Link>
+                )}
                 
                 <Link href="/catalog">
                   <Button variant="outline" size="lg" className="w-full" data-testid="button-continue-shopping">

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,13 +15,17 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, CheckCircle, Percent, Tag, Truck, CreditCard, QrCode } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Percent, Tag, Truck, CreditCard, QrCode, AlertTriangle } from 'lucide-react';
 import qrCodeImage from '@assets/QR to\'lov_1755750030820.jpg';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { apiRequest } from '@/lib/queryClient';
+
+// Minimal zakaz miqdori (500,000 so'm)
+const MINIMUM_ORDER_AMOUNT = 500000;
 
 const checkoutSchema = z.object({
   customerName: z.string().min(2, 'Ism kamida 2 ta belgidan iborat bo\'lishi kerak'),
@@ -45,6 +49,19 @@ export default function CheckoutPage() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Minimal zakaz miqdorini tekshirish
+  const isMinimumOrderMet = totalAmount >= MINIMUM_ORDER_AMOUNT;
+  const remainingAmount = MINIMUM_ORDER_AMOUNT - totalAmount;
+  
+  // Agar minimal miqdor bajarilmagan bo'lsa, savatga qaytarish
+  useEffect(() => {
+    if (cartItems.length > 0 && !isMinimumOrderMet) {
+      setTimeout(() => {
+        setLocation('/cart');
+      }, 3000); // 3 soniyadan keyin avtomatik qaytarish
+    }
+  }, [cartItems.length, isMinimumOrderMet, setLocation]);
   
   // Discount state
   const [discountCode, setDiscountCode] = useState('');
@@ -74,6 +91,11 @@ export default function CheckoutPage() {
   // Create order mutation
   const createOrderMutation = useMutation({
     mutationFn: async (formData: CheckoutFormData) => {
+      // Minimal zakaz miqdorini tekshirish
+      if (!isMinimumOrderMet) {
+        throw new Error('MINIMUM_ORDER_NOT_MET');
+      }
+      
       const orderData = {
         userId: 'guest-user', // For guest checkout
         totalAmount: finalAmount.toString(),
@@ -124,14 +146,26 @@ export default function CheckoutPage() {
       setLocation('/order-success');
     },
     onError: (error) => {
-      toast({
-        title: language === 'uz' ? "Xatolik yuz berdi" : "Произошла ошибка",
-        description: language === 'uz' ? 
-          "Buyurtmani yuborishda xatolik yuz berdi. Qaytadan urinib ko'ring." :
-          "Ошибка при отправке заказа. Попробуйте еще раз.",
-        variant: "destructive",
-        duration: 5000,
-      });
+      if (error.message === 'MINIMUM_ORDER_NOT_MET') {
+        toast({
+          title: language === 'uz' ? "Minimal zakaz miqdori bajarilmadi" : "Минимальная сумма заказа не выполнена",
+          description: language === 'uz' ? 
+            `Minimal zakaz miqdori 500,000 so'm. Yana ${remainingAmount.toLocaleString()} so'm mahsulot qo'shing.` :
+            `Минимальная сумма заказа 500,000 сум. Добавьте ещё товаров на ${remainingAmount.toLocaleString()} сум.`,
+          variant: "destructive",
+          duration: 5000,
+        });
+        setLocation('/cart');
+      } else {
+        toast({
+          title: language === 'uz' ? "Xatolik yuz berdi" : "Произошла ошибка",
+          description: language === 'uz' ? 
+            "Buyurtmani yuborishda xatolik yuz berdi. Qaytadan urinib ko'ring." :
+            "Ошибка при отправке заказа. Попробуйте еще раз.",
+          variant: "destructive",
+          duration: 5000,
+        });
+      }
     },
   });
 
@@ -240,6 +274,34 @@ export default function CheckoutPage() {
             {language === 'uz' ? 'Buyurtmani rasmiylashtirish' : 'Оформление заказа'}
           </h1>
         </div>
+
+        {/* Minimal zakaz ogohlantirishi */}
+        {!isMinimumOrderMet && (
+          <Alert className="mb-6 bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800">
+            <AlertTriangle className="h-4 w-4 text-red-600" />
+            <AlertDescription className="text-red-700 dark:text-red-300">
+              {language === 'uz' ? (
+                <>
+                  <strong>Diqqat!</strong> Minimal zakaz miqdori 500,000 so'm. 
+                  Sizning zakazingiz: <strong>{totalAmount.toLocaleString()} so'm</strong>. 
+                  Yana <strong>{remainingAmount.toLocaleString()} so'm</strong> mahsulot qo'shing yoki 
+                  <Link href="/cart" className="underline font-semibold ml-1">savatga qaytang</Link>.
+                  <br />
+                  <small className="text-xs">3 soniyadan keyin avtomatik savatga qaytarilasiz...</small>
+                </>
+              ) : (
+                <>
+                  <strong>Внимание!</strong> Минимальная сумма заказа 500,000 сум. 
+                  Ваш заказ: <strong>{totalAmount.toLocaleString()} сум</strong>. 
+                  Добавьте ещё товаров на <strong>{remainingAmount.toLocaleString()} сум</strong> или 
+                  <Link href="/cart" className="underline font-semibold ml-1">вернитесь в корзину</Link>.
+                  <br />
+                  <small className="text-xs">Через 3 секунды вы автоматически вернётесь в корзину...</small>
+                </>
+              )}
+            </AlertDescription>
+          </Alert>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Checkout Form */}

@@ -5,6 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useLanguage } from './language-provider';
 import { Link, useLocation } from 'wouter';
 import { Search, Globe, X, Phone, User } from 'lucide-react';
+import { UzbekistanFlag, RussiaFlag } from '@/components/ui/flag-icons';
 import logoImage from '@assets/optombazar logo_1755690917356.png';
 
 export function MobileTopNav() {
@@ -66,15 +67,21 @@ export function MobileTopNav() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="p-2">
-                <Globe className="h-5 w-5" />
+                {language === 'uz' ? (
+                  <UzbekistanFlag className="w-5 h-5" />
+                ) : (
+                  <RussiaFlag className="w-5 h-5" />
+                )}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setLanguage('uz')}>
-                🇺🇿 O'zbek
+              <DropdownMenuItem onClick={() => setLanguage('uz')} className="gap-2">
+                <UzbekistanFlag className="w-4 h-4" />
+                O'zbek
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setLanguage('ru')}>
-                🇷🇺 Русский
+              <DropdownMenuItem onClick={() => setLanguage('ru')} className="gap-2">
+                <RussiaFlag className="w-4 h-4" />
+                Русский
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

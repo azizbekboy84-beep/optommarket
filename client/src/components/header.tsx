@@ -10,6 +10,7 @@ import { useAuth } from '@/context/AuthContext';
 import { ThemeToggle } from './theme-toggle';
 import { Link, useLocation } from 'wouter';
 import { ChevronDown, ShoppingCart, User, Settings, Search, Phone, Facebook, Instagram, Mail, Folder, Package, Shirt, Utensils, Smartphone, Box, BookOpen, MessageCircle } from 'lucide-react';
+import { UzbekistanFlag, RussiaFlag } from '@/components/ui/flag-icons';
 import logoImage from '@assets/optombazar logo_1755690917356.png';
 import { Category } from '@shared/schema';
 
@@ -207,16 +208,28 @@ export function Header() {
             {/* Language Selector */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" data-testid="language-toggle">
-                  {language === 'uz' ? '🇺🇿 O\'Z' : '🇷🇺 RU'}
+                <Button variant="outline" size="sm" className="gap-2" data-testid="language-toggle">
+                  {language === 'uz' ? (
+                    <>
+                      <UzbekistanFlag className="w-4 h-4" />
+                      O'Z
+                    </>
+                  ) : (
+                    <>
+                      <RussiaFlag className="w-4 h-4" />
+                      RU
+                    </>
+                  )}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setLanguage('uz')}>
-                  🇺🇿 O'zbek
+                <DropdownMenuItem onClick={() => setLanguage('uz')} className="gap-2">
+                  <UzbekistanFlag className="w-4 h-4" />
+                  O'zbek
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLanguage('ru')}>
-                  🇷🇺 Русский
+                <DropdownMenuItem onClick={() => setLanguage('ru')} className="gap-2">
+                  <RussiaFlag className="w-4 h-4" />
+                  Русский
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

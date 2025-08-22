@@ -251,7 +251,7 @@ export default function ProductDetailsPage() {
           {/* Left Column - Image Gallery */}
           <div className="space-y-4">
             {/* Main Image */}
-            <div className="relative bg-card dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg border border-border">
+            <div className="relative bg-card rounded-2xl overflow-hidden shadow-lg border border-border">
               <img
                 src={currentImage}
                 alt={name}
@@ -357,7 +357,7 @@ export default function ProductDetailsPage() {
                     className={`p-3 rounded-full ${
                       favoriteStatus?.isFavorite 
                         ? 'text-red-500 hover:text-red-600 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/30' 
-                        : 'text-gray-400 hover:text-red-500 bg-gray-50 hover:bg-red-50 dark:bg-gray-800 dark:hover:bg-red-900/20'
+                        : 'text-muted-foreground hover:text-red-500 bg-muted hover:bg-red-50 dark:hover:bg-red-900/20'
                     }`}
                     onClick={handleToggleFavorite}
                     disabled={addToFavoritesMutation.isPending || removeFromFavoritesMutation.isPending}
@@ -379,7 +379,7 @@ export default function ProductDetailsPage() {
               </div>
 
               {/* Price Section */}
-              <div className="bg-card dark:bg-gray-800 rounded-2xl p-6 border border-border">
+              <div className="bg-card rounded-2xl p-6 border border-border">
                 <div className="flex items-baseline space-x-4">
                   <span className="text-3xl font-bold text-foreground">
                     {parseFloat(product.price).toLocaleString()} so'm
@@ -404,7 +404,7 @@ export default function ProductDetailsPage() {
               <div>
                 <h3 className="text-xl font-semibold text-foreground mb-3">Miqdor</h3>
                 <div className="flex items-center space-x-4">
-                  <div className="flex items-center bg-card dark:bg-gray-800 rounded-lg border border-border">
+                  <div className="flex items-center bg-card rounded-lg border border-border">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -467,7 +467,7 @@ export default function ProductDetailsPage() {
             {(product as any).specifications && Object.keys((product as any).specifications).length > 0 && (
               <div>
                 <h3 className="text-xl font-semibold text-foreground mb-3">Xususiyatlari</h3>
-                <div className="bg-card dark:bg-gray-800 rounded-2xl p-6 border border-border">
+                <div className="bg-card rounded-2xl p-6 border border-border">
                   <div className="grid grid-cols-1 gap-3">
                     {Object.entries((product as any).specifications).map(([key, value]) => (
                       <div key={key} className="flex justify-between border-b border-border/50 pb-2">
@@ -485,7 +485,7 @@ export default function ProductDetailsPage() {
 
       {/* O'xshash mahsulotlar bo'limi */}
       {relatedProducts.length > 0 && (
-        <div className="bg-gray-50 dark:bg-gray-900 py-16">
+        <div className="bg-muted/30 py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-foreground mb-4">
@@ -502,11 +502,11 @@ export default function ProductDetailsPage() {
             {relatedLoading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[...Array(4)].map((_, i) => (
-                  <div key={i} className="bg-card dark:bg-gray-800 rounded-2xl p-6 shadow-lg animate-pulse border border-border" data-testid={`skeleton-related-${i}`}>
-                    <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-xl mb-4"></div>
-                    <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
-                    <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                  <div key={i} className="bg-card rounded-2xl p-6 shadow-lg animate-pulse border border-border" data-testid={`skeleton-related-${i}`}>
+                    <div className="w-full h-48 bg-muted rounded-xl mb-4"></div>
+                    <div className="h-6 bg-muted rounded mb-2"></div>
+                    <div className="h-4 bg-muted rounded mb-4"></div>
+                    <div className="h-8 bg-muted rounded"></div>
                   </div>
                 ))}
               </div>

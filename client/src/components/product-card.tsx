@@ -29,9 +29,9 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
                      (product.stockQuantity || 0) > 0 ? 'lowStock' : 'outOfStock';
   
   const statusColors = {
-    inStock: 'text-green-800 bg-green-100',
-    lowStock: 'text-yellow-800 bg-yellow-100',
-    outOfStock: 'text-red-800 bg-red-100'
+    inStock: 'text-green-800 bg-green-100 dark:text-green-200 dark:bg-green-900/30',
+    lowStock: 'text-yellow-800 bg-yellow-100 dark:text-yellow-200 dark:bg-yellow-900/30',
+    outOfStock: 'text-red-800 bg-red-100 dark:text-red-200 dark:bg-red-900/30'
   };
 
   // Check if product is in favorites
@@ -121,7 +121,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
 
   return (
     <Link href={`/products/${product.slug}`}>
-      <div className="bg-white border border-gray-200 rounded-xl hover:shadow-lg transition-all group cursor-pointer relative" data-testid={`card-product-${product.id}`}>
+      <div className="bg-card border border-border rounded-xl hover:shadow-lg transition-all group cursor-pointer relative" data-testid={`card-product-${product.id}`}>
         {/* Favorites Button */}
         {user && (
           <Button
@@ -129,8 +129,8 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
             size="sm"
             className={`absolute top-2 right-2 z-10 p-2 rounded-full ${
               favoriteStatus?.isFavorite 
-                ? 'text-red-500 hover:text-red-600 bg-white/80 hover:bg-white/90' 
-                : 'text-gray-400 hover:text-red-500 bg-white/80 hover:bg-white/90'
+                ? 'text-red-500 hover:text-red-600 bg-card/80 hover:bg-card/90' 
+                : 'text-muted-foreground hover:text-red-500 bg-card/80 hover:bg-card/90'
             }`}
             onClick={handleToggleFavorite}
             disabled={addToFavoritesMutation.isPending || removeFromFavoritesMutation.isPending}
@@ -150,11 +150,11 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           />
         )}
         <div className="p-6">
-          <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-primary transition-colors" data-testid={`text-product-name-${product.id}`}>
+          <h3 className="font-semibold text-card-foreground mb-2 group-hover:text-primary transition-colors" data-testid={`text-product-name-${product.id}`}>
             {name}
           </h3>
         {description && (
-          <p className="text-sm text-gray-600 mb-3" data-testid={`text-product-description-${product.id}`}>
+          <p className="text-sm text-muted-foreground mb-3" data-testid={`text-product-description-${product.id}`}>
             {description}
           </p>
         )}
@@ -163,7 +163,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
             <span className="text-lg font-bold text-primary" data-testid={`text-product-price-${product.id}`}>
               {Number(product.wholesalePrice).toLocaleString()} so'm
             </span>
-            <span className="text-sm text-gray-500 ml-1">
+            <span className="text-sm text-muted-foreground ml-1">
               / {product.minQuantity} {product.unit}
             </span>
           </div>
@@ -172,7 +172,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           </span>
         </div>
         <Button 
-          className="w-full bg-gray-100 text-gray-700 hover:bg-primary hover:text-white" 
+          className="w-full bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground" 
           onClick={handleAddToCart}
           disabled={(product.stockQuantity || 0) === 0}
           data-testid={`button-add-to-cart-${product.id}`}

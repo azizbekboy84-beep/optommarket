@@ -23,9 +23,9 @@ export default function Home() {
   });
 
   const stats = [
-    { value: '50K+', label: t('productsCount') },
-    { value: '1000+', label: t('sellers') },
-    { value: '10K+', label: t('customers') },
+    { value: '1K+', label: t('productsCount') },
+    { value: '30+', label: t('sellers') },
+    { value: '100+', label: t('customers') },
     { value: '24/7', label: t('support') },
   ];
 

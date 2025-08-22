@@ -1,7 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import session from "express-session";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+// Import vite functions dynamically to avoid loading vite in production
 import { MemStorage } from "./storage";
 import { db } from "./db";
 import { startBlogScheduler } from "./cron/blog-scheduler";
@@ -46,7 +46,7 @@ app.use((req, res, next) => {
         logLine = logLine.slice(0, 79) + "…";
       }
 
-      log(logLine);
+      console.log(logLine);
     }
   });
 
@@ -72,9 +72,17 @@ app.use((req, res, next) => {
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
   if (app.get("env") === "development") {
+    const { setupVite } = await import("./vite");
     await setupVite(app, server);
   } else {
-    serveStatic(app);
+    // Serve static files in production
+    const path = await import("path");
+    app.use(express.static(path.resolve("dist/public")));
+    
+    // Serve index.html for all non-API routes
+    app.get("*", (_req, res) => {
+      res.sendFile(path.resolve("dist/public/index.html"));
+    });
   }
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
@@ -87,7 +95,7 @@ app.use((req, res, next) => {
     host: "0.0.0.0",
     reusePort: true,
   }, async () => {
-    log(`serving on port ${port}`);
+    console.log(`serving on port ${port}`);
     
     // AI va Telegram servislarini ishga tushirish
     if (process.env.GOOGLE_AI_API_KEY && process.env.TELEGRAM_BOT_TOKEN) {

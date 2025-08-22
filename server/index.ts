@@ -76,13 +76,8 @@ app.use((req, res, next) => {
     await setupVite(app, server);
   } else {
     // Serve static files in production
-    const path = await import("path");
-    app.use(express.static(path.resolve("dist/public")));
-    
-    // Serve index.html for all non-API routes
-    app.get("*", (_req, res) => {
-      res.sendFile(path.resolve("dist/public/index.html"));
-    });
+    const { serveStatic } = await import("./static");
+    serveStatic(app);
   }
 
   // ALWAYS serve the app on the port specified in the environment variable PORT

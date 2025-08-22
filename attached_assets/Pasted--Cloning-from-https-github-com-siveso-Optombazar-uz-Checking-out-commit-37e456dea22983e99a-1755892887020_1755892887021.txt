@@ -1,0 +1,168 @@
+==> Cloning from https://github.com/siveso/Optombazar.uz
+==> Checking out commit 37e456dea22983e99a64b7e803383ac99d303d14 in branch main
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 706B done
+#1 DONE 0.0s
+#2 [internal] load metadata for docker.io/library/node:20-alpine
+#2 ...
+#3 [auth] library/node:pull render-prod/docker-mirror-repository/library/node:pull token for us-west1-docker.pkg.dev
+#3 DONE 0.0s
+#2 [internal] load metadata for docker.io/library/node:20-alpine
+#2 DONE 4.5s
+#4 [internal] load .dockerignore
+#4 transferring context: 229B done
+#4 DONE 0.0s
+#5 [ 1/10] FROM docker.io/library/node:20-alpine@sha256:df02558528d3d3d0d621f112e232611aecfee7cbc654f6b375765f72bb262799
+#5 resolve docker.io/library/node:20-alpine@sha256:df02558528d3d3d0d621f112e232611aecfee7cbc654f6b375765f72bb262799 0.0s done
+#5 ...
+#6 [internal] load build context
+#6 transferring context: 8.16MB 0.2s done
+#6 DONE 0.2s
+#5 [ 1/10] FROM docker.io/library/node:20-alpine@sha256:df02558528d3d3d0d621f112e232611aecfee7cbc654f6b375765f72bb262799
+#5 extracting sha256:9824c27679d3b27c5e1cb00a73adb6f4f8d556994111c12db3c5d61a0c843df8
+#5 extracting sha256:9824c27679d3b27c5e1cb00a73adb6f4f8d556994111c12db3c5d61a0c843df8 0.1s done
+#5 extracting sha256:8c59d92d6fc9f01af4aaa86824be72b74bd4d940c4c46aa95d9710bfa46c975e
+#5 extracting sha256:8c59d92d6fc9f01af4aaa86824be72b74bd4d940c4c46aa95d9710bfa46c975e 1.3s done
+#5 DONE 4.1s
+#5 [ 1/10] FROM docker.io/library/node:20-alpine@sha256:df02558528d3d3d0d621f112e232611aecfee7cbc654f6b375765f72bb262799
+#5 extracting sha256:54225bd601967a0aa669ec9be621c24d8eeac874b698d55874018070898685c2 0.1s done
+#5 extracting sha256:a9e48ad1219d4d11c6456a8db0fd5c11af46242d52edf84e17ab84a7bfd93809 0.0s done
+#5 DONE 4.2s
+#7 [ 2/10] WORKDIR /app
+#7 DONE 0.0s
+#8 [ 3/10] COPY package*.json ./
+#8 DONE 0.0s
+#9 [ 4/10] RUN npm ci
+#9 3.281 npm warn deprecated request@2.88.2: request has been deprecated, see https://github.com/request/request/issues/3142
+#9 3.457 npm warn deprecated har-validator@5.1.5: this library is no longer supported
+#9 4.761 npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+#9 5.159 npm warn deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+#9 5.324 npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+#9 9.802 
+#9 9.802 added 665 packages, and audited 666 packages in 10s
+#9 9.802 
+#9 9.802 127 packages are looking for funding
+#9 9.802   run `npm fund` for details
+#9 9.842 
+#9 9.842 16 vulnerabilities (3 low, 11 moderate, 2 critical)
+#9 9.842 
+#9 9.842 To address issues that do not require attention, run:
+#9 9.842   npm audit fix
+#9 9.842 
+#9 9.842 To address all issues (including breaking changes), run:
+#9 9.842   npm audit fix --force
+#9 9.842 
+#9 9.842 Run `npm audit` for details.
+#9 9.844 npm notice
+#9 9.844 npm notice New major version of npm available! 10.8.2 -> 11.5.2
+#9 9.844 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.5.2
+#9 9.844 npm notice To update run: npm install -g npm@11.5.2
+#9 9.844 npm notice
+#9 DONE 18.3s
+#10 [ 5/10] COPY . .
+#10 DONE 0.4s
+#11 [ 6/10] RUN npm run build
+#11 0.190 
+#11 0.190 > rest-express@1.0.0 build
+#11 0.190 > vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+#11 0.190 
+#11 0.404 vite v5.4.19 building for production...
+#11 0.473 transforming...
+#11 0.805 Browserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+#11 0.805   npx update-browserslist-db@latest
+#11 0.805   Why you should do it regularly: https://github.com/browserslist/update-db#readme
+#11 9.005 ✓ 2594 modules transformed.
+#11 9.764 rendering chunks...
+#11 9.781 computing gzip size...
+#11 9.812 ../dist/public/index.html                                             3.07 kB │ gzip:   1.30 kB
+#11 9.812 ../dist/public/assets/optombazar logo_1755690917356-Chu8NA3g.png     23.36 kB
+#11 9.812 ../dist/public/assets/QR to'lov_1755750030820-B7JQmtJP.jpg           81.32 kB
+#11 9.812 ../dist/public/assets/index-CE4sDKtT.css                            109.58 kB │ gzip:  16.91 kB
+#11 9.812 ../dist/public/assets/index-BBeKhPqn.js                           1,186.25 kB │ gzip: 330.15 kB
+#11 9.813 
+#11 9.813 (!) Some chunks are larger than 500 kB after minification. Consider:
+#11 9.813 - Using dynamic import() to code-split the application
+#11 9.813 - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+#11 9.813 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+#11 9.813 ✓ built in 9.38s
+#11 9.898 
+#11 9.898   dist/index.js  164.7kb
+#11 9.898 
+#11 9.898 ⚡ Done in 9ms
+#11 DONE 10.0s
+#12 [ 7/10] RUN npm ci --only=production
+#12 0.184 npm warn config only Use `--omit=dev` to omit dev dependencies from the install.
+#12 13.01 npm warn deprecated har-validator@5.1.5: this library is no longer supported
+#12 13.25 npm warn deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+#12 13.31 npm warn deprecated request@2.88.2: request has been deprecated, see https://github.com/request/request/issues/3142
+#12 16.12 
+#12 16.12 added 558 packages, and audited 559 packages in 16s
+#12 16.12 
+#12 16.12 115 packages are looking for funding
+#12 16.12   run `npm fund` for details
+#12 16.12 
+#12 16.12 9 vulnerabilities (3 low, 4 moderate, 2 critical)
+#12 16.12 
+#12 16.12 To address issues that do not require attention, run:
+#12 16.12   npm audit fix
+#12 16.12 
+#12 16.12 To address all issues (including breaking changes), run:
+#12 16.12   npm audit fix --force
+#12 16.12 
+#12 16.12 Run `npm audit` for details.
+#12 DONE 25.0s
+#13 [ 8/10] RUN addgroup -g 1001 -S nodejs
+#13 DONE 18.5s
+#14 [ 9/10] RUN adduser -S optombazar -u 1001
+#14 DONE 0.1s
+#15 [10/10] RUN chown -R optombazar:nodejs /app
+#15 DONE 134.5s
+#16 exporting to docker image format
+#16 exporting layers
+#16 exporting layers 22.0s done
+#16 exporting manifest sha256:0d5dd8746e4e4ec8eae3713d7a05f39aa3890464fc078e48a93b9e84da1a670c done
+#16 exporting config sha256:286d7643fcb4b6250d10a0a8d9a4dbf27a0819287e56f5c45e45113d135e2efb done
+#16 DONE 25.8s
+#17 exporting cache to client directory
+#17 preparing build cache for export
+#17 writing cache manifest sha256:64a8fa63b027c180bb2cba975ed60ddce61a1c5d40498bbf2b12ba185a3a0777 0.1s done
+#17 DONE 6.0s
+Pushing image to registry...
+Upload succeeded
+==> Deploying...
+> rest-express@1.0.0 start
+> NODE_ENV=production node dist/index.js
+node:internal/modules/esm/resolve:873
+  throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+        ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'vite' imported from /app/dist/index.js
+    at packageResolve (node:internal/modules/esm/resolve:873:9)
+    at moduleResolve (node:internal/modules/esm/resolve:946:18)
+    at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+    at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+  code: 'ERR_MODULE_NOT_FOUND'
+}
+Node.js v20.19.4
+==> Exited with status 1
+==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
+> rest-express@1.0.0 start
+> NODE_ENV=production node dist/index.js
+node:internal/modules/esm/resolve:873
+  throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+        ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'vite' imported from /app/dist/index.js
+    at packageResolve (node:internal/modules/esm/resolve:873:9)
+    at moduleResolve (node:internal/modules/esm/resolve:946:18)
+    at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+    at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+  code: 'ERR_MODULE_NOT_FOUND'
+}
+Node.js v20.19.4

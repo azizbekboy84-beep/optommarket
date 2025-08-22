@@ -33,8 +33,10 @@ export default function AdminPushNotificationsPage() {
 
   // Push notification yuborish
   const sendNotificationMutation = useMutation({
-    mutationFn: (data: PushNotificationData) => 
-      apiRequest('/api/push/send', 'POST', data),
+    mutationFn: async (data: PushNotificationData) => {
+      const response = await apiRequest('POST', '/api/push/send', data);
+      return response.json();
+    },
     onSuccess: (response: any) => {
       toast({
         title: language === 'uz' ? 'Muvaffaqiyat!' : 'Успех!',

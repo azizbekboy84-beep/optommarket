@@ -31,7 +31,7 @@ export function MobileBottomNav() {
       badge: cartItemsCount > 0 ? cartItemsCount : undefined,
     },
     {
-      href: '/wishlist',
+      href: '/favorites',
       icon: Heart,
       labelUz: 'Saralangan',
       labelRu: 'Избранное',

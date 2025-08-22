@@ -34,6 +34,18 @@ export function AIChatWidget() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { language } = useLanguage();
 
+  // Auto-open chat after 30 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!isOpen && !localStorage.getItem('chat_auto_opened')) {
+        setIsOpen(true);
+        localStorage.setItem('chat_auto_opened', 'true');
+      }
+    }, 30000); // 30 seconds
+
+    return () => clearTimeout(timer);
+  }, [isOpen]);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };

@@ -4,6 +4,7 @@ import { useLanguage } from '@/components/language-provider';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -90,6 +91,13 @@ export default function CartPage() {
     await removeFromCart(itemId);
   };
 
+  const handleQuantityInputChange = async (itemId: string, value: string, maxStock: number) => {
+    const newQuantity = parseInt(value) || 1;
+    if (newQuantity >= 1 && newQuantity <= maxStock) {
+      await updateQuantity(itemId, newQuantity);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background dark:bg-black">
       <Header />
@@ -149,9 +157,15 @@ export default function CartPage() {
                         >
                           <Minus className="w-4 h-4" />
                         </Button>
-                        <span className="px-3 py-1 border rounded-md bg-background text-foreground text-center min-w-[50px]" data-testid={`text-quantity-${item.id}`}>
-                          {item.quantity}
-                        </span>
+                        <Input
+                          type="number"
+                          value={item.quantity}
+                          onChange={(e) => handleQuantityInputChange(item.id, e.target.value, item.product?.stockQuantity || 0)}
+                          min="1"
+                          max={item.product?.stockQuantity || 0}
+                          className="w-20 h-10 text-center border border-border bg-background text-foreground"
+                          data-testid={`input-quantity-${item.id}`}
+                        />
                         <Button
                           variant="outline"
                           size="sm"

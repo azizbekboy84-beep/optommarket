@@ -44,7 +44,6 @@ import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { Header } from "@/components/header";
 import { AppDownloadPrompt } from "@/components/AppDownloadPrompt";
 import { PushNotificationSetup } from "@/components/PushNotificationSetup";
-import { MarketingNotification } from "@/components/ui/marketing-notification";
 import { HelmetProvider } from 'react-helmet-async';
 
 function Router() {
@@ -182,7 +181,6 @@ function App() {
                   <MobileBottomNav />
                   <AIChatWidget />
                   <AppDownloadPrompt />
-                  <MarketingNotification />
                 </TooltipProvider>
               </CartProvider>
             </AuthProvider>

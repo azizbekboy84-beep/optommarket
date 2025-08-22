@@ -1,0 +1,75 @@
+YAKUNIY BOSQICH: LOYIHANI TO'LIQ STABILLASHTIRISH VA BARCHA FUNKSIYALARNI TEKSHIRISH
+Ajoyib, biz ko'plab funksiyalarni qo'shdik. Lekin ba'zida yangi o'zgarish eski funksiyani buzib qo'ymoqda. Endi biz yangi narsa qo'shishdan to'xtab, mavjud tizimning barcha qismlari birgalikda, xatosiz ishlashiga ishonch hosil qilamiz. Bu "katta tozalash" va barqarorlikni ta'minlash bosqichi.
+
+Loyiha mazmuni (Kontekst):
+Maqsadimiz — butun saytni boshidan oxirigacha, xuddi sinovchi (QA engineer) kabi tekshirib chiqish. Har bir tugma, har bir havola va har bir funksiya kutilgandek ishlashiga ishonch hosil qilish.
+
+Aniq qadamlar (To'liq Tekshiruv Ro'yxati):
+
+Sening vazifang — quyidagi ro'yxatdagi har bir bandni diqqat bilan tekshirib chiqish va agar biror muammo bo'lsa, uni darhol tuzatish.
+
+1-QISM: ASOSIY FOYDALANUVCHI OQIMI (MEHMON)
+
+Bosh sahifa: "Ommabop mahsulotlar" karuseli ishlayaptimi? Afzalliklar bo'limi to'g'ri ko'rsatilyaptimi?
+
+Katalog va Mahsulotlar:
+
+/products sahifasida mahsulotlar ko'rsatilyaptimi?
+
+Kategoriya va narx bo'yicha filtrlar to'g'ri ishlayaptimi?
+
+Mahsulotning batafsil sahifasi:
+
+Barcha ma'lumotlar (rasmlar galereyasi, narx, tavsif, xususiyatlar) ko'rinib turibdimi?
+
+Miqdorni klaviatura orqali kiritish ishlayaptimi?
+
+"Savatga qo'shish" tugmasi qorong'u rejimda ham aniq ko'rinib turibdimi?
+
+Savat: Mehmon sifatida mahsulot qo'shish, o'chirish va miqdorni o'zgartirish muammosiz ishlayaptimi?
+
+Buyurtma berish: Mehmon sifatida buyurtma berish jarayoni oxirigacha ishlayaptimi?
+
+2-QISM: RO'YXATDAN O'TGAN FOYDALANUVCHI OQIMI
+
+Ro'yxatdan o'tish / Kirish: Yangi akkaunt yaratish, tizimga kirish va chiqish muammosiz ishlayaptimi?
+
+Profil sahifasi:
+
+Buyurtmalar tarixi to'g'ri ko'rsatilyaptimi?
+
+"Saralanganlar" (Wishlist) funksiyasi ishlayaptimi (qo'shish, o'chirish, ko'rish)?
+
+3-QISM: ADMIN PANELI
+
+Kirish Nazorati: Faqat "admin" roli bor foydalanuvchi /admin manziliga kira olyaptimi? Oddiy foydalanuvchi kira olmayaptimi?
+
+Boshqaruv (CRUD):
+
+Kategoriyalarni qo'shish, tahrirlash, o'chirish to'liq ishlayaptimi?
+
+Mahsulotlarni (barcha yangi maydonlar bilan) qo'shish, tahrirlash, o'chirish to'liq ishlayaptimi?
+
+Blog postlarini qo'shish, tahrirlash, o'chirish to'liq ishlayaptimi?
+
+Buyurtmalar: Barcha buyurtmalar ro'yxati ko'rinyaptimi? Buyurtma statusini o'zgartirish ishlayaptimi?
+
+4-QISM: UMUMIY SAYT FUNKSIYALARI VA DIZAYN
+
+Dizayn va Adaptivlik:
+
+Header (web), MobileTopNav va MobileBottomNav (mobil) barcha sahifalarda to'g'ri va bir xil ko'rinishdami?
+
+Saytning barcha qismlarida "oq fonga oq yozuv" kabi rang xatoliklari yo'qmi?
+
+Til boshqaruvi (i18n): Til o'zgarganda saytdagi Barcha matnlar (menyular, tugmalar, mahsulot nomlari, tavsiflar) tanlangan tilga mos ravishda to'liq o'zgaryaptimi?
+
+Qorong'u/Yorug' rejim: Ikkala rejim ham saytning Barcha qismlarida (Admin paneli, modal oynalar, barcha sahifalar) to'liq va xatosiz ishlayaptimi?
+
+AI Chatbot: Ikonka ko'rinib turibdimi? Animatsiyasi bormi? 30 soniyadan keyin avtomatik ochilyaptimi? Suhbat boshida ism/telefon so'rayaptimi?
+
+Bildirishnomalar: Marketing bildirishnomasi 2 daqiqadan so'ng chiqyaptimi? Yangi mahsulot qo'shilganda real-vaqt bildirishnomasi ishlayaptimi?
+
+Qidiruv: Qidiruv funksiyasi ham mahsulotlar, ham blog postlari bo'yicha to'g'ri natija qaytaryaptimi?
+
+Vazifa yakunida, yuqoridagi har bir band bo'yicha ✅ (ishlamoqda va tekshirildi) yoki ❌ (muammo topildi va tuzatildi) belgisi bilan menga batafsil hisobot ber.

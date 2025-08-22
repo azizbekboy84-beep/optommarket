@@ -153,4 +153,53 @@ export async function sendNotificationToAll(payload: {
   }
 }
 
+// Test notification yuborish
+router.post('/send', async (req, res) => {
+  try {
+    const { title, body, url, icon, tag } = req.body;
+    
+    if (!title || !body) {
+      return res.status(400).json({ message: 'Title va body majburiy' });
+    }
+
+    // Barcha faol obunachilarga yuborish
+    await sendNotificationToAll({
+      title,
+      body,
+      icon: icon || '/icon-192x192.png',
+      url: url || '/',
+      tag: tag || 'optombazar-notification',
+    });
+
+    // Obunchilar sonini qaytarish
+    const subscriptions = await db
+      .select()
+      .from(pushSubscriptions)
+      .where(eq(pushSubscriptions.isActive, true));
+
+    res.json({ 
+      message: 'Bildirishnoma barcha obunachilarga yuborildi',
+      successCount: subscriptions.length 
+    });
+  } catch (error) {
+    console.error('Push notification yuborishda xatolik:', error);
+    res.status(500).json({ message: 'Bildirishnoma yuborishda xatolik yuz berdi' });
+  }
+});
+
+// Subscribers count endpoint
+router.get('/subscribers-count', async (req, res) => {
+  try {
+    const count = await db
+      .select({ count: pushSubscriptions.id })
+      .from(pushSubscriptions)
+      .where(eq(pushSubscriptions.isActive, true));
+
+    res.json({ count: count.length });
+  } catch (error) {
+    console.error('Subscribers count olishda xatolik:', error);
+    res.status(500).json({ message: 'Subscribers count olishda xatolik' });
+  }
+});
+
 export default router;

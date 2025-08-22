@@ -9,6 +9,7 @@ import { ProductCard } from '@/components/product-card';
 import { Button } from '@/components/ui/button';
 import { Category, Product } from '@shared/schema';
 import { Link } from 'wouter';
+import { PushNotificationSetup } from '@/components/PushNotificationSetup';
 
 export default function Home() {
   const { t, language } = useLanguage();
@@ -353,6 +354,13 @@ export default function Home() {
               </Button>
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Push Notification Setup */}
+      <section className="bg-background dark:bg-gray-900 py-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <PushNotificationSetup autoRequest={true} />
         </div>
       </section>
 

@@ -4,8 +4,8 @@
 # Install dependencies
 npm ci
 
-# Generate database schema push
-npm run db:generate
+# Push database schema
+npm run db:push
 
 # Build the application
 npm run build

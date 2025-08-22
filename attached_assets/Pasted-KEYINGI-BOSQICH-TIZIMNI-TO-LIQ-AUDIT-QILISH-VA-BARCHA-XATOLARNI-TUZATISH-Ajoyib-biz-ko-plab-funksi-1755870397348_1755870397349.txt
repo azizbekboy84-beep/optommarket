@@ -1,0 +1,43 @@
+KEYINGI BOSQICH: TIZIMNI TO'LIQ AUDIT QILISH VA BARCHA XATOLARNI TUZATISH
+Ajoyib, biz ko'plab funksiyalarni qo'shdik. Lekin hozir ba'zi avval ishlagan funksiyalar, ayniqsa avtomatlashtirilgan tizimlar ishlamay qolgan. Endi biz yangi narsa qo'shishdan to'xtab, mavjud tizimning barcha qismlari birgalikda, xatosiz ishlashiga ishonch hosil qilamiz. Bu "katta tozalash" va barqarorlikni ta'minlash bosqichi.
+
+Loyiha mazmuni (Kontekst):
+Maqsadimiz — butun saytni boshidan oxirigacha, xuddi sinovchi (QA engineer) kabi tekshirib chiqish. Har bir tugma, har bir havola va ayniqsa, har bir avtomatik jarayon kutilgandek ishlashiga ishonch hosil qilish.
+
+Aniq qadamlar (To'liq Tekshiruv va Tuzatish Ro'yxati):
+
+Sening vazifang — quyidagi ro'yxatdagi har bir bandni diqqat bilan tekshirib chiqish va agar biror muammo topsang, uni darhol tuzatish.
+
+1-QISM: ASOSIY FUNKSIYALARNI TEKSHIRISH
+
+Xarid Oqimi: Mehmon va ro'yxatdan o'tgan foydalanuvchi sifatida mahsulotni tanlashdan tortib, savatga qo'shish va buyurtmani rasmiylashtirishgacha bo'lgan butun jarayonni sinab ko'r. Hech qanday uzilish yo'qligiga ishonch hosil qil.
+
+Shaxsiy Kabinet: Profil sahifasi, buyurtmalar tarixi va saralanganlar ro'yxati to'g'ri ishlayaptimi?
+
+Admin Paneli: Barcha CRUD (qo'shish, ko'rish, tahrirlash, o'chirish) operatsiyalari kategoriyalar, mahsulotlar va blog postlari uchun muammosiz ishlayaptimi?
+
+2-QISM: AVTOMATLASHTIRILGAN TIZIMLARNI TUZATISH VA SINASH
+
+AI Blog Generatori:
+
+server/cron.ts fayli mavjudligini va uning server/index.ts faylida chaqirilayotganini tekshir.
+
+node-cron kutubxonasi to'g'ri sozlanganmi?
+
+AI orqali post yaratish funksiyasini qo'lda bir marta ishga tushirib ko'r. U Google Gemini API'siga to'g'ri murojaat qilyaptimi? Yangi post bazaga saqlanyaptimi? Agar xato bo'lsa, tuzat.
+
+Telegram Marketing Bot:
+
+Replit Secrets bo'limida TELEGRAM_BOT_TOKEN va TELEGRAM_CHAT_ID to'g'ri kiritilganini tekshir.
+
+server/cron.ts faylidagi kunlik mahsulot tanishtiruvi va haftalik aksiya postlarini yuborish funksiyalarini qo'lda bir marta ishga tushirib ko'r. Telegram kanaliga postlar to'g'ri formatda (rasm, matn, havola bilan) kelyaptimi? Agar xato bo'lsa, tuzat.
+
+Push Notification Tizimi:
+
+Replit Secrets bo'limida VAPID_PUBLIC_KEY va VAPID_PRIVATE_KEY to'g'ri kiritilganini tekshir.
+
+Sinov: Admin panelidan yangi mahsulot qo'sh. Shu zahoti obuna bo'lgan foydalanuvchiga Push Notification kelishi kerak.
+
+Sinov: Yuqorida tuzatilgan AI Blog Generatorini ishga tushirib, yangi post yarat. Shu zahoti obuna bo'lgan foydalanuvchiga Push Notification kelishi kerak. Agar bildirishnomalar kelmayotgan bo'lsa, web-push logikasini va service-worker.js faylini tekshirib, muammoni hal qil.
+
+Vazifa yakunida, yuqoridagi har bir band bo'yicha ✅ (ishlamoqda va tekshirildi) yoki ❌ (muammo topildi va tuzatildi) belgisi bilan menga batafsil hisobot ber. Ayniqsa, avtomatlashtirilgan tizimlar endi to'liq ishlayotganiga alohida e'tibor qarat.

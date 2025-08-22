@@ -29,8 +29,8 @@ self.addEventListener('push', (event) => {
     
     const options = {
       body: data.body,
-      icon: data.icon || '/icon-192x192.png',
-      badge: '/icon-192x192.png',
+      icon: '/favicon.ico',
+      badge: '/favicon.ico',
       tag: data.tag || 'optombazar-notification',
       data: {
         url: data.url || '/',
@@ -39,16 +39,17 @@ self.addEventListener('push', (event) => {
       actions: [
         {
           action: 'open',
-          title: 'Ko\'rish',
-          icon: '/icon-192x192.png'
+          title: 'Ko\'rish'
         },
         {
           action: 'close',
           title: 'Yopish'
         }
       ],
-      requireInteraction: true, // Foydalanuvchi javob bergunga qadar ko'rsatish
+      requireInteraction: false, // Avtomatik ko'rsatish
       vibrate: [200, 100, 200], // Vibratsiya naqshi
+      silent: false,
+      renotify: true,
     };
 
     event.waitUntil(

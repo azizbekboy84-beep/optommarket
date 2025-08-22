@@ -118,7 +118,7 @@ export async function sendNotificationToAll(payload: {
     const notificationPayload = JSON.stringify({
       title: payload.title,
       body: payload.body,
-      icon: payload.icon || '/icon-192x192.png',
+      icon: payload.icon || '/favicon.ico',
       url: payload.url || '/',
       tag: payload.tag || 'optombazar-notification',
       data: {

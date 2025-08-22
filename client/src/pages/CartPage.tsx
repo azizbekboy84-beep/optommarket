@@ -93,7 +93,7 @@ export default function CartPage() {
 
   const handleQuantityInputChange = async (itemId: string, value: string, maxStock: number) => {
     const newQuantity = parseInt(value) || 1;
-    if (newQuantity >= 1 && newQuantity <= maxStock) {
+    if (newQuantity >= 1 && newQuantity <= 999999) {
       await updateQuantity(itemId, newQuantity);
     }
   };
@@ -162,15 +162,15 @@ export default function CartPage() {
                           value={item.quantity}
                           onChange={(e) => handleQuantityInputChange(item.id, e.target.value, item.product?.stockQuantity || 0)}
                           min="1"
-                          max={item.product?.stockQuantity || 0}
-                          className="w-20 h-10 text-center border border-border bg-background text-foreground"
+                          max="999999"
+                          className="w-28 h-10 text-center border border-border bg-background text-foreground"
                           data-testid={`input-quantity-${item.id}`}
                         />
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => handleQuantityIncrease(item.id, item.quantity, item.product?.stockQuantity || 0)}
-                          disabled={item.quantity >= (item.product?.stockQuantity || 0)}
+                          disabled={item.quantity >= 999999}
                           data-testid={`button-increase-${item.id}`}
                         >
                           <Plus className="w-4 h-4" />

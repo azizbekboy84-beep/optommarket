@@ -205,7 +205,7 @@ export default function ProductDetailsPage() {
   const currentImage = images[selectedImageIndex] || images[0] || '/placeholder-image.jpg';
 
   const handleQuantityChange = (newQuantity: number) => {
-    if (newQuantity >= 1 && newQuantity <= (product.stockQuantity || 0)) {
+    if (newQuantity >= 1 && newQuantity <= 999999) {
       setQuantity(newQuantity);
     }
   };
@@ -420,15 +420,15 @@ export default function ProductDetailsPage() {
                       value={quantity}
                       onChange={handleQuantityInputChange}
                       min="1"
-                      max={product.stockQuantity || 0}
-                      className="w-20 h-12 text-center border-0 bg-transparent text-lg font-semibold text-foreground"
+                      max="999999"
+                      className="w-28 h-12 text-center border-0 bg-transparent text-lg font-semibold text-foreground"
                       data-testid="quantity-input"
                     />
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={handleQuantityIncrease}
-                      disabled={quantity >= (product.stockQuantity || 0)}
+                      disabled={quantity >= 999999}
                       className="h-12 w-12 p-0 hover:bg-muted"
                       data-testid="increase-quantity"
                     >

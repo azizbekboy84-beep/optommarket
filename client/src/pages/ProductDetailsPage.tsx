@@ -444,12 +444,12 @@ export default function ProductDetailsPage() {
               <Button
                 onClick={handleAddToCart}
                 disabled={stockStatus === 'outOfStock' || quantity < 1}
-                className="w-full h-14 text-lg font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
+                className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-blue-600 to-red-500 hover:from-red-500 hover:to-blue-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 data-testid="add-to-cart-button"
               >
-                <ShoppingCart className="w-6 h-6 mr-3" />
-                Savatga qo'shish
-                <span className="ml-2">
+                <ShoppingCart className="w-6 h-6 mr-3 text-white" />
+                <span className="text-white">Savatga qo'shish</span>
+                <span className="ml-2 text-white">
                   ({(quantity * parseFloat(product.price)).toLocaleString()} so'm)
                 </span>
               </Button>

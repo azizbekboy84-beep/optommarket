@@ -22,18 +22,18 @@ export default function CartPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-background dark:bg-black">
         <Header />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="animate-pulse space-y-6">
-            <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+            <div className="h-8 bg-muted rounded w-1/4"></div>
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="bg-white rounded-lg p-6">
+              <div key={i} className="bg-card rounded-lg p-6">
                 <div className="flex space-x-4">
-                  <div className="w-20 h-20 bg-gray-200 rounded"></div>
+                  <div className="w-20 h-20 bg-muted rounded"></div>
                   <div className="flex-1 space-y-2">
-                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                    <div className="h-4 bg-muted rounded w-3/4"></div>
+                    <div className="h-4 bg-muted rounded w-1/2"></div>
                   </div>
                 </div>
               </div>
@@ -47,15 +47,15 @@ export default function CartPage() {
 
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-background dark:bg-black">
         <Header />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
-            <ShoppingBag className="mx-auto h-24 w-24 text-gray-400 mb-6" />
-            <h1 className="text-3xl font-bold text-gray-900 mb-4" data-testid="text-empty-cart-title">
+            <ShoppingBag className="mx-auto h-24 w-24 text-muted-foreground mb-6" />
+            <h1 className="text-3xl font-bold text-foreground mb-4" data-testid="text-empty-cart-title">
               {language === 'uz' ? 'Savat bo\'sh' : 'Корзина пуста'}
             </h1>
-            <p className="text-gray-600 mb-8" data-testid="text-empty-cart-message">
+            <p className="text-muted-foreground mb-8" data-testid="text-empty-cart-message">
               {language === 'uz' 
                 ? 'Savatga mahsulot qo\'shing va xarid qiling!'
                 : 'Добавьте товары в корзину и совершите покупку!'
@@ -91,7 +91,7 @@ export default function CartPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background dark:bg-black">
       <Header />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -102,10 +102,10 @@ export default function CartPage() {
               {language === 'uz' ? 'Katalogga qaytish' : 'Вернуться к каталогу'}
             </Button>
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900" data-testid="text-cart-title">
+          <h1 className="text-3xl font-bold text-foreground" data-testid="text-cart-title">
             {language === 'uz' ? 'Savat' : 'Корзина'}
           </h1>
-          <p className="text-gray-600 mt-2" data-testid="text-items-count">
+          <p className="text-muted-foreground mt-2" data-testid="text-items-count">
             {itemCount} {language === 'uz' ? 'ta mahsulot' : 'товаров'}
           </p>
         </div>
@@ -129,12 +129,12 @@ export default function CartPage() {
 
                     {/* Product Details */}
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-1" data-testid={`text-item-name-${item.id}`}>
-                        <Link href={`/products/${item.product?.slug}`} className="hover:text-blue-600">
+                      <h3 className="text-lg font-semibold text-foreground mb-1" data-testid={`text-item-name-${item.id}`}>
+                        <Link href={`/products/${item.product?.slug}`} className="hover:text-primary">
                           {language === 'uz' ? item.product?.nameUz : item.product?.nameRu}
                         </Link>
                       </h3>
-                      <p className="text-sm text-gray-600 mb-2" data-testid={`text-item-price-${item.id}`}>
+                      <p className="text-sm text-muted-foreground mb-2" data-testid={`text-item-price-${item.id}`}>
                         {Number(item.product?.wholesalePrice || 0).toLocaleString()} {language === 'uz' ? 'so\'m' : 'сум'} / {item.product?.unit}
                       </p>
                       
@@ -149,7 +149,7 @@ export default function CartPage() {
                         >
                           <Minus className="w-4 h-4" />
                         </Button>
-                        <span className="px-3 py-1 border rounded-md bg-white text-center min-w-[50px]" data-testid={`text-quantity-${item.id}`}>
+                        <span className="px-3 py-1 border rounded-md bg-background text-foreground text-center min-w-[50px]" data-testid={`text-quantity-${item.id}`}>
                           {item.quantity}
                         </span>
                         <Button
@@ -161,7 +161,7 @@ export default function CartPage() {
                         >
                           <Plus className="w-4 h-4" />
                         </Button>
-                        <span className="text-sm text-gray-500" data-testid={`text-unit-${item.id}`}>
+                        <span className="text-sm text-muted-foreground" data-testid={`text-unit-${item.id}`}>
                           {item.product?.unit}
                         </span>
                       </div>
@@ -169,7 +169,7 @@ export default function CartPage() {
 
                     {/* Price and Actions */}
                     <div className="flex flex-col items-end space-y-2">
-                      <p className="text-lg font-bold text-gray-900" data-testid={`text-total-price-${item.id}`}>
+                      <p className="text-lg font-bold text-foreground" data-testid={`text-total-price-${item.id}`}>
                         {(Number(item.product?.wholesalePrice || 0) * item.quantity).toLocaleString()} {language === 'uz' ? 'so\'m' : 'сум'}
                       </p>
                       <Button

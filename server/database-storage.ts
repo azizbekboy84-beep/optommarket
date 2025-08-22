@@ -237,21 +237,38 @@ export class DatabaseStorage implements IStorage {
 
   async searchAll(query: string): Promise<{ products: Product[]; blogPosts: BlogPost[] }> {
     try {
+      console.log('🔍 DatabaseStorage searchAll called with:', query);
+      
+      if (!this.memStorage) {
+        console.log('⏳ Initializing memStorage...');
+        await this.initMemStorage();
+      }
+      
+      console.log('📞 Calling memStorage.searchProducts');
       const products = await this.memStorage.searchProducts(query);
+      console.log('📦 Products found:', products.length);
       
       // Blog postlarni PostgreSQL dan qidirish
       const searchQuery = query.toLowerCase().trim();
-      const posts = await db.select().from(blogPosts)
-        .where(
-          or(
-            like(blogPosts.title, `%${searchQuery}%`),
-            like(blogPosts.content, `%${searchQuery}%`)
-          )
-        );
+      let posts = [];
+      try {
+        posts = await db.select().from(blogPosts)
+          .where(
+            or(
+              like(blogPosts.title, `%${searchQuery}%`),
+              like(blogPosts.content, `%${searchQuery}%`)
+            )
+          );
+        console.log('📝 Blog posts found:', posts.length);
+      } catch (dbError) {
+        console.log('⚠️ Blog posts search failed, using empty array:', dbError);
+        posts = [];
+      }
 
+      console.log('📊 DatabaseStorage final results:', { productsFound: products.length, blogPostsFound: posts.length });
       return { products, blogPosts: posts };
     } catch (error) {
-      console.error('Qidiruvda xatolik:', error);
+      console.error('💥 DatabaseStorage search error:', error);
       return { products: [], blogPosts: [] };
     }
   }

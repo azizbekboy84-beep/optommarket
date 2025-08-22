@@ -674,14 +674,44 @@ export class MemStorage implements IStorage {
       return { products: [], blogPosts: [] };
     }
 
+    console.log('🔍 Qidiruv:', { searchQuery, totalProducts: this.products.size });
+    
+    // Debug: List all products first
+    console.log('📋 Barcha mahsulotlar:');
+    Array.from(this.products.values()).forEach(product => {
+      console.log('- ', { id: product.id, nameUz: product.nameUz, isActive: product.isActive });
+    });
+
     // Search products
     const products = Array.from(this.products.values()).filter(product => {
-      return product.isActive && (
-        product.nameUz.toLowerCase().includes(searchQuery) ||
-        product.nameRu.toLowerCase().includes(searchQuery) ||
-        (product.descriptionUz && product.descriptionUz.toLowerCase().includes(searchQuery)) ||
-        (product.descriptionRu && product.descriptionRu.toLowerCase().includes(searchQuery))
-      );
+      const nameUzMatch = product.nameUz.toLowerCase().includes(searchQuery);
+      const nameRuMatch = product.nameRu.toLowerCase().includes(searchQuery);
+      const descUzMatch = product.descriptionUz && product.descriptionUz.toLowerCase().includes(searchQuery);
+      const descRuMatch = product.descriptionRu && product.descriptionRu.toLowerCase().includes(searchQuery);
+      
+      const matches = nameUzMatch || nameRuMatch || descUzMatch || descRuMatch;
+      
+      console.log('🔍 Tekshiruv:', { 
+        id: product.id, 
+        nameUz: product.nameUz, 
+        searchQuery,
+        nameUzLower: product.nameUz.toLowerCase(),
+        nameUzMatch,
+        matches,
+        isActive: product.isActive
+      });
+      
+      if (matches) {
+        console.log('✅ Topildi:', { 
+          id: product.id, 
+          nameUz: product.nameUz, 
+          isActive: product.isActive,
+          nameUzMatch,
+          nameRuMatch 
+        });
+      }
+      
+      return product.isActive && matches;
     });
 
     // Search blog posts

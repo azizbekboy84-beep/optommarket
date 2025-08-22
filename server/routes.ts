@@ -945,13 +945,20 @@ export async function registerRoutes(app: Express, customStorage?: any): Promise
     try {
       const query = req.query.q as string;
       
+      console.log('🔎 Search API called:', { query, queryParams: req.query });
+      
       if (!query || typeof query !== 'string') {
+        console.log('❌ No query provided');
         return res.status(400).json({ message: "Qidiruv so'zi kiritilmagan" });
       }
       
+      console.log('📞 Calling activeStorage.searchAll with:', query);
       const results = await activeStorage.searchAll(query);
+      console.log('📊 Search results:', { productsFound: results.products.length, blogPostsFound: results.blogPosts.length });
+      
       res.json(results);
     } catch (error) {
+      console.error('💥 Search error:', error);
       res.status(500).json({ message: "Qidiruvda xatolik" });
     }
   });

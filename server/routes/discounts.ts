@@ -29,7 +29,7 @@ router.post("/", requireAuth, requireRole("admin"), async (req, res) => {
     
     const newDiscount = await db
       .insert(discounts)
-      .values(validatedData)
+      .values([validatedData])
       .returning();
 
     res.status(201).json(newDiscount[0]);
@@ -53,7 +53,7 @@ router.put("/:id", requireAuth, requireRole("admin"), async (req, res) => {
     
     const updatedDiscount = await db
       .update(discounts)
-      .set({ ...validatedData, updatedAt: new Date() })
+      .set(validatedData)
       .where(eq(discounts.id, id))
       .returning();
 

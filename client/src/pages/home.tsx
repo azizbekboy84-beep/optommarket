@@ -106,15 +106,15 @@ export default function Home() {
               <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/20">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-gradient-to-br from-blue-500/30 to-blue-600/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
-                    <div className="text-3xl font-bold mb-2">50K+</div>
+                    <div className="text-3xl font-bold mb-2">1K+</div>
                     <div className="text-sm opacity-80">Mahsulotlar</div>
                   </div>
                   <div className="bg-gradient-to-br from-red-500/30 to-red-600/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
-                    <div className="text-3xl font-bold mb-2">1000+</div>
+                    <div className="text-3xl font-bold mb-2">30+</div>
                     <div className="text-sm opacity-80">Sotuvchilar</div>
                   </div>
                   <div className="bg-gradient-to-br from-blue-600/30 to-red-500/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
-                    <div className="text-3xl font-bold mb-2">10K+</div>
+                    <div className="text-3xl font-bold mb-2">100+</div>
                     <div className="text-sm opacity-80">Mijozlar</div>
                   </div>
                   <div className="bg-gradient-to-br from-red-600/30 to-blue-500/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">

@@ -1,0 +1,38 @@
+# Dockerfile for Optombazar.uz deployment - VITE-FREE VERSION
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies (including dev dependencies for build)
+RUN npm ci
+
+# Copy source code
+COPY . .
+
+# Build the application (Vite-free production build)
+RUN npx vite build && npx esbuild server/index.production.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js
+
+# Remove dev dependencies after build
+RUN npm ci --only=production
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S optombazar -u 1001
+
+# Change ownership of the app directory
+RUN chown -R optombazar:nodejs /app
+USER optombazar
+
+# Expose port
+EXPOSE 10000
+
+# Set environment
+ENV NODE_ENV=production
+ENV PORT=10000
+
+# Start command
+CMD ["npm", "start"]

@@ -1,0 +1,58 @@
+Tushunaman, bu yana bir deploy xatosi va avvalgisiga juda o'xshash, lekin sababi biroz boshqacha. Keling, buni tahlil qilamiz.
+
+Xato Tahlili
+Asosiy Xato: Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'vite' imported from /app/dist/index.js
+
+Ma'nosi: Endi xato qurish (build) jarayonida emas, balki serverni ishga tushirish (npm start) jarayonida yuzaga kelyapti. Ishga tushirishga tayyor bo'lgan dist/index.js fayli o'z ichida vite paketini topa olmayapti.
+
+Sababi: Bu klassik "development vs. production" muammosi.
+
+vite — bu faqat ishlab chiqish (development) uchun kerak bo'lgan vosita. U frontend kodini yig'ish va develop serverni ishga tushirish uchun ishlatiladi.
+
+Production rejimida esa frontend allaqachon yig'ib bo'lingan bo'ladi va vite kerak emas.
+
+Muammo shundaki, sizning server/index.ts faylingizda vite bilan bog'liq kod (masalan, import { setupVite } from './vite') mavjud. esbuild bu kodni production uchun fayl (dist/index.js) yaratayotganda ham qo'shib yuboradi. Server ishga tushganda, u vite'ni topa olmaydi, chunki u production muhitida o'rnatilmagan (devDependency).
+
+Yechim: Vite Kodini Production'dan Ajratish
+Biz server kodiga vite bilan bog'liq har qanday kod faqat development rejimida ishga tushishini va production fayliga umuman qo'shilmasligini "o'rgatishimiz" kerak.
+
+Qanday tuzatiladi:
+
+Loyihangizdagi server/index.ts faylini oching.
+
+Faylning eng yuqori qismida vite bilan bog'liq bo'lgan import qatorini toping. Masalan:
+
+TypeScript
+
+// BU QATORNI O'CHIRING YOKI KOMMENTGA OLING
+import { setupVite, serveStatic, log } from "./vite"; 
+Endi fayl ichida setupVite chaqirilayotgan if blokini toping va uni dinamik import() bilan almashtiring.
+
+Eski kod shunday bo'lishi mumkin:
+
+TypeScript
+
+// ...
+if (app.get("env") === "development") {
+  await setupVite(app, server); // Bu yerda xato
+} else {
+  serveStatic(app);
+}
+// ...
+Uni quyidagicha o'zgartiring:
+
+TypeScript
+
+// ...
+if (process.env.NODE_ENV === "development") {
+  // Vite'ni faqat development rejimida dinamik import qilamiz
+  const { setupVite } = await import("./vite");
+  await setupVite(app, server);
+} else {
+  // Production uchun statik fayllarni ko'rsatish
+  // Agar serveStatic ham o'sha faylda bo'lsa, uni ham dinamik import qiling
+  const { serveStatic } = await import("./vite"); 
+  serveStatic(app);
+}
+// ...
+Ushbu o'zgarishni qilib, kodingizni GitHub'ga yuborganingizdan so'ng, Render avtomatik tarzda loyihani qaytadan qurishni boshlaydi. Bu safar production fayli ichida vite'ga murojaat bo'lmaydi va server muvaffaqiyatli ishga tushishi kerak.

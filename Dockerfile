@@ -13,8 +13,8 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Build the application
-RUN npm run build
+# Build the application (Vite-free production build)
+RUN npx vite build && npx esbuild server/index.production.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js
 
 # Remove dev dependencies after build
 RUN npm ci --only=production

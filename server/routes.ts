@@ -634,6 +634,60 @@ export async function registerRoutes(app: Express, customStorage?: any): Promise
     }
   });
 
+  // Contact form endpoint
+  app.post("/api/contact", async (req, res) => {
+    try {
+      const { name, email, phone, company, message } = req.body;
+      
+      if (!name || !phone || !message) {
+        return res.status(400).json({ message: "Name, phone and message are required" });
+      }
+      
+      // Save contact message to database
+      const sessionId = req.headers['x-session-id'] as string || 'anonymous';
+      const contactData = {
+        sessionId,
+        userName: name,
+        userPhone: phone,
+        userEmail: email || null,
+        message: message,
+        metadata: company ? { company } : null
+      };
+      
+      const savedMessage = await activeStorage.saveChatMessage(contactData);
+      
+      // Log the contact activity
+      await activityLogger.logActivity(req, {
+        activityType: 'contact_form',
+        targetId: savedMessage.id,
+        targetType: 'form',
+        metadata: { name, phone, company: company || null }
+      });
+      
+      // Send Telegram notification to admin
+      const notificationText = `
+🔔 <b>Yangi kontakt so'rovi</b>
+
+👤 <b>Ism:</b> ${name}
+📞 <b>Telefon:</b> ${phone}
+${email ? `📧 <b>Email:</b> ${email}\n` : ''}${company ? `🏢 <b>Kompaniya:</b> ${company}\n` : ''}
+💬 <b>Xabar:</b> ${message}
+
+⏰ <b>Vaqt:</b> ${new Date().toLocaleString('uz-UZ')}
+      `;
+      
+      await sendTelegramNotification(notificationText);
+      
+      res.status(201).json({ 
+        message: "Contact form submitted successfully",
+        id: savedMessage.id 
+      });
+    } catch (error) {
+      console.error('Contact form error:', error);
+      res.status(500).json({ message: "Failed to submit contact form" });
+    }
+  });
+
   // Admin APIs - Protected with adminAuth middleware
   app.get("/api/admin/products", adminAuth, async (req, res) => {
     try {

@@ -23,9 +23,20 @@ export default function Contact() {
 
   const contactMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
-      // TODO: Implement contact form submission
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      return { success: true };
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-session-id': localStorage.getItem('cart-session-id') || 'anonymous'
+        },
+        body: JSON.stringify(data)
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to submit contact form');
+      }
+      
+      return response.json();
     },
     onSuccess: () => {
       toast({

@@ -24,6 +24,7 @@ export const translations = {
     // Categories
     mainCategories: "Asosiy Kategoriyalar",
     categoriesDescription: "Bizning keng mahsulot turkumlarimizdan o'zingizga kerakli mahsulotlarni toping",
+    viewMore: "Ko'rish →",
     
     // Products
     featuredProducts: "Mashhur Mahsulotlar",
@@ -105,8 +106,9 @@ export const translations = {
     support: "Поддержка",
     
     // Categories
-    mainCategories: "Основные категории",
+    mainCategories: "Основные категории", 
     categoriesDescription: "Найдите нужные товары из нашего широкого ассортимента",
+    viewMore: "Смотреть →",
     
     // Products
     featuredProducts: "Популярные товары",

@@ -194,10 +194,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4" data-testid="text-categories-title">
-              Asosiy kategoriyalar
+              {t('mainCategories')}
             </h2>
             <p className="text-xl text-white max-w-2xl mx-auto" data-testid="text-categories-description">
-              Bizning eng mashhur mahsulot toifalarimiz bilan tanishing
+              {language === 'uz' ? 'Bizning eng mashhur mahsulot toifalarimiz bilan tanishing' : 'Знакомьтесь с нашими самыми популярными категориями товаров'}
             </p>
           </div>
 
@@ -233,7 +233,7 @@ export default function Home() {
                       </h3>
                       <div className="-mx-3 -mb-3 p-2 bg-gradient-to-r from-blue-500 to-red-500">
                         <span className="inline-flex items-center text-white font-medium text-[10px]">
-                          Ko'rish →
+                          {t('viewMore')}
                         </span>
                       </div>
                     </div>
@@ -246,7 +246,7 @@ export default function Home() {
           <div className="text-center mt-12">
             <Link href="/categories">
               <button className="bg-gradient-to-r from-blue-600 to-red-500 text-white px-8 py-3 rounded-2xl font-semibold hover:from-red-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105">
-                Barcha kategoriyalarni ko'rish
+                {language === 'uz' ? 'Barcha kategoriyalarni ko\'rish' : 'Посмотреть все категории'}
               </button>
             </Link>
           </div>

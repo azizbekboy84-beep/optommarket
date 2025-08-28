@@ -44,7 +44,7 @@ const checkoutSchema = z.object({
 type CheckoutFormData = z.infer<typeof checkoutSchema>;
 
 export default function CheckoutPage() {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const { cartItems, totalAmount, clearCart } = useCart();
   const { toast } = useToast();
   const [, setLocation] = useLocation();

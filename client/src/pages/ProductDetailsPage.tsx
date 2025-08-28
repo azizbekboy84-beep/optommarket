@@ -200,7 +200,7 @@ export default function ProductDetailsPage() {
   const statusLabels = {
     inStock: language === 'uz' ? 'Sotuvda bor' : 'В продаже',
     lowStock: language === 'uz' ? 'Kam qoldi' : 'Мало осталось', 
-    outOfStock: language === 'uz' ? 'Sotuvda bor' : 'В продаже'
+    outOfStock: language === 'uz' ? 'Tugadi' : 'Закончилось'
   };
 
   const statusColors = {

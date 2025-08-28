@@ -32,7 +32,7 @@ export const translations = {
     addToCart: "Savatga qo'shish",
     inStock: "Sotuvda bor",
     lowStock: "Kam qoldi", 
-    outOfStock: "Sotuvda bor",
+    outOfStock: "Tugadi",
     piece: "dona",
     
     // Why Choose Us
@@ -115,7 +115,7 @@ export const translations = {
     addToCart: "В корзину",
     inStock: "В продаже",
     lowStock: "Заканчивается",
-    outOfStock: "В продаже",
+    outOfStock: "Закончилось",
     piece: "шт",
     
     // Why Choose Us

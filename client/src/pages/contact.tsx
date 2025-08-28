@@ -161,7 +161,7 @@ export default function Contact() {
 
                 <Button 
                   type="submit" 
-                  className="w-full bg-primary hover:bg-blue-700"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-600 dark:hover:bg-blue-700"
                   disabled={contactMutation.isPending}
                   data-testid="button-submit"
                 >
@@ -227,9 +227,9 @@ export default function Contact() {
                   Katta hajmdagi buyurtmalar va maxsus narxlar uchun bizning wholesale bo'limi bilan bog'laning.
                 </p>
                 <div className="space-y-2">
-                  <p className="text-sm"><strong>Telegram:</strong> @optombazar_wholesale</p>
+                  <p className="text-sm"><strong>Telegram:</strong> <a href="https://t.me/Akramjon1984" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">@Akramjon1984</a></p>
                   <p className="text-sm"><strong>WhatsApp:</strong> +998996448444</p>
-                  <p className="text-sm"><strong>Minimal buyurtma:</strong> 100,000 so'm</p>
+                  <p className="text-sm"><strong>Minimal buyurtma:</strong> 500,000 so'm</p>
                 </div>
               </CardContent>
             </Card>

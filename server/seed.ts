@@ -145,6 +145,7 @@ export const realProducts = [
     images: ["https://optombazar.uz/image/cache/catalog/products/2023/10/26/photo_2023-10-26_16-08-31-500x500.jpg"],
     stockQuantity: 500,
     minQuantity: 100,
+    wholesaleMinQuantity: 500,
     unit: "dona",
     specifications: {
       "O'lchami": "40x50 sm",
@@ -169,6 +170,7 @@ export const realProducts = [
     images: ["https://optombazar.uz/image/cache/catalog/products/2023/11/01/photo_2023-11-01_12-25-10-500x500.jpg"],
     stockQuantity: 50,
     minQuantity: 1,
+    wholesaleMinQuantity: 10,
     unit: "rulon",
     specifications: {
       "Uzunligi": "300 m",
@@ -193,6 +195,7 @@ export const realProducts = [
     images: ["https://optombazar.uz/image/cache/catalog/products/2024/02/10/photo_2024-02-10_13-09-51-500x500.jpg"],
     stockQuantity: 120,
     minQuantity: 1,
+    wholesaleMinQuantity: 5,
     unit: "dona",
     specifications: {
       "Og'irligi": "1.5 kg",
@@ -215,6 +218,7 @@ export const realProducts = [
     images: ["https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=500"],
     stockQuantity: 1000,
     minQuantity: 50,
+    wholesaleMinQuantity: 200,
     unit: "paket",
     specifications: {
       "Hajmi": "200ml",
@@ -238,6 +242,7 @@ export const realProducts = [
     images: ["https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=500"],
     stockQuantity: 500,
     minQuantity: 25,
+    wholesaleMinQuantity: 100,
     unit: "paket",
     specifications: {
       "Diametri": "23 sm",

@@ -37,6 +37,7 @@ export const products = pgTable("products", {
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
   wholesalePrice: decimal("wholesale_price", { precision: 10, scale: 2 }).notNull(),
   minQuantity: integer("min_quantity").default(1),
+  wholesaleMinQuantity: integer("wholesale_min_quantity").default(1),
   stockQuantity: integer("stock_quantity").default(0),
   unit: text("unit").notNull(), // kg, piece, box, etc.
   specifications: json("specifications").$type<Record<string, string>>(),

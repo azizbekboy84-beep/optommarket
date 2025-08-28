@@ -27,6 +27,7 @@ interface ProductFormData {
   price: string;
   wholesalePrice: string;
   minQuantity: number;
+  wholesaleMinQuantity: number;
   stockQuantity: number;
   unit: string;
   specifications: string;
@@ -49,6 +50,7 @@ const defaultFormData: ProductFormData = {
   price: '0',
   wholesalePrice: '0',
   minQuantity: 1,
+  wholesaleMinQuantity: 1,
   stockQuantity: 0,
   unit: 'dona',
   specifications: '{}',
@@ -203,6 +205,7 @@ export default function AdminProductsPage() {
       price: product.price,
       wholesalePrice: product.wholesalePrice,
       minQuantity: product.minQuantity || 1,
+      wholesaleMinQuantity: (product as any).wholesaleMinQuantity || 1,
       stockQuantity: product.stockQuantity || 0,
       unit: product.unit,
       specifications: JSON.stringify((product as any).specifications || {}),
@@ -341,9 +344,9 @@ export default function AdminProductsPage() {
                         />
                       </div>
                     </div>
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="minQuantity" className="text-foreground">Min miqdor</Label>
+                        <Label htmlFor="minQuantity" className="text-foreground">Min miqdor (chakana)</Label>
                         <Input
                           id="minQuantity"
                           type="number"
@@ -352,6 +355,18 @@ export default function AdminProductsPage() {
                           className="bg-background text-foreground"
                         />
                       </div>
+                      <div>
+                        <Label htmlFor="wholesaleMinQuantity" className="text-foreground">Min miqdor (optom)</Label>
+                        <Input
+                          id="wholesaleMinQuantity"
+                          type="number"
+                          value={formData.wholesaleMinQuantity}
+                          onChange={(e) => setFormData({ ...formData, wholesaleMinQuantity: parseInt(e.target.value) || 1 })}
+                          className="bg-background text-foreground"
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="stockQuantity" className="text-foreground">Sklad miqdori</Label>
                         <Input

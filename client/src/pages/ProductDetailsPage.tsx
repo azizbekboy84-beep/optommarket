@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'wouter';
 import { useProductBySlug } from '@/hooks/useProductBySlug';
 import { useRelatedProducts } from '@/hooks/useRelatedProducts';
@@ -30,6 +30,7 @@ export default function ProductDetailsPage() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [showVideoModal, setShowVideoModal] = useState(false);
 
+
   // YouTube video handling functions
   const getYouTubeId = (url: string) => {
     if (!url) return null;
@@ -42,6 +43,13 @@ export default function ProductDetailsPage() {
   };
 
   const { data: product, isLoading, error } = useProductBySlug(slug || '');
+  
+  // Mahsulot ma'lumotlari kelganidan keyin miqdorni yangilash
+  useEffect(() => {
+    if (product) {
+      setQuantity(product.minQuantity || 1);
+    }
+  }, [product]);
   
   // Get related products
   const { data: relatedProducts = [], isLoading: relatedLoading } = useRelatedProducts(product?.id || '');
@@ -205,22 +213,32 @@ export default function ProductDetailsPage() {
   const currentImage = images[selectedImageIndex] || images[0] || '/placeholder-image.jpg';
 
   const handleQuantityChange = (newQuantity: number) => {
-    if (newQuantity >= 1 && newQuantity <= 999999) {
+    const minQty = product.minQuantity || 1;
+    if (newQuantity >= minQty && newQuantity <= 999999) {
       setQuantity(newQuantity);
     }
   };
 
   const handleQuantityDecrease = () => {
-    handleQuantityChange(quantity - 1);
+    const minQty = product.minQuantity || 1;
+    const step = minQty;
+    handleQuantityChange(quantity - step);
   };
 
   const handleQuantityIncrease = () => {
-    handleQuantityChange(quantity + 1);
+    const minQty = product.minQuantity || 1;
+    const step = minQty;
+    handleQuantityChange(quantity + step);
   };
 
   const handleQuantityInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value) || 1;
-    handleQuantityChange(value);
+    const value = parseInt(e.target.value);
+    const minQty = product.minQuantity || 1;
+    if (value && value >= minQty) {
+      handleQuantityChange(value);
+    } else if (value === 0 || isNaN(value)) {
+      setQuantity(minQty);
+    }
   };
 
   // Qaysi narxni ishlatish kerakligini aniqlash
@@ -432,8 +450,9 @@ export default function ProductDetailsPage() {
                       type="number"
                       value={quantity}
                       onChange={handleQuantityInputChange}
-                      min="1"
+                      min={product.minQuantity || 1}
                       max="999999"
+                      step={product.minQuantity || 1}
                       className="w-28 h-12 text-center border-0 bg-transparent text-lg font-semibold text-foreground"
                       data-testid="quantity-input"
                     />

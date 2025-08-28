@@ -489,7 +489,7 @@ export default function ProductDetailsPage() {
 
             {/* Description - Moved after Add to Cart button */}
             <div>
-              <h3 className="text-xl font-semibold text-foreground mb-3">Tavsif</h3>
+              <h3 className="text-xl font-semibold text-foreground mb-3">{t('description')}</h3>
               <p className="text-muted-foreground leading-relaxed" data-testid="product-description">
                 {description || 'Mahsulot tavsifi mavjud emas.'}
               </p>

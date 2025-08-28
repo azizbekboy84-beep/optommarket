@@ -24,7 +24,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { apiRequest } from '@/lib/queryClient';
 
-// Minimal zakaz miqdori (500,000 so'm)
+// Minimal zakaz miqdori (500,000 currency)
 const MINIMUM_ORDER_AMOUNT = 500000;
 
 const checkoutSchema = z.object({
@@ -150,8 +150,8 @@ export default function CheckoutPage() {
         toast({
           title: language === 'uz' ? "Minimal zakaz miqdori bajarilmadi" : "Минимальная сумма заказа не выполнена",
           description: language === 'uz' ? 
-            `Minimal zakaz miqdori 500,000 so'm. Yana ${remainingAmount.toLocaleString()} so'm mahsulot qo'shing.` :
-            `Минимальная сумма заказа 500,000 сум. Добавьте ещё товаров на ${remainingAmount.toLocaleString()} сум.`,
+            `Minimal zakaz miqdori 500,000 ${t('currency')}. Yana ${remainingAmount.toLocaleString()} ${t('currency')} mahsulot qo'shing.` :
+            `Минимальная сумма заказа 500,000 ${t('currency')}. Добавьте ещё товаров на ${remainingAmount.toLocaleString()} ${t('currency')}.`,
           variant: "destructive",
           duration: 5000,
         });
@@ -282,18 +282,18 @@ export default function CheckoutPage() {
             <AlertDescription className="text-red-700 dark:text-red-300">
               {language === 'uz' ? (
                 <>
-                  <strong>Diqqat!</strong> Minimal zakaz miqdori 500,000 so'm. 
-                  Sizning zakazingiz: <strong>{totalAmount.toLocaleString()} so'm</strong>. 
-                  Yana <strong>{remainingAmount.toLocaleString()} so'm</strong> mahsulot qo'shing yoki 
+                  <strong>Diqqat!</strong> Minimal zakaz miqdori 500,000 {t('currency')}. 
+                  Sizning zakazingiz: <strong>{totalAmount.toLocaleString()} {t('currency')}</strong>. 
+                  Yana <strong>{remainingAmount.toLocaleString()} {t('currency')}</strong> mahsulot qo'shing yoki 
                   <Link href="/cart" className="underline font-semibold ml-1">savatga qaytang</Link>.
                   <br />
                   <small className="text-xs">3 soniyadan keyin avtomatik savatga qaytarilasiz...</small>
                 </>
               ) : (
                 <>
-                  <strong>Внимание!</strong> Минимальная сумма заказа 500,000 сум. 
-                  Ваш заказ: <strong>{totalAmount.toLocaleString()} сум</strong>. 
-                  Добавьте ещё товаров на <strong>{remainingAmount.toLocaleString()} сум</strong> или 
+                  <strong>Внимание!</strong> Минимальная сумма заказа 500,000 {t('currency')}. 
+                  Ваш заказ: <strong>{totalAmount.toLocaleString()} {t('currency')}</strong>. 
+                  Добавьте ещё товаров на <strong>{remainingAmount.toLocaleString()} {t('currency')}</strong> или 
                   <Link href="/cart" className="underline font-semibold ml-1">вернитесь в корзину</Link>.
                   <br />
                   <small className="text-xs">Через 3 секунды вы автоматически вернётесь в корзину...</small>
@@ -590,8 +590,8 @@ export default function CheckoutPage() {
                               </li>
                               <li>
                                 {language === 'uz' 
-                                  ? `To'lov miqdorini tasdiqlang: ${finalAmount.toLocaleString()} so'm`
-                                  : `Подтвердите сумму платежа: ${finalAmount.toLocaleString()} сум`
+                                  ? `To'lov miqdorini tasdiqlang: ${finalAmount.toLocaleString()} ${t('currency')}`
+                                  : `Подтвердите сумму платежа: ${finalAmount.toLocaleString()} ${t('currency')}`
                                 }
                               </li>
                               <li>
@@ -641,7 +641,7 @@ export default function CheckoutPage() {
                     <Button 
                       type="submit" 
                       size="lg" 
-                      className="w-full"
+                      className="w-full bg-gradient-to-r from-blue-600 to-red-500 hover:from-blue-700 hover:to-red-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                       disabled={isSubmitting}
                       data-testid="button-place-order"
                     >
@@ -678,11 +678,11 @@ export default function CheckoutPage() {
                           {language === 'uz' ? item.product?.nameUz : item.product?.nameRu}
                         </p>
                         <p className="text-gray-500" data-testid={`text-item-details-${item.id}`}>
-                          {item.quantity} × {Number(item.product?.wholesalePrice || 0).toLocaleString()} {language === 'uz' ? 'so\'m' : 'сум'}
+                          {item.quantity} × {Number(item.product?.wholesalePrice || 0).toLocaleString()} {t('currency')}
                         </p>
                       </div>
                       <span className="font-medium" data-testid={`text-item-total-${item.id}`}>
-                        {(Number(item.product?.wholesalePrice || 0) * item.quantity).toLocaleString()} {language === 'uz' ? 'so\'m' : 'сум'}
+                        {(Number(item.product?.wholesalePrice || 0) * item.quantity).toLocaleString()} {t('currency')}
                       </span>
                     </div>
                   ))}
@@ -730,7 +730,7 @@ export default function CheckoutPage() {
                             </>
                           ) : (
                             <>
-                              {appliedDiscount.value.toLocaleString()} {language === 'uz' ? 'so\'m' : 'сум'}
+                              {appliedDiscount.value.toLocaleString()} {t('currency')}
                             </>
                           )}
                         </Badge>
@@ -758,7 +758,7 @@ export default function CheckoutPage() {
                       {language === 'uz' ? 'Mahsulotlar' : 'Товары'}
                     </span>
                     <span data-testid="text-subtotal-amount">
-                      {totalAmount.toLocaleString()} {language === 'uz' ? 'so\'m' : 'сум'}
+                      {totalAmount.toLocaleString()} {t('currency')}
                     </span>
                   </div>
                   
@@ -768,7 +768,7 @@ export default function CheckoutPage() {
                         {language === 'uz' ? 'Chegirma' : 'Скидка'} ({appliedDiscount.code})
                       </span>
                       <span>
-                        -{discountAmount.toLocaleString()} {language === 'uz' ? 'so\'m' : 'сум'}
+                        -{discountAmount.toLocaleString()} {t('currency')}
                       </span>
                     </div>
                   )}
@@ -790,15 +790,15 @@ export default function CheckoutPage() {
                     {language === 'uz' ? 'Jami' : 'Итого'}
                   </span>
                   <span data-testid="text-total-amount" className={appliedDiscount ? 'text-green-600' : ''}>
-                    {finalAmount.toLocaleString()} {language === 'uz' ? 'so\'m' : 'сум'}
+                    {finalAmount.toLocaleString()} {t('currency')}
                   </span>
                 </div>
                 
                 {appliedDiscount && (
                   <div className="text-xs text-gray-500 text-center">
                     {language === 'uz' ? 
-                      `${discountAmount.toLocaleString()} so'm chegirma qo'llandi` :
-                      `Применена скидка ${discountAmount.toLocaleString()} сум`
+                      `${discountAmount.toLocaleString()} ${t('currency')} chegirma qo'llandi` :
+                      `Применена скидка ${discountAmount.toLocaleString()} ${t('currency')}`
                     }
                   </div>
                 )}

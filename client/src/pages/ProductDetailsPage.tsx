@@ -223,6 +223,19 @@ export default function ProductDetailsPage() {
     handleQuantityChange(value);
   };
 
+  // Qaysi narxni ishlatish kerakligini aniqlash
+  const getEffectivePrice = () => {
+    const wholesaleMinQty = (product as any).wholesaleMinQuantity || product.minQuantity;
+    if (quantity >= wholesaleMinQty && product.wholesalePrice) {
+      return parseFloat(product.wholesalePrice);
+    }
+    return parseFloat(product.price);
+  };
+
+  const effectivePrice = getEffectivePrice();
+  const totalPrice = quantity * effectivePrice;
+  const isWholesalePrice = quantity >= ((product as any).wholesaleMinQuantity || product.minQuantity) && product.wholesalePrice;
+
   const handleAddToCart = async () => {
     if (!product) return;
     
@@ -392,7 +405,7 @@ export default function ProductDetailsPage() {
                       Optom narxi: {parseFloat(product.wholesalePrice).toLocaleString()} so'm
                     </span>
                     <span className="text-sm text-muted-foreground ml-2">
-                      (min: {product.minQuantity} {product.unit})
+                      (min: {(product as any).wholesaleMinQuantity || product.minQuantity} {product.unit})
                     </span>
                   </div>
                 )}
@@ -450,7 +463,7 @@ export default function ProductDetailsPage() {
                 <ShoppingCart className="w-6 h-6 mr-3 text-white" />
                 <span className="text-white">Savatga qo'shish</span>
                 <span className="ml-2 text-white">
-                  ({(quantity * parseFloat(product.price)).toLocaleString()} so'm)
+                  ({totalPrice.toLocaleString()} so'm)
                 </span>
               </Button>
             </div>

@@ -143,9 +143,9 @@ export const realProducts = [
     categoryId: "kesilgan-tutqichli-paketlar",
     sellerId: "admin-user-1",
     images: ["https://optombazar.uz/image/cache/catalog/products/2023/10/26/photo_2023-10-26_16-08-31-500x500.jpg"],
-    stockQuantity: 500,
+    stockQuantity: 14000,
     minQuantity: 100,
-    wholesaleMinQuantity: 500,
+    wholesaleMinQuantity: 1400,
     unit: "dona",
     specifications: {
       "O'lchami": "40x50 sm",

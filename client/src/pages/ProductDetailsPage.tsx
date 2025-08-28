@@ -198,9 +198,9 @@ export default function ProductDetailsPage() {
                      (product.stockQuantity || 0) > 0 ? 'lowStock' : 'outOfStock';
   
   const statusLabels = {
-    inStock: language === 'uz' ? 'Omborda bor' : 'В наличии',
+    inStock: language === 'uz' ? 'Sotuvda bor' : 'В продаже',
     lowStock: language === 'uz' ? 'Kam qoldi' : 'Мало осталось', 
-    outOfStock: language === 'uz' ? 'Tugadi' : 'Закончилось'
+    outOfStock: language === 'uz' ? 'Sotuvda bor' : 'В продаже'
   };
 
   const statusColors = {

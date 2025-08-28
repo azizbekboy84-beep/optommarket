@@ -30,9 +30,9 @@ export const translations = {
     featuredDescription: "Eng ko'p sotilayotgan optom mahsulotlar",
     viewAll: "Barchasini ko'rish",
     addToCart: "Savatga qo'shish",
-    inStock: "Stokda",
-    lowStock: "Kam qoldi",
-    outOfStock: "Tugagan",
+    inStock: "Sotuvda bor",
+    lowStock: "Kam qoldi", 
+    outOfStock: "Sotuvda bor",
     piece: "dona",
     
     // Why Choose Us
@@ -113,9 +113,9 @@ export const translations = {
     featuredDescription: "Самые продаваемые оптовые товары",
     viewAll: "Посмотреть все",
     addToCart: "В корзину",
-    inStock: "В наличии",
+    inStock: "В продаже",
     lowStock: "Заканчивается",
-    outOfStock: "Нет в наличии",
+    outOfStock: "В продаже",
     piece: "шт",
     
     // Why Choose Us

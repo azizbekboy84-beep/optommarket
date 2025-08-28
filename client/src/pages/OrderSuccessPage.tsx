@@ -79,7 +79,11 @@ export default function OrderSuccessPage() {
             <div className="bg-blue-50 p-4 rounded-lg mt-6">
               <p className="text-blue-800 text-sm">
                 <strong>Eslatma:</strong> Agar 30 daqiqa ichida aloqa bo'lmasa, 
-                iltimos +998 XX XXX XX XX raqamiga qo'ng'iroq qiling.
+                iltimos +998 99 644 84 44 raqamiga qo'ng'iroq qiling, yoki{' '}
+                <a href="https://t.me/akramjon0011" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                  https://t.me/akramjon0011
+                </a>{' '}
+                telegram orqali yozing.
               </p>
             </div>
           </CardContent>

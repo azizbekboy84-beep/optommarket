@@ -62,7 +62,7 @@ async function sendTelegramNotification(message: string): Promise<void> {
 }
 
 // Helper function to build context for intelligent responses
-async function buildChatContext(userMessage: string, storage: IStorage): Promise<string> {
+async function buildChatContext(userMessage: string, storage: any): Promise<string> {
   try {
     // Get categories and products for context
     const categories = await storage.getCategories();
@@ -77,7 +77,7 @@ async function buildChatContext(userMessage: string, storage: IStorage): Promise
     // Add product information if user asks about specific products
     const lowerMessage = userMessage.toLowerCase();
     if (lowerMessage.includes('paket') || lowerMessage.includes('пакет')) {
-      const packageProducts = products.filter((product: any) => 
+      const packageProducts = products.filter((product) => 
         product.categoryId === 'polietilen-paketlar'
       ).slice(0, 5);
       
@@ -99,9 +99,9 @@ async function buildChatContext(userMessage: string, storage: IStorage): Promise
 // Helper function to generate intelligent AI response
 async function generateIntelligentResponse(userMessage: string, context: string): Promise<string> {
   try {
-    const apiKey = process.env.GOOGLE_API_KEY;
+    const apiKey = process.env.GOOGLE_AI_API_KEY;
     if (!apiKey) {
-      throw new Error('GOOGLE_API_KEY environment variable is not set');
+      throw new Error('GOOGLE_AI_API_KEY environment variable is not set');
     }
 
     const prompt = `Sen Optombazar.uz yordamchisisan. Javoblaringni qisqa va 2-3 gapdan oshirma. 
@@ -144,9 +144,9 @@ Javobingiz o'zbek tilida bo'lsin va qisqa, aniq bo'lsin.`;
 // Helper function to generate AI response using Google Gemini
 async function generateAIResponse(userMessage: string): Promise<string> {
   try {
-    const apiKey = process.env.GOOGLE_API_KEY;
+    const apiKey = process.env.GOOGLE_AI_API_KEY;
     if (!apiKey) {
-      throw new Error('GOOGLE_API_KEY environment variable is not set');
+      throw new Error('GOOGLE_AI_API_KEY environment variable is not set');
     }
 
     const prompt = `Siz Optombazar.uz ulgurji savdo platformasining yordamchisisiz. Ushbu platforma Oʻzbekistonda ulgurji mahsulotlar bilan savdo qiladi.
@@ -476,7 +476,7 @@ export async function registerRoutes(app: Express, customStorage?: any): Promise
       
       // Populate with product details
       const cartWithProducts = await Promise.all(
-        cartItems.map(async (item) => {
+        cartItems.map(async (item: any) => {
           const product = await activeStorage.getProduct(item.productId);
           return {
             ...item,
@@ -583,12 +583,12 @@ export async function registerRoutes(app: Express, customStorage?: any): Promise
       
       // Populate each order with its items
       const ordersWithItems = await Promise.all(
-        orders.map(async (order) => {
+        orders.map(async (order: any) => {
           const items = await activeStorage.getOrderItems(order.id);
           
           // Populate items with product details
           const itemsWithProducts = await Promise.all(
-            items.map(async (item) => {
+            items.map(async (item: any) => {
               const product = await activeStorage.getProduct(item.productId);
               return {
                 ...item,
@@ -689,12 +689,12 @@ export async function registerRoutes(app: Express, customStorage?: any): Promise
       
       // Populate each order with its items and customer info
       const ordersWithDetails = await Promise.all(
-        orders.map(async (order) => {
+        orders.map(async (order: any) => {
           const items = await activeStorage.getOrderItems(order.id);
           
           // Populate items with product details
           const itemsWithProducts = await Promise.all(
-            items.map(async (item) => {
+            items.map(async (item: any) => {
               const product = await activeStorage.getProduct(item.productId);
               return {
                 ...item,

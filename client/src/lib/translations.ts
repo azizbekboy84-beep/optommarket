@@ -84,6 +84,10 @@ export const translations = {
     shippingAddress: "Yetkazib berish manzili",
     notes: "Qo'shimcha ma'lumot",
     submitOrder: "Buyurtma berish",
+    
+    // Currency
+    currency: "so'm",
+    
   },
   ru: {
     // Header
@@ -168,6 +172,10 @@ export const translations = {
     shippingAddress: "Адрес доставки",
     notes: "Дополнительная информация",
     submitOrder: "Оформить заказ",
+    
+    // Currency
+    currency: "сум",
+    
   }
 };
 

@@ -229,7 +229,7 @@ export default function Contact() {
                 <div className="space-y-2">
                   <p className="text-sm"><strong>Telegram:</strong> <a href="https://t.me/Akramjon1984" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">@Akramjon1984</a></p>
                   <p className="text-sm"><strong>WhatsApp:</strong> +998996448444</p>
-                  <p className="text-sm"><strong>Minimal buyurtma:</strong> 500,000 so'm</p>
+                  <p className="text-sm"><strong>{language === 'uz' ? 'Minimal buyurtma' : 'Минимальный заказ'}:</strong> 500,000 {t('currency')}</p>
                 </div>
               </CardContent>
             </Card>

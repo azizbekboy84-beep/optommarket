@@ -84,20 +84,20 @@ export default function Home() {
                 Optombazar.uz
               </h1>
               <p className="text-2xl lg:text-3xl font-light mb-4 text-blue-100">
-                O'zbekistondagi eng yirik optom savdo platformasi
+                {t('heroTitle')}
               </p>
               <p className="text-xl text-gray-200 mb-8 leading-relaxed" data-testid="text-hero-description">
-                Polietilen paketlar, bir martalik idish-tovoq, elektronika va kiyim-kechak kabi mahsulotlarni optom narxlarda xarid qiling
+                {t('heroDescription')}
               </p>
               <div className="flex flex-col sm:flex-row gap-6">
                 <Link href="/catalog">
                   <button className="bg-gradient-to-r from-blue-600 to-red-500 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:from-blue-700 hover:to-red-600 transition-all duration-300 transform hover:scale-105 shadow-2xl" data-testid="button-view-catalog">
-                    Katalogni ko'rish
+                    {t('viewProducts')}
                   </button>
                 </Link>
                 <Link href="/contact">
                   <button className="border-2 border-white/60 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-red-500 hover:text-white hover:border-red-500 transition-all duration-300 backdrop-blur-sm" data-testid="button-become-seller">
-                    Sotuvchi bo'lish
+                    {t('becomeSeller')}
                   </button>
                 </Link>
               </div>
@@ -107,19 +107,19 @@ export default function Home() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-gradient-to-br from-blue-500/30 to-blue-600/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
                     <div className="text-3xl font-bold mb-2">1K+</div>
-                    <div className="text-sm opacity-80">Mahsulotlar</div>
+                    <div className="text-sm opacity-80">{t('productsCount')}</div>
                   </div>
                   <div className="bg-gradient-to-br from-red-500/30 to-red-600/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
                     <div className="text-3xl font-bold mb-2">30+</div>
-                    <div className="text-sm opacity-80">Sotuvchilar</div>
+                    <div className="text-sm opacity-80">{t('sellers')}</div>
                   </div>
                   <div className="bg-gradient-to-br from-blue-600/30 to-red-500/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
                     <div className="text-3xl font-bold mb-2">100+</div>
-                    <div className="text-sm opacity-80">Mijozlar</div>
+                    <div className="text-sm opacity-80">{t('customers')}</div>
                   </div>
                   <div className="bg-gradient-to-br from-red-600/30 to-blue-500/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
                     <div className="text-3xl font-bold mb-2">24/7</div>
-                    <div className="text-sm opacity-80">Qo'llab-quvvatlash</div>
+                    <div className="text-sm opacity-80">{t('support')}</div>
                   </div>
                 </div>
               </div>
@@ -337,20 +337,20 @@ export default function Home() {
       <section className="bg-gradient-to-br from-blue-900 via-blue-800 to-red-800 dark:from-blue-800 dark:via-blue-700 dark:to-red-700 py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6" data-testid="text-cta-title">
-            Biznes Hamkorimgiz Bo'lishga Tayormisiz?
+            {t('businessPartner')}
           </h2>
           <p className="text-xl text-white mb-10 max-w-3xl mx-auto leading-relaxed" data-testid="text-cta-description">
-            Optombazar.uz platformasiga qo'shiling va o'z biznesingizni yangi bosqichga olib chiqing. Minglab mijozlarga yetib boring!
+            {t('ctaDescription')}
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link href="/register">
               <Button size="lg" className="bg-white text-blue-900 hover:bg-gray-50 px-8 py-4 text-lg font-bold rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl" data-testid="button-register-now">
-                Hoziroq Ro'yxatdan O'tish
+                {t('registerNow')}
               </Button>
             </Link>
             <Link href="/contact">
               <Button variant="outline" size="lg" className="border-2 border-white text-white hover:bg-white hover:text-blue-900 px-8 py-4 text-lg font-bold rounded-2xl transition-all duration-300 transform hover:scale-105" data-testid="button-contact-us">
-                Bog'lanish
+                {t('contactUs')}
               </Button>
             </Link>
           </div>

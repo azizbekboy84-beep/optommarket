@@ -274,7 +274,7 @@ export default function ProductDetailsPage() {
         <nav className="flex items-center space-x-2 mb-8" data-testid="breadcrumb-nav">
           <Link href="/catalog" className="flex items-center text-primary hover:text-primary/80 font-medium transition-colors">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            <span className="text-foreground">← Katalogga qaytish</span>
+            <span className="text-foreground">← {language === 'uz' ? 'Katalogga qaytish' : 'Вернуться в каталог'}</span>
           </Link>
         </nav>
 
@@ -292,7 +292,7 @@ export default function ProductDetailsPage() {
               {product.isFeatured && (
                 <Badge className="absolute top-4 left-4 bg-yellow-500 text-white">
                   <Star className="w-3 h-3 mr-1" />
-                  Tavsiya etiladi
+                  {language === 'uz' ? 'Tavsiya etiladi' : 'Рекомендуется'}
                 </Badge>
               )}
             </div>
@@ -343,7 +343,7 @@ export default function ProductDetailsPage() {
                     </button>
                   </DialogTrigger>
                   <DialogContent className="max-w-4xl w-full">
-                    <DialogTitle className="text-foreground">Mahsulot videosi</DialogTitle>
+                    <DialogTitle className="text-foreground">{language === 'uz' ? 'Mahsulot videosi' : 'Видео товара'}</DialogTitle>
                     <div className="aspect-video">
                       {isYouTubeVideo((product as any).videoUrl) ? (
                         <iframe
@@ -362,7 +362,7 @@ export default function ProductDetailsPage() {
                           className="w-full h-full rounded-lg"
                           data-testid="product-video"
                         >
-                          Brauzeringiz video formatini qo'llab-quvvatlamaydi.
+                          {language === 'uz' ? 'Brauzeringiz video formatini qo\'llab-quvvatlamaydi.' : 'Ваш браузер не поддерживает видеоформат.'}
                         </video>
                       )}
                     </div>
@@ -413,14 +413,14 @@ export default function ProductDetailsPage() {
               <div className="bg-card rounded-2xl p-6 border border-border">
                 <div className="flex items-baseline space-x-4">
                   <span className="text-3xl font-bold text-foreground">
-                    {parseFloat(product.price).toLocaleString()} so'm
+                    {parseFloat(product.price).toLocaleString()} {t('currency')}
                   </span>
                   <span className="text-lg text-muted-foreground">/ {product.unit}</span>
                 </div>
                 {product.wholesalePrice && parseFloat(product.wholesalePrice) !== parseFloat(product.price) && (
                   <div className="mt-2">
                     <span className="text-lg text-green-600 dark:text-green-400">
-                      Optom narxi: {parseFloat(product.wholesalePrice).toLocaleString()} so'm
+                      {language === 'uz' ? 'Optom narxi' : 'Оптовая цена'}: {parseFloat(product.wholesalePrice).toLocaleString()} {t('currency')}
                     </span>
                     <span className="text-sm text-muted-foreground ml-2">
                       (min: {(product as any).wholesaleMinQuantity || product.minQuantity} {product.unit})
@@ -433,7 +433,7 @@ export default function ProductDetailsPage() {
             {/* Quantity and Add to Cart */}
             <div className="space-y-4">
               <div>
-                <h3 className="text-xl font-semibold text-foreground mb-3">Miqdor</h3>
+                <h3 className="text-xl font-semibold text-foreground mb-3">{t('quantity')}</h3>
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center bg-card rounded-lg border border-border">
                     <Button
@@ -480,9 +480,9 @@ export default function ProductDetailsPage() {
                 data-testid="add-to-cart-button"
               >
                 <ShoppingCart className="w-6 h-6 mr-3 text-white" />
-                <span className="text-white">Savatga qo'shish</span>
+                <span className="text-white">{t('addToCart')}</span>
                 <span className="ml-2 text-white">
-                  ({totalPrice.toLocaleString()} so'm)
+                  ({totalPrice.toLocaleString()} {t('currency')})
                 </span>
               </Button>
             </div>
@@ -498,7 +498,7 @@ export default function ProductDetailsPage() {
             {/* Specifications - Moved after Add to Cart button */}
             {(product as any).specifications && Object.keys((product as any).specifications).length > 0 && (
               <div>
-                <h3 className="text-xl font-semibold text-foreground mb-3">Xususiyatlari</h3>
+                <h3 className="text-xl font-semibold text-foreground mb-3">{t('specifications')}</h3>
                 <div className="bg-card rounded-2xl p-6 border border-border">
                   <div className="grid grid-cols-1 gap-3">
                     {Object.entries((product as any).specifications).map(([key, value]) => (

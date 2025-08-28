@@ -159,7 +159,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         <div className="flex items-center justify-between mb-4">
           <div>
             <span className="text-lg font-bold text-primary" data-testid={`text-product-price-${product.id}`}>
-              {Number(product.wholesalePrice).toLocaleString()} so'm
+              {Number(product.price).toLocaleString()} so'm
             </span>
             <span className="text-sm text-muted-foreground ml-1">
               / {product.minQuantity} {product.unit}

@@ -3,7 +3,15 @@ import { drizzle } from 'drizzle-orm/neon-serverless';
 import ws from "ws";
 import * as schema from "@shared/schema";
 
-neonConfig.webSocketConstructor = ws;
+// WebSocket konfiguratsiyasi sertifikat xatolarini hal qilish uchun
+neonConfig.webSocketConstructor = class extends ws {
+  constructor(url: string, protocols?: string | string[], options?: ws.ClientOptions) {
+    super(url, protocols, {
+      ...options,
+      rejectUnauthorized: false
+    });
+  }
+};
 
 // For development in Replit, provide fallback when DATABASE_URL is not accessible
 const databaseUrl = process.env.DATABASE_URL;

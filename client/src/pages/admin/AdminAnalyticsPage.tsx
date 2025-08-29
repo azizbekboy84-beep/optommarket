@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/components/language-provider';
-import { Header } from '@/components/header';
+
 import { Footer } from '@/components/footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -52,7 +52,7 @@ export default function AdminAnalyticsPage() {
           }
         </title>
       </Helmet>
-      <Header />
+      
       <div className="container mx-auto p-6 space-y-6">
         <div className="flex items-center gap-3">
           <BarChart3 className="h-8 w-8 text-blue-600" />

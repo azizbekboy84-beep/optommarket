@@ -8,7 +8,6 @@ import { useAuth } from '@/context/AuthContext';
 import { SEOHead } from '@/components/SEOHead';
 import { generateProductMetaTags } from '@shared/seo';
 import { Footer } from '@/components/footer';
-import { Header } from '@/components/header';
 import { ProductCard } from '@/components/product-card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -267,7 +266,7 @@ export default function ProductDetailsPage() {
   return (
     <div className="min-h-screen bg-background dark:bg-black">
       <SEOHead seo={seoMetaTags} />
-      <Header />
+      
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Navigation */}

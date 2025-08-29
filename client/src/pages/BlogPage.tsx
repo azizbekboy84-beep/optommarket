@@ -28,7 +28,7 @@ export default function BlogPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
       <SEOHead seo={blogSEO} />
-      <Header />
+      
       <div className="py-12">
         <div className="max-w-7xl mx-auto px-4">
           {/* Hero Section */}

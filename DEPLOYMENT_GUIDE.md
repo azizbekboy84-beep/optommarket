@@ -52,7 +52,7 @@ Quyidagi environment variable larni tayyorlab qo'ying:
 - **Region**: Frankfurt
 - **Branch**: `main`
 - **Runtime**: `Node`
-- **Build Command**: `npm ci && npm run build`
+- **Build Command**: `npm install && npx vite build && npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist`
 - **Start Command**: `npm start`
 
 ### Environment Variables:
@@ -60,8 +60,12 @@ Quyidagi environment variable larni tayyorlab qo'ying:
 NODE_ENV=production
 PORT=10000
 DATABASE_URL=[yuqorida yaratgan PostgreSQL CONNECTION STRING]
+SESSION_SECRET=[kuchli parol yaratina yoki Render avtomatik yaratsin]
 GOOGLE_AI_API_KEY=[Google AI Console dan olingan API key - ixtiyoriy]
-TELEGRAM_BOT_TOKEN=[Telegram BotFather dan olingan token - ixtiyoriy]
+TELEGRAM_BOT_TOKEN=[Telegram BotFather dan olingan token - ixtiyoriy] 
+TELEGRAM_CHAT_ID=[Telegram chat ID - ixtiyoriy]
+VAPID_PUBLIC_KEY=[Push notification uchun - ixtiyoriy]
+VAPID_PRIVATE_KEY=[Push notification uchun - ixtiyoriy]
 ```
 
 ### Plan:

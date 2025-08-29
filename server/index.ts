@@ -85,12 +85,14 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || '5000', 10);
+  const host = process.env.NODE_ENV === 'development' ? 'localhost' : '0.0.0.0';
+  
   server.listen({
     port,
-    host: "0.0.0.0",
+    host,
     reusePort: true,
   }, async () => {
-    console.log(`serving on port ${port}`);
+    console.log(`serving on ${host}:${port}`);
     
     // AI va Telegram servislarini ishga tushirish
     if (process.env.GOOGLE_AI_API_KEY && process.env.TELEGRAM_BOT_TOKEN) {

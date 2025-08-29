@@ -8,6 +8,7 @@ import { useLanguage } from './language-provider';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { ThemeToggle } from './theme-toggle';
+import { AppInstallButton } from './AppInstallPrompt';
 import { Link, useLocation } from 'wouter';
 import { ChevronDown, ShoppingCart, User, Settings, Search, Phone, Facebook, Instagram, Mail, Folder, Package, Shirt, Utensils, Smartphone, Box, BookOpen, MessageCircle } from 'lucide-react';
 import { UzbekistanFlag, RussiaFlag } from '@/components/ui/flag-icons';
@@ -201,6 +202,9 @@ export function Header() {
                 </Button>
               </form>
             </div>
+
+            {/* App Install Button */}
+            <AppInstallButton variant="ghost" />
 
             {/* Theme Toggle */}
             <ThemeToggle />

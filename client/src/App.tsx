@@ -43,6 +43,7 @@ import { AIChatWidget } from "@/components/AIChatWidget";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { Header } from "@/components/header";
 import { AppDownloadPrompt } from "@/components/AppDownloadPrompt";
+import { AppInstallPrompt } from "@/components/AppInstallPrompt";
 import { PushNotificationSetup } from "@/components/PushNotificationSetup";
 import { HelmetProvider } from 'react-helmet-async';
 
@@ -175,12 +176,14 @@ function App() {
               <CartProvider>
                 <TooltipProvider>
                   <Toaster />
+                  <Header />
                   <main className="pb-20 md:pb-0">
                     <Router />
                   </main>
                   <MobileBottomNav />
                   <AIChatWidget />
                   <AppDownloadPrompt />
+                  <AppInstallPrompt />
                 </TooltipProvider>
               </CartProvider>
             </AuthProvider>

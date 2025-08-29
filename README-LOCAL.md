@@ -90,4 +90,4 @@ npm start
 ## Qo'shimcha ma'lumot
 - Development rejimi: Hot reload bilan ishlaydi
 - Production rejimi: Static fayllar bilan ishlaydi
-- PWA: Brauzerda "Ilovani o'rnatish" taklifi chiqadi
+- PWA: Brauzerda "Ilovani o'rnatish" taklifi chiqadi . 

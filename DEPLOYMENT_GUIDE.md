@@ -52,7 +52,7 @@ Quyidagi environment variable larni tayyorlab qo'ying:
 - **Region**: Frankfurt
 - **Branch**: `main`
 - **Runtime**: `Node`
-- **Build Command**: `npm ci && npm run build`
+- **Build Command**: `npm install && npx vite build && npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist`
 - **Start Command**: `npm start`
 
 ### Environment Variables:

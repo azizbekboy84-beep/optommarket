@@ -8,7 +8,7 @@ npm ci
 npm run db:push
 
 # Build the application
-npm run build
+npx vite build && npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
 
 # Make sure build directory exists
 mkdir -p dist

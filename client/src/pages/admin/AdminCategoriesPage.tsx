@@ -75,8 +75,13 @@ export default function AdminCategoriesPage() {
       return response.json();
     },
     onSuccess: () => {
+      // Admin paneldagi cache'ni yangilash
       queryClient.invalidateQueries({ queryKey: ['admin-categories'] });
-      toast({ title: 'Muvaffaqiyat', description: 'Kategoriya yaratildi' });
+      // Asosiy saytdagi cache'ni ham yangilash
+      queryClient.invalidateQueries({ queryKey: ['/api/categories'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      
+      toast({ title: 'Muvaffaqiyat', description: 'Kategoriya yaratildi va saytda ko\'rsatildi' });
       handleCloseDialog();
     },
     onError: () => {
@@ -167,6 +172,29 @@ export default function AdminCategoriesPage() {
     setFormData(defaultFormData);
   };
 
+  // Slug yaratish funksiyasi
+  const generateSlug = (text: string) => {
+    return text
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '') // Faqat harflar, raqamlar, bo'sh joy va tire
+      .replace(/\s+/g, '-') // Bo'sh joylarni tire bilan almashtirish
+      .replace(/-+/g, '-') // Bir nechta tireni bitta tire bilan almashtirish
+      .trim()
+      .replace(/^-|-$/g, ''); // Boshi va oxiridagi tireni olib tashlash
+  };
+
+  // Nom o'zgarganda slug'ni avtomatik yangilash
+  const handleNameChange = (field: 'nameUz' | 'nameRu', value: string) => {
+    const newFormData = { ...formData, [field]: value };
+    
+    // Agar slug bo'sh bo'lsa yoki avvalgi nomdan yaratilgan bo'lsa, yangi slug yaratish
+    if (!formData.slug || formData.slug === generateSlug(formData.nameUz)) {
+      newFormData.slug = generateSlug(value);
+    }
+    
+    setFormData(newFormData);
+  };
+
   const handleDelete = (id: string) => {
     deleteMutation.mutate(id);
   };
@@ -193,9 +221,9 @@ export default function AdminCategoriesPage() {
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button onClick={() => setFormData(defaultFormData)}>
+              <Button onClick={() => setFormData(defaultFormData)} className="bg-green-600 hover:bg-green-700 text-white">
                 <Plus className="h-4 w-4 mr-2" />
-                Yangi kategoriya
+                Yangi Kategoriya Qo'shish
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -211,8 +239,9 @@ export default function AdminCategoriesPage() {
                     <Input
                       id="nameUz"
                       value={formData.nameUz}
-                      onChange={(e) => setFormData({ ...formData, nameUz: e.target.value })}
+                      onChange={(e) => handleNameChange('nameUz', e.target.value)}
                       required
+                      placeholder="Kategoriya nomini kiriting"
                     />
                   </div>
                   <div>
@@ -220,8 +249,9 @@ export default function AdminCategoriesPage() {
                     <Input
                       id="nameRu"
                       value={formData.nameRu}
-                      onChange={(e) => setFormData({ ...formData, nameRu: e.target.value })}
+                      onChange={(e) => handleNameChange('nameRu', e.target.value)}
                       required
+                      placeholder="Kategoriya nomini kiriting (rus tilida)"
                     />
                   </div>
                 </div>
@@ -247,13 +277,17 @@ export default function AdminCategoriesPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="slug">Slug</Label>
+                    <Label htmlFor="slug">URL Slug</Label>
                     <Input
                       id="slug"
                       value={formData.slug}
                       onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                       required
+                      placeholder="avtomatik-yaratiladi"
                     />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Kategoriya nomini yozsangiz, avtomatik yaratiladi
+                    </p>
                   </div>
                   <div>
                     <Label htmlFor="image">Rasm URL</Label>

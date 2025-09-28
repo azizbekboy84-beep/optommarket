@@ -1,18 +1,9 @@
 import { useEffect } from 'react';
 import { useLocation } from 'wouter';
 
-// Google Analytics tracking functions
-declare global {
-  interface Window {
-    gtag: (...args: any[]) => void;
-    dataLayer: any[];
-  }
-}
-
 export function useAnalytics() {
   const [location] = useLocation();
 
-  // Page view tracking
   useEffect(() => {
     if (typeof window.gtag === 'function') {
       window.gtag('config', 'GA_MEASUREMENT_ID', {

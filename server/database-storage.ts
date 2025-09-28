@@ -250,7 +250,7 @@ export class DatabaseStorage implements IStorage {
       
       // Blog postlarni PostgreSQL dan qidirish
       const searchQuery = query.toLowerCase().trim();
-      let posts = [];
+      let posts: any[] = [];
       try {
         posts = await db.select().from(blogPosts)
           .where(

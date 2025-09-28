@@ -310,7 +310,7 @@ export class MemStorage implements IStorage {
       },
     ];
 
-    products.forEach(product => {
+    products.forEach((product: any) => {
       this.products.set(product.id, product);
     });
 

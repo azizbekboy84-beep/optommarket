@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express, { type Request, Response, NextFunction } from "express";
 import session from "express-session";
 import { registerRoutes } from "./routes";
@@ -5,7 +6,7 @@ import { registerRoutes } from "./routes";
 import { MemStorage } from "./storage";
 import { db } from "./db";
 import { startBlogScheduler } from "./cron/blog-scheduler";
-import { getBotInfo } from "./services/telegram-bot";
+import { initializeTelegramBot } from "./services/telegram-bot";
 
 const app = express();
 app.use(express.json());
@@ -85,13 +86,9 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || '5000', 10);
-  const host = process.env.NODE_ENV === 'development' ? 'localhost' : '0.0.0.0';
+  const host = process.env.NODE_ENV === 'development' ? '127.0.0.1' : '0.0.0.0';
   
-  server.listen({
-    port,
-    host,
-    reusePort: true,
-  }, async () => {
+  server.listen(port, host, async () => {
     console.log(`serving on ${host}:${port}`);
     
     // AI va Telegram servislarini ishga tushirish
@@ -99,7 +96,7 @@ app.use((req, res, next) => {
       try {
         // Telegram bot ma'lumotlarini tekshirish
         console.log('Telegram bot ma\'lumotlari tekshirilmoqda...');
-        await getBotInfo();
+        initializeTelegramBot();
         
         // Blog scheduler'ni ishga tushirish
         console.log('Blog scheduler ishga tushirilmoqda...');

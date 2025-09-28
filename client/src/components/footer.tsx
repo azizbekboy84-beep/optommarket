@@ -13,7 +13,7 @@ export function Footer() {
             <div className="flex items-center mb-4">
               <img 
                 src={logoImage} 
-                alt="Optombazar.uz" 
+                alt="OptomMarket.uz" 
                 className="h-10 w-auto filter brightness-0 invert"
               />
             </div>

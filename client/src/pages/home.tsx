@@ -19,6 +19,9 @@ export default function Home() {
 
   const { data: featuredProducts = [], isLoading: productsLoading } = useQuery<Product[]>({
     queryKey: ['/api/products/featured'],
+    staleTime: 0, // Always fetch fresh data
+    refetchOnWindowFocus: true, // Refetch when window gets focus
+    refetchInterval: 30000, // Refetch every 30 seconds
   });
 
   const stats = [
@@ -70,10 +73,12 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/30 to-red-600/30"></div>
         
-        {/* Animated background elements */}
-        <div className="absolute top-20 left-10 w-32 h-32 bg-blue-400/20 rounded-full animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-24 h-24 bg-red-400/20 rounded-full animate-bounce"></div>
-        <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-blue-400/20 rounded-full animate-ping"></div>
+        {/* Enhanced animated background elements */}
+        <div className="absolute top-20 left-10 w-32 h-32 bg-blue-400/20 rounded-full animate-float"></div>
+        <div className="absolute bottom-20 right-20 w-24 h-24 bg-red-400/20 rounded-full animate-bounce-slow"></div>
+        <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-blue-400/20 rounded-full animate-pulse-slow"></div>
+        <div className="absolute top-1/3 right-1/3 w-20 h-20 bg-purple-400/20 rounded-full animate-float" style={{animationDelay: '2s'}}></div>
+        <div className="absolute bottom-1/3 left-1/2 w-12 h-12 bg-yellow-400/20 rounded-full animate-ping" style={{animationDelay: '1s'}}></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -101,24 +106,57 @@ export default function Home() {
               </div>
             </div>
             <div className="relative">
-              <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/20">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gradient-to-br from-blue-500/30 to-blue-600/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
-                    <div className="text-3xl font-bold mb-2">1K+</div>
-                    <div className="text-sm opacity-80">{t('productsCount')}</div>
+              {/* Background decorative elements */}
+              <div className="absolute -inset-4 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-red-600/20 rounded-3xl blur-xl animate-pulse-slow"></div>
+              
+              <div className="relative glass rounded-3xl p-8 border border-white/30 shadow-modern backdrop-blur-xl">
+                <div className="grid grid-cols-2 gap-6">
+                  {/* Products Card */}
+                  <div className="group relative bg-gradient-to-br from-blue-500/40 to-blue-600/40 rounded-2xl p-6 backdrop-blur-sm border border-white/30 transform hover:scale-110 hover:rotate-1 transition-all duration-500 hover:shadow-glow overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-transparent rounded-2xl"></div>
+                    <div className="absolute top-2 right-2 w-8 h-8 bg-blue-400/30 rounded-full animate-ping"></div>
+                    <div className="relative z-10">
+                      <div className="text-4xl font-black mb-2 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent drop-shadow-sm">1K+</div>
+                      <div className="text-sm font-medium opacity-90 text-blue-50 group-hover:text-white transition-colors">{t('productsCount')}</div>
+                    </div>
                   </div>
-                  <div className="bg-gradient-to-br from-red-500/30 to-red-600/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
-                    <div className="text-3xl font-bold mb-2">30+</div>
-                    <div className="text-sm opacity-80">{t('sellers')}</div>
+
+                  {/* Sellers Card */}
+                  <div className="group relative bg-gradient-to-br from-red-500/40 to-red-600/40 rounded-2xl p-6 backdrop-blur-sm border border-white/30 transform hover:scale-110 hover:-rotate-1 transition-all duration-500 hover:shadow-glow overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-red-400/20 to-transparent rounded-2xl"></div>
+                    <div className="absolute top-2 right-2 w-6 h-6 bg-red-400/30 rounded-full animate-bounce"></div>
+                    <div className="relative z-10">
+                      <div className="text-4xl font-black mb-2 bg-gradient-to-r from-white via-red-100 to-white bg-clip-text text-transparent drop-shadow-sm">30+</div>
+                      <div className="text-sm font-medium opacity-90 text-red-50 group-hover:text-white transition-colors">{t('sellers')}</div>
+                    </div>
                   </div>
-                  <div className="bg-gradient-to-br from-blue-600/30 to-red-500/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
-                    <div className="text-3xl font-bold mb-2">100+</div>
-                    <div className="text-sm opacity-80">{t('customers')}</div>
+
+                  {/* Customers Card */}
+                  <div className="group relative bg-gradient-to-br from-purple-500/40 to-pink-600/40 rounded-2xl p-6 backdrop-blur-sm border border-white/30 transform hover:scale-110 hover:rotate-1 transition-all duration-500 hover:shadow-glow overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-400/20 to-transparent rounded-2xl"></div>
+                    <div className="absolute top-2 right-2 w-7 h-7 bg-purple-400/30 rounded-full animate-pulse"></div>
+                    <div className="relative z-10">
+                      <div className="text-4xl font-black mb-2 bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent drop-shadow-sm">100+</div>
+                      <div className="text-sm font-medium opacity-90 text-purple-50 group-hover:text-white transition-colors">{t('customers')}</div>
+                    </div>
                   </div>
-                  <div className="bg-gradient-to-br from-red-600/30 to-blue-500/30 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
-                    <div className="text-3xl font-bold mb-2">24/7</div>
-                    <div className="text-sm opacity-80">{t('support')}</div>
+
+                  {/* Support Card */}
+                  <div className="group relative bg-gradient-to-br from-yellow-500/40 to-orange-600/40 rounded-2xl p-6 backdrop-blur-sm border border-white/30 transform hover:scale-110 hover:-rotate-1 transition-all duration-500 hover:shadow-glow overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-transparent rounded-2xl"></div>
+                    <div className="absolute top-2 right-2 w-5 h-5 bg-yellow-400/30 rounded-full animate-ping" style={{animationDelay: '1s'}}></div>
+                    <div className="relative z-10">
+                      <div className="text-4xl font-black mb-2 bg-gradient-to-r from-white via-yellow-100 to-white bg-clip-text text-transparent drop-shadow-sm">24/7</div>
+                      <div className="text-sm font-medium opacity-90 text-yellow-50 group-hover:text-white transition-colors">{t('support')}</div>
+                    </div>
                   </div>
+                </div>
+                
+                {/* Floating particles effect */}
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/20 rounded-full animate-float"></div>
+                  <div className="absolute top-3/4 right-1/4 w-1 h-1 bg-white/30 rounded-full animate-float" style={{animationDelay: '2s'}}></div>
+                  <div className="absolute bottom-1/4 left-3/4 w-1.5 h-1.5 bg-white/25 rounded-full animate-float" style={{animationDelay: '3s'}}></div>
                 </div>
               </div>
             </div>
@@ -188,51 +226,95 @@ export default function Home() {
       </section>
 
       {/* Categories Section */}
-      <section className="bg-gradient-to-br from-blue-900 via-blue-800 to-red-800 dark:from-blue-800 dark:via-blue-700 dark:to-red-700 py-20">
+      <section className="bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4" data-testid="text-categories-title">
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl mb-6">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6" data-testid="text-categories-title">
               {t('mainCategories')}
             </h2>
-            <p className="text-xl text-white max-w-2xl mx-auto" data-testid="text-categories-description">
-              {language === 'uz' ? 'Bizning eng mashhur mahsulot toifalarimiz bilan tanishing' : 'Знакомьтесь с нашими самыми популярными категориями товаров'}
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed" data-testid="text-categories-description">
+              {language === 'uz' ? 'Bizning eng mashhur mahsulot toifalarimiz bilan tanishing va kerakli mahsulotni oson toping' : 'Знакомьтесь с нашими самыми популярными категориями товаров и легко найдите нужный продукт'}
             </p>
           </div>
 
           {categoriesLoading ? (
-            <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {[...Array(12)].map((_, i) => (
-                <div key={i} className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-3 animate-pulse h-32" data-testid={`skeleton-category-${i}`}>
-                  <div className="w-8 h-8 mx-auto mb-2 bg-gray-200 rounded-2xl"></div>
-                  <div className="h-3 bg-gray-200 rounded mb-2 mx-auto w-16"></div>
-                  <div className="h-5 bg-gray-200 rounded-full w-12 mx-auto mt-auto"></div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              {[...Array(10)].map((_, i) => (
+                <div key={i} className="bg-white dark:bg-gray-800 rounded-3xl p-8 animate-pulse shadow-lg border border-gray-100 dark:border-gray-700" data-testid={`skeleton-category-${i}`}>
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gray-200 dark:bg-gray-700 rounded-2xl"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2 mx-auto w-24"></div>
+                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-16 mx-auto"></div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {categories.slice(0, 12).map((category, index) => {
-                const categoryIcons = ['📦', '🍽️', '📱', '👕', '🏠', '⚡', '🛠️', '🌿', '🎨', '📚', '🎵', '☕'];
-                const categoryIcon = categoryIcons[index] || '📦';
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              {categories.slice(0, 10).map((category, index) => {
+                const categoryColors = [
+                  'from-blue-500 to-blue-600',
+                  'from-emerald-500 to-emerald-600', 
+                  'from-purple-500 to-purple-600',
+                  'from-orange-500 to-orange-600',
+                  'from-pink-500 to-pink-600',
+                  'from-indigo-500 to-indigo-600',
+                  'from-teal-500 to-teal-600',
+                  'from-red-500 to-red-600',
+                  'from-yellow-500 to-yellow-600',
+                  'from-cyan-500 to-cyan-600'
+                ];
+                const categoryIcons = [
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>,
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 21l4-4 4 4" /></svg>,
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>,
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z" /></svg>,
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>,
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>,
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>,
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m3 0H4a1 1 0 00-1 1v16a1 1 0 001 1h16a1 1 0 001-1V5a1 1 0 00-1-1z" /></svg>,
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>
+                ];
+                
+                const colorClass = categoryColors[index % categoryColors.length];
+                const IconComponent = categoryIcons[index % categoryIcons.length];
                 
                 return (
                   <div 
                     key={category.id}
-                    className="group bg-white dark:bg-gray-800 rounded-2xl p-3 hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:scale-105 shadow-md overflow-hidden border border-gray-100 dark:border-gray-700 h-32"
+                    className="group bg-white dark:bg-gray-800 rounded-3xl p-8 hover:shadow-xl transition-all duration-500 cursor-pointer transform hover:scale-105 hover:-translate-y-2 shadow-lg border border-gray-100 dark:border-gray-700 hover:border-gray-200 dark:hover:border-gray-600 relative overflow-hidden"
                     onClick={() => window.location.href = `/category/${category.slug}`}
                     data-testid={`category-card-${category.id}`}
                   >
-                    <div className="text-center h-full flex flex-col justify-between">
-                      <div className="w-8 h-8 mx-auto mb-1 flex items-center justify-center text-2xl">
-                        {categoryIcon}
+                    {/* Background glow effect */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${colorClass} opacity-0 group-hover:opacity-5 transition-opacity duration-500 rounded-3xl`}></div>
+                    
+                    <div className="relative z-10 text-center">
+                      {/* Icon */}
+                      <div className={`w-16 h-16 mx-auto mb-6 flex items-center justify-center bg-gradient-to-br ${colorClass} rounded-2xl text-white transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg`}>
+                        {IconComponent}
                       </div>
-                      <h3 className="text-xs font-bold text-gray-900 dark:text-gray-100 mb-1 line-clamp-2 leading-tight" data-testid={`text-category-name-${category.id}`}>
+                      
+                      {/* Title */}
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300" data-testid={`text-category-name-${category.id}`}>
                         {language === 'uz' ? category.nameUz : category.nameRu}
                       </h3>
-                      <div className="-mx-3 -mb-3 p-2 bg-gradient-to-r from-blue-500 to-red-500">
-                        <span className="inline-flex items-center text-white font-medium text-[10px]">
-                          {t('viewMore')}
-                        </span>
+                      
+                      {/* Description */}
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-2">
+                        {language === 'uz' ? category.descriptionUz || 'Turli xil mahsulotlar' : category.descriptionRu || 'Различные товары'}
+                      </p>
+                      
+                      {/* Action button */}
+                      <div className="inline-flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors duration-300">
+                        {t('viewMore')}
+                        <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
                       </div>
                     </div>
                   </div>
@@ -241,10 +323,13 @@ export default function Home() {
             </div>
           )}
 
-          <div className="text-center mt-12">
+          <div className="text-center mt-16">
             <Link href="/categories">
-              <button className="bg-gradient-to-r from-blue-600 to-red-500 text-white px-8 py-3 rounded-2xl font-semibold hover:from-red-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105">
+              <button className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-2xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                 {language === 'uz' ? 'Barcha kategoriyalarni ko\'rish' : 'Посмотреть все категории'}
+                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </button>
             </Link>
           </div>
@@ -315,14 +400,14 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="bg-card dark:bg-gray-700 rounded-xl p-8 text-center shadow-sm hover:shadow-lg transition-all duration-300 transform hover:scale-105 border border-border" data-testid={`feature-${index}`}>
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-red-100 dark:from-blue-900/30 dark:to-red-900/30 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">
+              <div key={index} className="group bg-card/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-xl p-8 text-center shadow-modern hover:shadow-glow transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 border border-border/50 hover:border-blue-400/50" data-testid={`feature-${index}`}>
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-red-100 dark:from-blue-900/30 dark:to-red-900/30 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl group-hover:scale-110 transition-transform duration-300 shadow-lg group-hover:shadow-glow">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-card-foreground mb-4" data-testid={`text-feature-title-${index}`}>
+                <h3 className="text-xl font-semibold text-card-foreground mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300" data-testid={`text-feature-title-${index}`}>
                   {language === 'uz' ? feature.titleUz : feature.titleRu}
                 </h3>
-                <p className="text-muted-foreground" data-testid={`text-feature-description-${index}`}>
+                <p className="text-muted-foreground group-hover:text-foreground transition-colors duration-300" data-testid={`text-feature-description-${index}`}>
                   {language === 'uz' ? feature.descriptionUz : feature.descriptionRu}
                 </p>
               </div>

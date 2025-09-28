@@ -11,11 +11,10 @@ import { Badge } from '../../components/ui/badge';
 import { Header } from '../../components/header';
 import { Footer } from '../../components/footer';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../../components/ui/form';
 import { Textarea } from '../../components/ui/textarea';
-import { Trash2, Edit, Plus, Copy, Calendar, Percent, DollarSign } from 'lucide-react';
+import { Trash2, Edit, Plus, Copy, Calendar, Percent, dollarSign } from 'lucide-react';
 import { useToast } from '../../hooks/use-toast';
 import { apiRequest } from '../../lib/queryClient';
 
@@ -23,108 +22,37 @@ const discountFormSchema = z.object({
   code: z.string().min(3, 'Kod kamida 3 ta belgidan iborat bo\'lishi kerak').max(20),
   type: z.enum(['percentage', 'fixed']),
   value: z.number().min(1, 'Qiymat 1 dan katta bo\'lishi kerak'),
-  validFrom: z.string(),
-  validUntil: z.string(),
-  maxUses: z.number().min(0),
-  targetType: z.enum(['all_products', 'specific_products', 'specific_categories']),
-  isActive: z.boolean().default(true),
+{{ ... }}
+  isActive: true,
 });
 
-type DiscountFormData = z.infer<typeof discountFormSchema>;
+// Barcha chegirmalarni olish
+const { data: discountsData, isLoading } = useQuery<Discount[]>({
+  queryKey: ['/api/discounts'],
+});
 
-interface Discount {
-  id: string;
-  code: string;
-  type: 'percentage' | 'fixed';
-  value: number;
-  validFrom: string;
-  validUntil: string;
-  maxUses: number;
-  usedCount: number;
-  targetType: 'all_products' | 'specific_products' | 'specific_categories';
-  targetIds?: string[];
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
+const discounts = discountsData ?? [];
 
-export default function AdminDiscountsPage() {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingDiscount, setEditingDiscount] = useState<Discount | null>(null);
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
+// Yangi chegirma yaratish yoki tahrirlash
+const createOrUpdateMutation = useMutation({
+  mutationFn: async (data: DiscountFormData) => {
+    const requestData = {
+      ...data,
+      validFrom: new Date(data.validFrom).toISOString(),
+      validUntil: new Date(data.validUntil).toISOString(),
+    };
 
-  const form = useForm<DiscountFormData>({
-    resolver: zodResolver(discountFormSchema),
-    defaultValues: {
-      code: '',
-      type: 'percentage',
-      value: 0,
-      validFrom: new Date().toISOString().split('T')[0],
-      validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 kun keyin
-      maxUses: 0,
-      targetType: 'all_products',
-      isActive: true,
-    },
-  });
-
-  // Barcha chegirmalarni olish
-  const { data: discounts = [], isLoading } = useQuery({
-    queryKey: ['/api/discounts'],
-  });
-
-  // Yangi chegirma yaratish yoki tahrirlash
-  const createOrUpdateMutation = useMutation({
-    mutationFn: async (data: DiscountFormData) => {
-      const requestData = {
-        ...data,
-        validFrom: new Date(data.validFrom).toISOString(),
-        validUntil: new Date(data.validUntil).toISOString(),
-      };
-
-      if (editingDiscount) {
-        return apiRequest(`/api/discounts/${editingDiscount.id}`, {
-          method: 'PUT',
-          body: JSON.stringify(requestData),
-        });
-      } else {
-        return apiRequest('/api/discounts', {
-          method: 'POST',
-          body: JSON.stringify(requestData),
-        });
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/discounts'] });
-      setIsDialogOpen(false);
-      setEditingDiscount(null);
-      form.reset();
-      toast({
-        title: 'Muvaffaqiyat!',
-        description: editingDiscount ? 'Chegirma yangilandi' : 'Yangi chegirma yaratildi',
-      });
-    },
-    onError: (error: any) => {
-      toast({
-        title: 'Xatolik!',
-        description: error.message || 'Chegirmani saqlashda xatolik yuz berdi',
-        variant: 'destructive',
-      });
-    },
-  });
-
-  // Chegirmani o'chirish
-  const deleteMutation = useMutation({
-    mutationFn: async (discountId: string) => {
-      return apiRequest(`/api/discounts/${discountId}`, {
-        method: 'DELETE',
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/discounts'] });
-      toast({
-        title: 'Muvaffaqiyat!',
-        description: 'Chegirma o\'chirildi',
+    if (editingDiscount) {
+      const response = await apiRequest<Discount>('PUT', `/api/discounts/${editingDiscount.id}`, requestData);
+      return response.data;
+    } else {
+      const response = await apiRequest<Discount>('POST', '/api/discounts', requestData);
+      return response.data;
+    }
+  },
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['/api/discounts'] });
+    setIsDialogOpen(false);
       });
     },
     onError: (error: any) => {

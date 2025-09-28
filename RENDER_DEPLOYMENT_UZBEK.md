@@ -1,4 +1,4 @@
-# 🚀 Optombazar.uz ni Render.com ga joylashtirish - To'liq yo'riqnoma
+# 🚀 OptomMarket.uz - Render.com'da Deploy Qilishtirish - To'liq yo'riqnoma
 
 ## 📋 Tayyorgarlik ro'yxati
 
@@ -23,8 +23,8 @@
 ```bash
 git init
 git add .
-git commit -m "Production ready - Optombazar.uz"
-git remote add origin https://github.com/YOUR_USERNAME/optombazar-uz.git
+git commit -m "Production ready - OptomMarket.uz"
+git remote add origin https://github.com/YOUR_USERNAME/optommarket-uz.git
 git push -u origin main
 ```
 
@@ -36,16 +36,16 @@ git push -u origin main
 ### 3-qadam: PostgreSQL bazasini yarating
 1. Render dashboard: "New +" → "PostgreSQL"
 2. Sozlamalar:
-   - **Name**: `optombazar-db`
-   - **Database**: `optombazar`
-   - **User**: `optombazar_user`
+   - **Name**: `optommarket-db`
+   - **Database**: `optommarket`
+   - **User**: `optommarket_user`
    - **Region**: Frankfurt
    - **Plan**: Starter ($7/oy)
 
 ### 4-qadam: Web Service yarating
 1. Dashboard: "New +" → "Web Service"
 2. Sozlamalar:
-   - **Name**: `optombazar-uz`
+   - **Name**: `optommarket-uz`
    - **Build Command**: `./build.sh`
    - **Start Command**: `./start.sh`
 
@@ -68,9 +68,9 @@ TELEGRAM_BOT_TOKEN=[ixtiyoriy - Telegram bot uchun]
 
 ## 🔗 Foydali linklar
 
-- **Saytingiz URL'i**: `https://optombazar-uz.onrender.com`
-- **Health check**: `https://optombazar-uz.onrender.com/health`
-- **API health**: `https://optombazar-uz.onrender.com/api/health`
+- **Saytingiz URL'i**: `https://optommarket-uz.onrender.com`
+- **Health check**: `https://optommarket-uz.onrender.com/health`
+- **API health**: `https://optommarket-uz.onrender.com/api/health`
 
 ## 🛠️ Deploy qilish buyruqlari
 
@@ -93,11 +93,11 @@ git push origin main
 2. Environment variables to'g'ri ekanligini tekshiring
 3. Database connection ishlayotganini tekshiring
 
-**Telefon support**: +998 99 644 84 44 (Optombazar admin)
+**Telefon support**: +998 99 644 84 44 (OptomMarket admin)
 
 ## ✅ Deploy muvaffaqiyatli bo'lgandan keyin
 
-1. **Saytni tekshiring**: `https://optombazar-uz.onrender.com`
+1. **Saytni tekshiring**: `https://optommarket-uz.onrender.com`
 2. **Admin panel**: `/admin` yo'li orqali (admin@example.com / admin123)
 3. **API test**: `/api/health` endpoint orqali
 4. **Ma'lumotlar**: Kategoriyalar va mahsulotlar ko'rinishi kerak

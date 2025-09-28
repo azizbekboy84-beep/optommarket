@@ -1,16 +1,16 @@
 import { Router } from 'express';
 import webpush from 'web-push';
-import { db } from './db.js';
-import { pushSubscriptions } from '@shared/schema.js';
-import { eq } from 'drizzle-orm';
 
 const router = Router();
+
+// In-memory storage for push subscriptions (development only)
+const subscriptionsStore = new Map<string, any>();
 
 // VAPID kalitlarini sozlash
 if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
   try {
     webpush.setVapidDetails(
-      'mailto:support@optombazar.uz',
+      'mailto:support@optommarket.uz',
       process.env.VAPID_PUBLIC_KEY,
       process.env.VAPID_PRIVATE_KEY
     );
@@ -35,37 +35,28 @@ router.get('/vapid-public-key', (req, res) => {
 router.post('/subscribe', async (req, res) => {
   try {
     const { subscription, userAgent } = req.body;
-    const userId = (req.session as any)?.user?.id || null; // agar foydalanuvchi tizimga kirgan bo'lsa
+    const userId = (req.session as any)?.user?.id || null;
     
     if (!subscription) {
       return res.status(400).json({ message: 'Subscription obyekti majburiy' });
     }
 
-    // Avval mavjud obunani tekshiramiz (bir xil endpoint'ga bir necha marta obuna bo'lmaslik uchun)
-    const existingSubscription = await db
-      .select()
-      .from(pushSubscriptions)
-      .where(eq(pushSubscriptions.subscription, subscription))
-      .limit(1);
-
-    if (existingSubscription.length > 0) {
-      return res.json({ message: 'Siz allaqachon obuna bo\'lgansiz' });
-    }
-
-    // Yangi obunani bazaga qo'shamiz
-    const [newSubscription] = await db
-      .insert(pushSubscriptions)
-      .values({
-        userId,
-        subscription,
-        userAgent: userAgent || req.get('user-agent'),
-        isActive: true,
-      })
-      .returning();
+    // In-memory storage'da saqlash
+    const subscriptionKey = subscription.endpoint;
+    const subscriptionData = {
+      id: Date.now().toString(),
+      userId,
+      subscription,
+      userAgent: userAgent || req.get('user-agent'),
+      isActive: true,
+      createdAt: new Date()
+    };
+    
+    subscriptionsStore.set(subscriptionKey, subscriptionData);
 
     res.status(201).json({ 
       message: 'Push notification obunasi muvaffaqiyatli yaratildi',
-      subscription: newSubscription 
+      subscription: subscriptionData 
     });
   } catch (error) {
     console.error('Push subscription xatoligi:', error);
@@ -82,11 +73,12 @@ router.post('/unsubscribe', async (req, res) => {
       return res.status(400).json({ message: 'Endpoint majburiy' });
     }
 
-    // Obunani o'chiramiz yoki faol emas deb belgilaymiz
-    await db
-      .update(pushSubscriptions)
-      .set({ isActive: false })
-      .where(eq(pushSubscriptions.subscription, { endpoint }));
+    // In-memory storage'dan o'chirish
+    const subscription = subscriptionsStore.get(endpoint);
+    if (subscription) {
+      subscription.isActive = false;
+      subscriptionsStore.set(endpoint, subscription);
+    }
 
     res.json({ message: 'Obuna muvaffaqiyatli o\'chirildi' });
   } catch (error) {
@@ -110,10 +102,7 @@ export async function sendNotificationToAll(payload: {
     }
 
     // Barcha faol obunalarni olamiz
-    const subscriptions = await db
-      .select()
-      .from(pushSubscriptions)
-      .where(eq(pushSubscriptions.isActive, true));
+    const subscriptions = Array.from(subscriptionsStore.values()).filter(sub => sub.isActive);
 
     if (subscriptions.length === 0) {
       console.log('Faol obunachalar topilmadi');
@@ -135,17 +124,15 @@ export async function sendNotificationToAll(payload: {
     // Har bir obunachiga push notification yuboramiz
     const sendPromises = subscriptions.map(async (sub) => {
       try {
-        await webpush.sendNotification(sub.subscription as any, notificationPayload);
+        await webpush.sendNotification(sub.subscription, notificationPayload);
         console.log(`Push notification yuborildi: ${sub.id}`);
       } catch (error: any) {
         console.error(`Push notification yuborishda xatolik (${sub.id}):`, error);
         
         // Agar endpoint mavjud bo'lmasa yoki muddati o'tgan bo'lsa, obunani o'chiramiz
         if (error.statusCode === 410 || error.statusCode === 404) {
-          await db
-            .update(pushSubscriptions)
-            .set({ isActive: false })
-            .where(eq(pushSubscriptions.id, sub.id));
+          sub.isActive = false;
+          subscriptionsStore.set(sub.subscription.endpoint, sub);
           console.log(`Yaroqsiz obuna o'chirildi: ${sub.id}`);
         }
       }
@@ -177,10 +164,7 @@ router.post('/send', async (req, res) => {
     });
 
     // Obunchilar sonini qaytarish
-    const subscriptions = await db
-      .select()
-      .from(pushSubscriptions)
-      .where(eq(pushSubscriptions.isActive, true));
+    const subscriptions = Array.from(subscriptionsStore.values()).filter(sub => sub.isActive);
 
     res.json({ 
       message: 'Bildirishnoma barcha obunachilarga yuborildi',
@@ -195,12 +179,8 @@ router.post('/send', async (req, res) => {
 // Subscribers count endpoint
 router.get('/subscribers-count', async (req, res) => {
   try {
-    const count = await db
-      .select({ count: pushSubscriptions.id })
-      .from(pushSubscriptions)
-      .where(eq(pushSubscriptions.isActive, true));
-
-    res.json({ count: count.length });
+    const subscriptions = Array.from(subscriptionsStore.values()).filter(sub => sub.isActive);
+    res.json({ count: subscriptions.length });
   } catch (error) {
     console.error('Subscribers count olishda xatolik:', error);
     res.status(500).json({ message: 'Subscribers count olishda xatolik' });

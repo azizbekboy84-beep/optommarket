@@ -35,8 +35,6 @@ async function createAndSaveBlogPost(storage: IStorage, language: 'uz' | 'ru' = 
       console.log('Blog post Telegram kanaliga yuborildi');
     } catch (telegramError) {
       console.error('Telegram kanaliga yuborishda xatolik:', telegramError);
-      // Blog post yaratilgan, lekin Telegram'ga yuborilmagan
-      // Bu xatolikni loglaymiz, lekin umumiy jarayonni to'xtatmaymiz
     }
 
   } catch (error) {
@@ -97,6 +95,58 @@ async function checkAndSendNewProducts(storage: IStorage): Promise<void> {
   }
 }
 
+// Marketing xabarlarini yuborish funksiyasi
+async function sendMarketingCampaign(storage: IStorage): Promise<void> {
+  try {
+    const marketingMessages = [
+      {
+        title: "🔥 MAXSUS CHEGIRMA!",
+        content: `OptomBazar.uz da barcha plastik idishlar uchun 15% chegirma!
+        
+📅 Muddati: 3 kun
+💰 Minimal buyurtma: 500,000 so'm
+🚚 Bepul yetkazib berish Toshkent bo'ylab
+
+Ushbu imkoniyatni boy bermang! Bugun buyurtma bering.`,
+        imageUrl: null
+      },
+      {
+        title: "🎯 YANGI MIJOZLAR UCHUN",
+        content: `Birinchi buyurtmangizga 20% chegirma!
+
+✅ Sifatli mahsulotlar
+✅ Tez yetkazib berish  
+✅ Professional xizmat
+✅ Optom narxlar
+
+Ro'yxatdan o'ting va chegirmangizni oling!`,
+        imageUrl: null
+      },
+      {
+        title: "📦 OMMABOP MAHSULOTLAR",
+        content: `Eng ko'p sotilayotgan mahsulotlarimiz:
+
+🥇 Polietilen paketlar - 25,000 so'm/kg dan
+🥈 Bir martalik idishlar - 15,000 so'm/to'plam dan  
+🥉 Plastik konteynerlar - 35,000 so'm/dona dan
+
+Bugun buyurtma bering va eng yaxshi narxlardan foydalaning!`,
+        imageUrl: null
+      }
+    ];
+
+    // Tasodifiy marketing xabarini tanlash
+    const randomMessage = marketingMessages[Math.floor(Math.random() * marketingMessages.length)];
+    
+    const { sendMarketingMessage } = await import('../services/telegram-bot');
+    await sendMarketingMessage(randomMessage as any);
+    
+    console.log(`Marketing xabari yuborildi: ${randomMessage.title}`);
+  } catch (error) {
+    console.error('Marketing kampaniyasida xatolik:', error);
+  }
+}
+
 // Asosiy scheduler funksiyasi
 export function startBlogScheduler(storage: IStorage): void {
   if (isSchedulerActive) {
@@ -106,18 +156,18 @@ export function startBlogScheduler(storage: IStorage): void {
 
   console.log('Blog scheduler ishga tushirilmoqda...');
   
-  // Har soat 0-daqiqada (07:00 dan 19:00 gacha) blog post yaratish
-  cron.schedule('0 7-19 * * *', async () => {
-    console.log('Soatlik blog post yaratish vazifasi boshlandi...');
+  // Har 2 soatda blog post yaratish (08:00 dan 20:00 gacha)
+  cron.schedule('0 8-20/2 * * *', async () => {
+    console.log('Blog post yaratish vazifasi boshlandi...');
     
     try {
       // O'zbek va rus tillarini navbat bilan tanlash
       const currentHour = new Date().getHours();
-      const language = currentHour % 2 === 0 ? 'uz' : 'ru';
+      const language = currentHour % 4 === 0 ? 'uz' : 'ru';
       
       await createAndSaveBlogPost(storage, language);
     } catch (error) {
-      console.error('Soatlik blog post yaratishda xatolik:', error);
+      console.error('Blog post yaratishda xatolik:', error);
     }
   }, {
     timezone: "Asia/Tashkent"
@@ -157,11 +207,64 @@ export function startBlogScheduler(storage: IStorage): void {
     timezone: "Asia/Tashkent"
   });
 
+  // Haftalik marketing kampaniyasi - har dushanba va juma 14:00 da
+  cron.schedule('0 14 * * 1,5', async () => {
+    console.log('Haftalik marketing kampaniyasi boshlandi...');
+    
+    try {
+      await sendMarketingCampaign(storage);
+    } catch (error) {
+      console.error('Marketing kampaniyasida xatolik:', error);
+    }
+  }, {
+    timezone: "Asia/Tashkent"
+  });
+
+  // Haftalik hisobot - har yakshanba 20:00 da
+  cron.schedule('0 20 * * 0', async () => {
+    console.log('Haftalik hisobot yuborish boshlandi...');
+    
+    try {
+      const { sendWeeklyReport } = await import('../services/telegram-bot');
+      await sendWeeklyReport(storage);
+    } catch (error) {
+      console.error('Haftalik hisorot yuborishda xatolik:', error);
+    }
+  }, {
+    timezone: "Asia/Tashkent"
+  });
+
+  // Oylik maxsus aksiya - har oyning 1-sanasida 10:00 da
+  cron.schedule('0 10 1 * *', async () => {
+    console.log('Oylik maxsus aksiya e\'lon qilinmoqda...');
+    
+    try {
+      const { announceSpecialOffer } = await import('../services/telegram-bot');
+      const nextMonth = new Date();
+      nextMonth.setMonth(nextMonth.getMonth() + 1);
+      
+      await announceSpecialOffer({
+        title: "OYLIK MAXSUS AKSIYA",
+        description: "Ushbu oyda barcha mahsulotlarga maxsus chegirmalar! Optom xaridlar uchun qo'shimcha bonuslar.",
+        discount: 20,
+        validUntil: nextMonth,
+        minOrder: 1000000
+      });
+    } catch (error) {
+      console.error('Oylik aksiya e\'lon qilishda xatolik:', error);
+    }
+  }, {
+    timezone: "Asia/Tashkent"
+  });
+
   isSchedulerActive = true;
   console.log('Blog scheduler muvaffaqiyatli ishga tushirildi!');
-  console.log('- Blog postlar: har soat (07:00-19:00)');
+  console.log('- Blog postlar: har 2 soatda (08:00-20:00)');
   console.log('- Yangi mahsulotlar: har kuni 09:00');
   console.log('- Kechki reklama: har kuni 18:00');
+  console.log('- Marketing: dushanba va juma 14:00');
+  console.log('- Haftalik hisorot: yakshanba 20:00');
+  console.log('- Oylik aksiya: har oyning 1-sanasida 10:00');
 }
 
 // Scheduler'ni to'xtatish
@@ -183,6 +286,12 @@ export function stopBlogScheduler(): void {
 export async function createTestBlogPost(storage: IStorage, language: 'uz' | 'ru' = 'uz'): Promise<void> {
   console.log('Test blog post yaratilmoqda...');
   await createAndSaveBlogPost(storage, language);
+}
+
+// Test funksiyasi - darhol marketing xabari yuborish
+export async function sendTestMarketingMessage(storage: IStorage): Promise<void> {
+  console.log('Test marketing xabari yuborilmoqda...');
+  await sendMarketingCampaign(storage);
 }
 
 // Scheduler statusini tekshirish

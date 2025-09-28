@@ -34,5 +34,8 @@ export function useProducts(categoryId?: string, search?: string) {
       }
       return response.json();
     },
+    staleTime: 0, // Always fetch fresh data
+    refetchOnWindowFocus: true, // Refetch when window gets focus
+    refetchInterval: 30000, // Refetch every 30 seconds
   });
 }

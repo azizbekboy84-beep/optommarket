@@ -45,13 +45,13 @@ const defaultFormData: ProductFormData = {
   nameRu: '',
   descriptionUz: '',
   descriptionRu: '',
-  categoryId: 'cat-1',
-  sellerId: 'seller-1',
-  price: '0',
-  wholesalePrice: '0',
+  categoryId: 'polietilen-paketlar', // Real category ID
+  sellerId: 'admin-user-1', // Real seller ID
+  price: '10000',
+  wholesalePrice: '9000',
   minQuantity: 1,
-  wholesaleMinQuantity: 1,
-  stockQuantity: 0,
+  wholesaleMinQuantity: 10,
+  stockQuantity: 100,
   unit: 'dona',
   specifications: '{}',
   image1: '',
@@ -108,8 +108,14 @@ export default function AdminProductsPage() {
       return response.json();
     },
     onSuccess: () => {
+      // Admin paneldagi cache'ni yangilash
       queryClient.invalidateQueries({ queryKey: ['admin-products'] });
-      toast({ title: 'Muvaffaqiyat', description: 'Mahsulot yaratildi' });
+      // Asosiy saytdagi cache'ni ham yangilash
+      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/products/featured'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/categories'] });
+      
+      toast({ title: 'Muvaffaqiyat', description: 'Mahsulot yaratildi va saytda ko\'rsatildi' });
       handleCloseDialog();
     },
     onError: () => {
@@ -226,6 +232,29 @@ export default function AdminProductsPage() {
     setFormData(defaultFormData);
   };
 
+  // Slug yaratish funksiyasi
+  const generateSlug = (text: string) => {
+    return text
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '') // Faqat harflar, raqamlar, bo'sh joy va tire
+      .replace(/\s+/g, '-') // Bo'sh joylarni tire bilan almashtirish
+      .replace(/-+/g, '-') // Bir nechta tireni bitta tire bilan almashtirish
+      .trim()
+      .replace(/^-|-$/g, ''); // Boshi va oxiridagi tireni olib tashlash
+  };
+
+  // Nom o'zgarganda slug'ni avtomatik yangilash
+  const handleNameChange = (field: 'nameUz' | 'nameRu', value: string) => {
+    const newFormData = { ...formData, [field]: value };
+    
+    // Agar slug bo'sh bo'lsa yoki avvalgi nomdan yaratilgan bo'lsa, yangi slug yaratish
+    if (!formData.slug || formData.slug === generateSlug(formData.nameUz)) {
+      newFormData.slug = generateSlug(value);
+    }
+    
+    setFormData(newFormData);
+  };
+
   const handleDelete = (id: string) => {
     if (confirm('Mahsulotni o\'chirishni tasdiqlaysizmi?')) {
       deleteMutation.mutate(id);
@@ -248,9 +277,9 @@ export default function AdminProductsPage() {
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-primary text-primary-foreground">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                 <Plus className="h-4 w-4 mr-2" />
-                Yangi mahsulot
+                Yangi Mahsulot Qo'shish
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-card text-card-foreground">
@@ -268,9 +297,10 @@ export default function AdminProductsPage() {
                       <Input
                         id="nameUz"
                         value={formData.nameUz}
-                        onChange={(e) => setFormData({ ...formData, nameUz: e.target.value })}
+                        onChange={(e) => handleNameChange('nameUz', e.target.value)}
                         required
                         className="bg-background text-foreground"
+                        placeholder="Mahsulot nomini kiriting"
                       />
                     </div>
                     <div>
@@ -482,13 +512,16 @@ export default function AdminProductsPage() {
                       onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                       required
                       className="bg-background text-foreground"
+                      placeholder="avtomatin-yaratiladi"
                     />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Mahsulot nomini yozsangiz, avtomatin yaratiladi
+                    </p>
                   </div>
                   <div className="flex items-center space-x-6">
                     <div className="flex items-center space-x-2">
                       <Switch
                         id="isActive"
-                        checked={formData.isActive}
                         onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
                       />
                       <Label htmlFor="isActive" className="text-foreground">Faol</Label>

@@ -1,18 +1,8 @@
 import { useEffect } from 'react';
 import { useLocation } from 'wouter';
 
-// Google Tag Manager va marketing events uchun hook
-declare global {
-  interface Window {
-    dataLayer: any[];
-    gtag?: (...args: any[]) => void;
-    fbq?: (...args: any[]) => void;
-  }
-}
-
 export function useMarketing() {
   const [location] = useLocation();
-
   // DataLayer ni initialize qilish
   useEffect(() => {
     if (typeof window !== 'undefined') {

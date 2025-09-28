@@ -4,11 +4,12 @@ import bcrypt from "bcrypt";
 import { storage } from "./storage";
 import { SitemapGenerator } from "./services/sitemap-generator";
 import { DatabaseStorage } from "./database-storage";
-import { insertProductSchema, insertCategorySchema, insertOrderSchema, insertCartItemSchema, insertUserSchema, insertBlogPostSchema, insertChatMessageSchema } from "@shared/schema";
+import { insertProductSchema, insertCategorySchema, insertOrderSchema, insertCartItemSchema, insertUserSchema, insertBlogPostSchema, insertChatMessageSchema, type Product, type Category } from "@shared/schema";
 import { adminAuth } from "./middleware/adminAuth";
 import { registerAITestRoutes } from "./routes/ai-test";
 import { ActivityLogger } from "./utils/activityLogger";
 import { registerReportsRoutes } from "./routes/admin/reports";
+import { registerAutomationRoutes } from "./routes/admin/automation";
 import discountsRouter from "./routes/discounts";
 import favoritesRouter from "./routes/favorites";
 import pushRouter from "./push";
@@ -70,21 +71,21 @@ async function buildChatContext(userMessage: string, storage: any): Promise<stri
     
     let context = "Bizning platformamizda quyidagi kategoriyalar mavjud:\n";
     
-    categories.forEach((category: any) => {
-      context += `- ${category.nameUz} (${category.nameRu}): ${category.descriptionUz}\n`;
+    categories.forEach((category: Category) => {
+      context += `- ${category.nameUz} (${category.nameRu}): ${category.descriptionUz || ''}\n`;
     });
     
     // Add product information if user asks about specific products
     const lowerMessage = userMessage.toLowerCase();
     if (lowerMessage.includes('paket') || lowerMessage.includes('пакет')) {
-      const packageProducts = products.filter((product) => 
+      const packageProducts = products.filter((product: Product) => 
         product.categoryId === 'polietilen-paketlar'
       ).slice(0, 5);
       
       if (packageProducts.length > 0) {
         context += "\nPolietilen paketlar:\n";
-        packageProducts.forEach((product: any) => {
-          context += `- ${product.nameUz}: ${product.wholesalePrice} so'm (minimal: ${product.minQuantity} ${product.unit})\n`;
+        packageProducts.forEach((product: Product) => {
+          context += `- ${product.nameUz}: ${product.wholesalePrice} so'm (minimal: ${product.minQuantity || 1} ${product.unit})\n`;
         });
       }
     }
@@ -356,12 +357,12 @@ export async function registerRoutes(app: Express, customStorage?: any): Promise
       const rootCategories: any[] = [];
       
       // First pass: create map of all categories
-      categories.forEach(category => {
+      categories.forEach((category: Category) => {
         categoriesMap.set(category.slug, { ...category, children: [] });
       });
       
       // Second pass: build hierarchy
-      categories.forEach(category => {
+      categories.forEach((category: Category) => {
         const categoryWithChildren = categoriesMap.get(category.slug);
         if (category.parentId) {
           const parent = categoriesMap.get(category.parentId);
@@ -439,7 +440,7 @@ export async function registerRoutes(app: Express, customStorage?: any): Promise
       // Get products from the same category, excluding the main product
       const allProductsInCategory = await activeStorage.getProducts(mainProduct.categoryId);
       const relatedProducts = allProductsInCategory
-        .filter(product => product.id !== productId)
+        .filter((product: Product) => product.id !== productId)
         .sort(() => Math.random() - 0.5) // Randomize
         .slice(0, 4); // Limit to 4 products
       
@@ -1151,12 +1152,12 @@ ${email ? `📧 <b>Email:</b> ${email}\n` : ''}${company ? `🏢 <b>Kompaniya:</
   
   // Register admin reports routes
   registerReportsRoutes(app, activeStorage);
+  registerAutomationRoutes(app, activeStorage);
   
   // Register discounts, favorites, push notification, analytics and marketing routes
   app.use("/api/discounts", discountsRouter);
   app.use("/api/favorites", favoritesRouter);
   app.use("/api/push", pushRouter);
-  app.use("/api/analytics", analyticsRouter);
   app.use("/api/marketing", marketingRouter);
 
   const httpServer = createServer(app);

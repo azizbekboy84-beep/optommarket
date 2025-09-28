@@ -286,3 +286,79 @@ ${offerData.minOrder ? `💰 Minimal buyurtma: ${offerData.minOrder.toLocaleStri
     return false;
   }
 }
+
+// Blog postni kanalga yuborish
+export async function sendBlogPostToChannel(blogPost: {
+  title: string;
+  content: string;
+  imageUrl?: string;
+  url: string;
+}): Promise<boolean> {
+  if (!bot) {
+    console.log('Telegram bot ishlamayapti');
+    return false;
+  }
+
+  try {
+    const message = `📢 *${blogPost.title}*\n\n${blogPost.content.substring(0, 300)}...\n\n🔗 Batafsil: ${blogPost.url}`;
+    
+    // Bu yerda kanal ID sini o'zgartiring
+    const channelId = process.env.TELEGRAM_CHANNEL_ID || '';
+    
+    if (blogPost.imageUrl) {
+      await bot.sendPhoto(channelId, blogPost.imageUrl, {
+        caption: message,
+        parse_mode: 'Markdown'
+      });
+    } else {
+      await bot.sendMessage(channelId, message, { parse_mode: 'Markdown' });
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Blog post yuborishda xatolik:', error);
+    return false;
+  }
+}
+
+// Test xabari yuborish
+export async function sendTestMessage(chatId: string): Promise<boolean> {
+  if (!bot) {
+    console.log('Telegram bot ishlamayapti');
+    return false;
+  }
+
+  try {
+    await bot.sendMessage(chatId, '✅ Test xabari muvaffaqiyatli yuborildi!');
+    return true;
+  } catch (error) {
+    console.error('Test xabari yuborishda xatolik:', error);
+    return false;
+  }
+}
+
+// Bot haqida ma'lumot olish
+export async function getBotInfo(): Promise<{
+  id: number;
+  username: string;
+  firstName: string;
+  isActive: boolean;
+} | null> {
+  if (!bot) {
+    console.log('Telegram bot ishlamayapti');
+    return null;
+  }
+
+  try {
+    const me = await bot.getMe();
+    return {
+      id: me.id,
+      username: me.username || '',
+      firstName: me.first_name,
+      isActive: true
+    };
+  } catch (error) {
+    console.error('Bot ma\'lumotlarini olishda xatolik:', error);
+    return null;
+  }
+}

@@ -1,10 +1,10 @@
 import 'dotenv/config';
 import express, { type Request, Response, NextFunction } from "express";
 import session from "express-session";
+import RedisStore from 'connect-redis';
+import { createClient } from 'redis';
 import { registerRoutes } from "./routes";
-// Import vite functions dynamically to avoid loading vite in production
-import { MemStorage } from "./storage";
-import { db } from "./db";
+import { DatabaseStorage } from "./database-storage";
 import { startBlogScheduler } from "./cron/blog-scheduler";
 import { initializeTelegramBot } from "./services/telegram-bot";
 
@@ -12,22 +12,48 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Redis client yaratish
+let redisClient = createClient({
+  url: process.env.REDIS_URL || 'redis://localhost:6379'
+});
+
+redisClient.on('error', (err) => console.error('Redis xatosi:', err));
+
+// Redis'ga ulanish
+const connectRedis = async () => {
+  try {
+    await redisClient.connect();
+    console.log('Redis-ga muvaffaqiyatli ulanildi');
+  } catch (err) {
+    console.error('Redis-ga ulanishda xatolik:', err);
+    process.exit(1);
+  }
+};
+
 // Session configuration
-app.use(session({
+const sessionConfig = {
+  store: new RedisStore({
+    client: redisClient,
+    prefix: 'session:',
+  }),
   secret: process.env.SESSION_SECRET || 'fallback-secret-key-for-development',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false, // Set to true in production with HTTPS
+    secure: process.env.NODE_ENV === 'production', // HTTPS bo'lsa true qo'ying
     httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    sameSite: 'lax'
   }
-}));
+};
 
+app.use(session(sessionConfig));
+
+// Logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
+  let capturedJsonResponse: any;
 
   const originalResJson = res.json;
   res.json = function (bodyJson, ...args) {
@@ -55,8 +81,10 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Redis'ga ulanishni boshlash
+  await connectRedis();
+  
   // Database Storage yaratish (PostgreSQL blog posts uchun)
-  const { DatabaseStorage } = await import("./database-storage");
   const storage = new DatabaseStorage();
   
   const server = await registerRoutes(app, storage);

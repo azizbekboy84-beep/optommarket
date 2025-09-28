@@ -1,6 +1,7 @@
 {
   "name": "optommarket-uz",
   "version": "1.0.0",
+  "type": "module",
   "description": "OptomMarket - O'zbekiston eng yirik optom savdo platformasi",
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx server/index.ts",
@@ -45,6 +46,7 @@
     "@radix-ui/react-tooltip": "^1.2.0",
     "@tanstack/react-query": "^5.60.5",
     "@types/bcrypt": "^6.0.0",
+    "@types/connect-redis": "^0.0.23",
     "@types/node-telegram-bot-api": "^0.64.10",
     "@types/web-push": "^3.6.4",
     "@types/xml2js": "^0.4.14",
@@ -53,6 +55,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "connect-pg-simple": "^10.0.0",
+    "connect-redis": "^9.0.0",
     "date-fns": "^3.6.0",
     "dotenv": "^17.2.2",
     "drizzle-orm": "^0.39.1",
@@ -77,6 +80,7 @@
     "react-icons": "^5.4.0",
     "react-resizable-panels": "^2.1.7",
     "recharts": "^2.15.2",
+    "redis": "^5.8.2",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "tw-animate-css": "^1.2.5",

@@ -1,8 +1,9 @@
 import 'dotenv/config';
 import express, { type Request, Response, NextFunction } from "express";
 import session from "express-session";
-import RedisStore from 'connect-redis';
-import { createClient } from 'redis';
+import connectPgSimple from 'connect-pg-simple';
+import pkg from 'pg';
+const { Pool } = pkg;
 import { registerRoutes } from "./routes";
 import { DatabaseStorage } from "./database-storage";
 import { startBlogScheduler } from "./cron/blog-scheduler";
@@ -12,29 +13,20 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Redis client yaratish
-let redisClient = createClient({
-  url: process.env.REDIS_URL || 'redis://localhost:6379'
+// PostgreSQL client for sessions
+const PgSession = connectPgSimple(session);
+const pgPool = new Pool({
+  connectionString: process.env.DATABASE_URL,
 });
 
-redisClient.on('error', (err) => console.error('Redis xatosi:', err));
-
-// Redis'ga ulanish
-const connectRedis = async () => {
-  try {
-    await redisClient.connect();
-    console.log('Redis-ga muvaffaqiyatli ulanildi');
-  } catch (err) {
-    console.error('Redis-ga ulanishda xatolik:', err);
-    process.exit(1);
-  }
-};
+pgPool.on('error', (err) => console.error('PostgreSQL session xatosi:', err));
 
 // Session configuration
 const sessionConfig = {
-  store: new RedisStore({
-    client: redisClient,
-    prefix: 'session:',
+  store: new PgSession({
+    pool: pgPool,
+    tableName: 'session',
+    createTableIfMissing: true,
   }),
   secret: process.env.SESSION_SECRET || 'fallback-secret-key-for-development',
   resave: false,
@@ -43,7 +35,7 @@ const sessionConfig = {
     secure: process.env.NODE_ENV === 'production', // HTTPS bo'lsa true qo'ying
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    sameSite: 'lax'
+    sameSite: 'lax' as const
   }
 };
 
@@ -81,8 +73,7 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Redis'ga ulanishni boshlash
-  await connectRedis();
+  // PostgreSQL sessiya tizimi tayyor
   
   // Database Storage yaratish (PostgreSQL blog posts uchun)
   const storage = new DatabaseStorage();

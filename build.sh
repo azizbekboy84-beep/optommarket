@@ -2,13 +2,27 @@
 # Render.com build script
 
 # Install dependencies
+echo "  Dependencielarni o'rnatish..."
 npm ci
 
-# Push database schema
-npm run db:push
+# Client qismini build qilish
+echo "   Client qismini build qilish..."
+cd client
+npm run build
+cd ..
 
-# Build the application
-npx vite build && npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+# Server qismini build qilish
+echo "   Server qismini build qilish..."
+npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
 
-# Make sure build directory exists
-mkdir -p dist
+# Public papkasini nusxalash
+echo "   Public fayllarini tayyorlash..."
+cp -r client/dist/* dist/public/
+
+# .env faylini nusxalash
+if [ -f .env ]; then
+  echo "   .env faylini nusxalash..."
+  cp .env dist/
+fi
+
+echo "  Build muvaffaqiyatli yakunlandi!"

@@ -1,19 +1,21 @@
 #!/bin/bash
 # Production start script
 
-echo "🚀 Starting Optombazar.uz production server..."
+echo " Optombazar.uz production server ishga tushmoqda..."
 
-# Check if required environment variables are set
+# Kerakli environment variable'lar tekshiriladi
 if [ -z "$DATABASE_URL" ]; then
-    echo "❌ DATABASE_URL environment variable is required"
+    echo " XATOLIK: DATABASE_URL muhit o'zgaruvchisi kiritilmagan"
     exit 1
 fi
 
-# Set default port if not specified
+# Portni sozlash
 export PORT=${PORT:-10000}
 
-echo "🌐 Server will start on port $PORT"
-echo "📊 Environment: $NODE_ENV"
+# Joriy muhit haqida ma'lumot
+echo " Server $PORT portida ishga tushmoqda"
+echo " Muhit: $NODE_ENV"
 
-# Start the application
+# Dasturni ishga tushirish
+echo " Dastur ishga tushirilmoqda..."
 node dist/index.js

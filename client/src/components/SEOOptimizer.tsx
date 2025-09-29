@@ -29,7 +29,6 @@ export function SEOOptimizer({ seo, children }: SEOOptimizerProps) {
         {seo.ogImage && <meta property="og:image:alt" content={seo.ogTitle} />}
         
         {/* Twitter Card Meta Tags */}
-        <meta name="twitter:card" content={seo.twitterCard} />
         <meta name="twitter:title" content={seo.twitterTitle} />
         <meta name="twitter:description" content={seo.twitterDescription} />
         {seo.twitterImage && <meta name="twitter:image" content={seo.twitterImage} />}
@@ -41,11 +40,13 @@ export function SEOOptimizer({ seo, children }: SEOOptimizerProps) {
         <meta name="googlebot" content="index, follow" />
         <meta name="bingbot" content="index, follow" />
         
+        {/* Google Site Verification */}
+        <meta name="google-site-verification" content="hIZ7DGmAUZT117-8ekyYnjYQHvH3sP2d1IaI-IKm4T0" />
+        
         {/* Language and Locale */}
         <meta property="og:locale" content="uz_UZ" />
         <meta property="og:locale:alternate" content="ru_RU" />
         <html lang="uz" />
-        
         {/* Mobile Optimization */}
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="format-detection" content="telephone=no" />

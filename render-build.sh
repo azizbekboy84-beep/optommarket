@@ -3,9 +3,9 @@ set -e
 
 echo "🚀 Starting Render deployment with Vite-free build..."
 
-# Install all dependencies
+# Install all dependencies (including devDependencies for build)
 echo "📦 Installing dependencies..."
-npm install --legacy-peer-deps
+NODE_ENV=development npm install --legacy-peer-deps
 
 # Build frontend
 echo "🎨 Building frontend..."

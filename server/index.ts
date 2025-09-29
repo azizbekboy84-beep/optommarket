@@ -1,5 +1,4 @@
 import 'dotenv/config';
-<<<<<<< HEAD
 import express, { type Request, Response, NextFunction } from "express";
 import session from "express-session";
 import connectPgSimple from 'connect-pg-simple';
@@ -9,20 +8,11 @@ import { registerRoutes } from "./routes";
 import { DatabaseStorage } from "./database-storage";
 import { startBlogScheduler } from "./cron/blog-scheduler";
 import { initializeTelegramBot } from "./services/telegram-bot";
-=======
-import express, { type Request, Response, NextFunction } from 'express';
-import session from 'express-session';
-import { registerRoutes } from './routes';
-import { DatabaseStorage } from './database-storage';
-import { startBlogScheduler } from './cron/blog-scheduler';
-import { initializeTelegramBot } from './services/telegram-bot';
->>>>>>> 0b4a4c3092fc2ad83e199825d89e3383b6527541
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-<<<<<<< HEAD
 // Environment variable validation
 const requiredEnvVars = ['DATABASE_URL'];
 const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
@@ -60,22 +50,6 @@ const sessionConfig = {
 };
 
 app.use(session(sessionConfig));
-=======
-// Simple session (no Redis) to unblock deploy
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || 'fallback-secret-key',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: false, // keep false; Render terminates TLS at proxy
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-      sameSite: 'lax',
-    },
-  })
-);
->>>>>>> 0b4a4c3092fc2ad83e199825d89e3383b6527541
 
 // Logging middleware
 app.use((req, res, next) => {
@@ -105,13 +79,9 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-<<<<<<< HEAD
   // PostgreSQL sessiya tizimi tayyor
   
   // Database Storage yaratish (PostgreSQL blog posts uchun)
-=======
-  // Storage (DB-backed implementation)
->>>>>>> 0b4a4c3092fc2ad83e199825d89e3383b6527541
   const storage = new DatabaseStorage();
 
   const server = await registerRoutes(app, storage);

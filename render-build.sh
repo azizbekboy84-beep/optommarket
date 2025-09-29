@@ -5,7 +5,7 @@ echo "🚀 Starting Render deployment with Vite-free build..."
 
 # Install all dependencies
 echo "📦 Installing dependencies..."
-npm ci
+npm install --legacy-peer-deps
 
 # Build frontend
 echo "🎨 Building frontend..."

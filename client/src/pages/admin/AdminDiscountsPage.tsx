@@ -16,6 +16,25 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Textarea } from '../../components/ui/textarea';
 import { Trash2, Edit, Plus, Copy, Calendar, Percent, DollarSign } from 'lucide-react';
 import { useToast } from '../../hooks/use-toast';
+import { apiRequest } from '../../lib/queryClient';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+// Type definitions
+type Discount = {
+  id: string;
+  code: string;
+  type: 'percentage' | 'fixed';
+  value: number;
+  isActive: boolean;
+  validFrom: string;
+  validUntil: string;
+  maxUses: number;
+  usedCount: number;
+  targetType: 'all_products' | 'specific_products' | 'specific_categories';
+  targetIds?: string[];
+  createdAt: string;
+  updatedAt: string;
+};
 
 const discountFormSchema = z.object({
   code: z.string().min(3, 'Kod kamida 3 ta belgidan iborat bo\'lishi kerak').max(20),
@@ -23,34 +42,22 @@ const discountFormSchema = z.object({
   value: z.number().min(1, 'Qiymat 1 dan katta bo\'lishi kerak'),
   validFrom: z.string(),
   validUntil: z.string(),
-  maxUses: z.number().optional(),
-  targetType: z.string().default('all_products'),
+  maxUses: z.number().int().min(0).default(0),
+  targetType: z.enum(['all_products', 'specific_products', 'specific_categories']).default('all_products'),
+  targetIds: z.array(z.string()).optional(),
   isActive: z.boolean().default(true),
 });
 
 type DiscountFormData = z.infer<typeof discountFormSchema>;
-
-interface Discount {
-  id: string;
-  code: string;
-  type: string;
-  value: number;
-  validFrom: string;
-  validUntil: string;
-  maxUses?: number;
-  targetType: string;
-  isActive: boolean;
-  usedCount: number;
-  createdAt: string;
-}
 
 export default function AdminDiscountsPage() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingDiscount, setEditingDiscount] = useState<Discount | null>(null);
-
+  
   const form = useForm<DiscountFormData>({
+    resolver: zodResolver(discountFormSchema),
     defaultValues: {
       code: '',
       type: 'percentage',
@@ -70,31 +77,53 @@ export default function AdminDiscountsPage() {
 
   const discounts = discountsData ?? [];
 
-// Yangi chegirma yaratish yoki tahrirlash
-const createOrUpdateMutation = useMutation({
-  mutationFn: async (data: DiscountFormData) => {
-    const requestData = {
-      ...data,
-      validFrom: new Date(data.validFrom).toISOString(),
-      validUntil: new Date(data.validUntil).toISOString(),
-    };
+  // Chegirmani o'chirish
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest('DELETE', `/api/discounts/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/discounts'] });
+      toast({
+        title: 'Muvaffaqiyat!',
+        description: 'Chegirma muvaffaqiyatli o\'chirildi',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Xatolik!',
+        description: error.message || 'Chegirmani o\'chirishda xatolik',
+        variant: 'destructive',
+      });
+    },
+  });
 
-    if (editingDiscount) {
-      const response = await apiRequest<Discount>('PUT', `/api/discounts/${editingDiscount.id}`, requestData);
-      return response.data;
-    } else {
-      const response = await apiRequest<Discount>('POST', '/api/discounts', requestData);
-      return response.data;
-    }
+  // Yangi chegirma yaratish yoki tahrirlash
+  const createOrUpdateMutation = useMutation({
+    mutationFn: async (data: DiscountFormData) => {
+      const requestData = {
+        ...data,
+        validFrom: new Date(data.validFrom).toISOString(),
+        validUntil: new Date(data.validUntil).toISOString(),
+      };
+
+      if (editingDiscount) {
+        const response = await apiRequest('PUT', `/api/discounts/${editingDiscount.id}`, requestData);
+        return response;
+      } else {
+        const response = await apiRequest('POST', '/api/discounts', requestData);
+        return response;
+      }
   },
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['/api/discounts'] });
-    setIsDialogOpen(false);
-    toast({
-      title: 'Muvaffaqiyat!',
-      description: 'Chegirma muvaffaqiyatli saqlandi',
-    });
-  },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/discounts'] });
+      setIsDialogOpen(false);
+      form.reset();
+      toast({
+        title: 'Muvaffaqiyat!',
+        description: editingDiscount ? 'Chegirma tahrirlandi' : 'Yangi chegirma qo\'shildi',
+      });
+    },
     onError: (error: any) => {
       toast({
         title: 'Xatolik!',

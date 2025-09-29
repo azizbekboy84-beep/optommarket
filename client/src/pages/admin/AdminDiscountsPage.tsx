@@ -14,24 +14,61 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../../components/ui/form';
 import { Textarea } from '../../components/ui/textarea';
-import { Trash2, Edit, Plus, Copy, Calendar, Percent, dollarSign } from 'lucide-react';
+import { Trash2, Edit, Plus, Copy, Calendar, Percent, DollarSign } from 'lucide-react';
 import { useToast } from '../../hooks/use-toast';
-import { apiRequest } from '../../lib/queryClient';
 
 const discountFormSchema = z.object({
   code: z.string().min(3, 'Kod kamida 3 ta belgidan iborat bo\'lishi kerak').max(20),
   type: z.enum(['percentage', 'fixed']),
   value: z.number().min(1, 'Qiymat 1 dan katta bo\'lishi kerak'),
-{{ ... }}
-  isActive: true,
+  validFrom: z.string(),
+  validUntil: z.string(),
+  maxUses: z.number().optional(),
+  targetType: z.string().default('all_products'),
+  isActive: z.boolean().default(true),
 });
 
-// Barcha chegirmalarni olish
-const { data: discountsData, isLoading } = useQuery<Discount[]>({
-  queryKey: ['/api/discounts'],
-});
+type DiscountFormData = z.infer<typeof discountFormSchema>;
 
-const discounts = discountsData ?? [];
+interface Discount {
+  id: string;
+  code: string;
+  type: string;
+  value: number;
+  validFrom: string;
+  validUntil: string;
+  maxUses?: number;
+  targetType: string;
+  isActive: boolean;
+  usedCount: number;
+  createdAt: string;
+}
+
+export default function AdminDiscountsPage() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingDiscount, setEditingDiscount] = useState<Discount | null>(null);
+
+  const form = useForm<DiscountFormData>({
+    defaultValues: {
+      code: '',
+      type: 'percentage',
+      value: 0,
+      validFrom: '',
+      validUntil: '',
+      maxUses: 0,
+      targetType: 'all_products',
+      isActive: true,
+    },
+  });
+
+  // Barcha chegirmalarni olish
+  const { data: discountsData, isLoading } = useQuery<Discount[]>({
+    queryKey: ['/api/discounts'],
+  });
+
+  const discounts = discountsData ?? [];
 
 // Yangi chegirma yaratish yoki tahrirlash
 const createOrUpdateMutation = useMutation({
@@ -53,8 +90,11 @@ const createOrUpdateMutation = useMutation({
   onSuccess: () => {
     queryClient.invalidateQueries({ queryKey: ['/api/discounts'] });
     setIsDialogOpen(false);
-      });
-    },
+    toast({
+      title: 'Muvaffaqiyat!',
+      description: 'Chegirma muvaffaqiyatli saqlandi',
+    });
+  },
     onError: (error: any) => {
       toast({
         title: 'Xatolik!',

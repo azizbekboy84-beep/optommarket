@@ -41,7 +41,6 @@ import FavoritesPage from "@/pages/FavoritesPage";
 import NotFound from "@/pages/not-found";
 import { AIChatWidget } from "@/components/AIChatWidget";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
-import { Header } from "@/components/header";
 import { AppDownloadPrompt } from "@/components/AppDownloadPrompt";
 import { AppInstallPrompt } from "@/components/AppInstallPrompt";
 import { PushNotificationSetup } from "@/components/PushNotificationSetup";
@@ -176,7 +175,6 @@ function App() {
               <CartProvider>
                 <TooltipProvider>
                   <Toaster />
-                  <Header />
                   <main className="pb-20 md:pb-0">
                     <Router />
                   </main>

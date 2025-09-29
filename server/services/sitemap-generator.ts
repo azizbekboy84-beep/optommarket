@@ -1,202 +1,80 @@
-import { DatabaseStorage } from "../database-storage";
+import { storage } from '../storage.js';
 
-export class SitemapGenerator {
-  private storage: DatabaseStorage;
+// Sitemap XML generatori
+export async function generateSitemap(): Promise<string> {
+  const baseUrl = 'https://optommarket.uz';
+  
+  // Asosiy sahifalar
+  const staticPages = [
+    { url: '/', priority: '1.0', changefreq: 'daily' },
+    { url: '/catalog', priority: '0.9', changefreq: 'daily' },
+    { url: '/categories', priority: '0.8', changefreq: 'weekly' },
+    { url: '/blog', priority: '0.7', changefreq: 'daily' },
+    { url: '/contact', priority: '0.6', changefreq: 'monthly' },
+    { url: '/about', priority: '0.5', changefreq: 'monthly' },
+  ];
 
-  constructor(storage: DatabaseStorage) {
-    this.storage = storage;
+  let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">`;
+
+  // Asosiy sahifalarni qo'shish
+  for (const page of staticPages) {
+    sitemap += `
+  <url>
+    <loc>${baseUrl}${page.url}</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>${page.changefreq}</changefreq>
+    <priority>${page.priority}</priority>
+  </url>`;
   }
 
-  async generateSitemap(): Promise<string> {
-    const baseUrl = 'https://optombazar.uz';
-    const currentDate = new Date().toISOString();
-
-    let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml"
-        xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
-        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-
-  <!-- Asosiy sahifalar -->
+  try {
+    // Kategoriyalarni qo'shish
+    const categories = await storage.getCategories();
+    for (const category of categories) {
+      sitemap += `
   <url>
-    <loc>${baseUrl}/</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  
-  <url>
-    <loc>${baseUrl}/catalog</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  
-  <url>
-    <loc>${baseUrl}/blog</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>${baseUrl}/contact</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-`;
-
-    try {
-      // Kategoriyalarni sitemap'ga qo'shish
-      const categories = await this.storage.getCategories();
-      for (const category of categories) {
-        if (category.isActive && category.slug) {
-          sitemap += `  <url>
     <loc>${baseUrl}/category/${category.slug}</loc>
-    <lastmod>${currentDate}</lastmod>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-`;
-        }
-      }
-
-      // Mahsulotlarni sitemap'ga qo'shish
-      const products = await this.storage.getProducts();
-      for (const product of products) {
-        if (product.isActive && product.slug) {
-          const productLastMod = product.createdAt ? product.createdAt.toISOString() : currentDate;
-          sitemap += `  <url>
-    <loc>${baseUrl}/products/${product.slug}</loc>
-    <lastmod>${productLastMod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>`;
-          
-          // Mahsulot rasmlarini qo'shish
-          if (product.images && product.images.length > 0) {
-            for (const image of product.images) {
-              sitemap += `
-    <image:image>
-      <image:loc>${image}</image:loc>
-      <image:title>${product.nameUz}</image:title>
-      <image:caption>${product.descriptionUz || ''}</image:caption>
-    </image:image>`;
-            }
-          }
-          sitemap += `
-  </url>
-`;
-        }
-      }
-
-      // Blog postlarni sitemap'ga qo'shish
-      const blogPosts = await this.storage.getBlogPosts();
-      for (const post of blogPosts) {
-        if (post.isPublished && post.slug) {
-          const postLastMod = post.updatedAt ? post.updatedAt.toISOString() : 
-                              (post.createdAt ? post.createdAt.toISOString() : currentDate);
-          sitemap += `  <url>
-    <loc>${baseUrl}/blog/${post.slug}</loc>
-    <lastmod>${postLastMod}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>`;
-          
-          // Blog post rasmini qo'shish
-          if (post.imageUrl) {
-            sitemap += `
-    <image:image>
-      <image:loc>${post.imageUrl}</image:loc>
-      <image:title>${post.title}</image:title>
-      <image:caption>${post.excerpt || ''}</image:caption>
-    </image:image>`;
-          }
-          sitemap += `
-  </url>
-`;
-        }
-      }
-
-    } catch (error) {
-      console.error('Sitemap generatsiya xatoligi:', error);
+    <priority>0.7</priority>
+  </url>`;
     }
 
-    sitemap += '</urlset>';
-    return sitemap;
+    // Mahsulotlarni qo'shish
+    const products = await storage.getProducts();
+    for (const product of products) {
+      if (product.isActive) {
+        sitemap += `
+  <url>
+    <loc>${baseUrl}/products/${product.slug}</loc>
+    <lastmod>${product.createdAt ? new Date(product.createdAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>`;
+      }
+    }
+
+    // Blog postlarni qo'shish
+    const blogPosts = await storage.getBlogPosts();
+    for (const post of blogPosts) {
+      if (post.isPublished) {
+        sitemap += `
+  <url>
+    <loc>${baseUrl}/blog/${post.slug}</loc>
+    <lastmod>${post.createdAt ? new Date(post.createdAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>`;
+      }
+    }
+  } catch (error) {
+    console.error('Sitemap generatsiyasida xatolik:', error);
   }
 
-  generateRobotsTxt(): string {
-    const baseUrl = 'https://optombazar.uz';
-    
-    return `User-agent: *
-Allow: /
+  sitemap += `
+</urlset>`;
 
-# Asosiy sahifalar
-Allow: /
-Allow: /catalog
-Allow: /blog
-Allow: /contact
-Allow: /products/
-Allow: /category/
-Allow: /blog/
-
-# Static fayllar
-Allow: /assets/
-Allow: /images/
-Allow: /*.css
-Allow: /*.js
-Allow: /*.png
-Allow: /*.jpg
-Allow: /*.jpeg
-Allow: /*.gif
-Allow: /*.svg
-Allow: /*.webp
-Allow: /*.ico
-
-# Admin panelni bloklash
-Disallow: /admin/
-Disallow: /api/
-
-# Vaqtinchalik sahifalar
-Disallow: /cart
-Disallow: /checkout
-Disallow: /profile
-Disallow: /login
-Disallow: /register
-
-# Sitemap'ni ko'rsatish
-Sitemap: ${baseUrl}/sitemap.xml
-
-# Crawl-delay (ixtiyoriy)
-Crawl-delay: 1
-
-# Maxsus bot'lar uchun qoidalar
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 1
-
-User-agent: Bingbot
-Allow: /
-Crawl-delay: 2
-
-User-agent: YandexBot
-Allow: /
-Crawl-delay: 1`;
-  }
-
-  async generateSitemapIndex(): Promise<string> {
-    const baseUrl = 'https://optombazar.uz';
-    const currentDate = new Date().toISOString();
-
-    return `<?xml version="1.0" encoding="UTF-8"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap>
-    <loc>${baseUrl}/sitemap.xml</loc>
-    <lastmod>${currentDate}</lastmod>
-  </sitemap>
-</sitemapindex>`;
-  }
+  return sitemap;
 }

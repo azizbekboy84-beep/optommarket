@@ -2,8 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'wouter';
 import { useLanguage } from '@/components/language-provider';
 
-import { SEOHead } from '@/components/SEOHead';
+import { ModernHeader } from '@/components/modern/ModernHeader';
+import { CategoryCard } from '@/components/category-card';
 import { Footer } from '@/components/footer';
+import { SEOHead } from '@/components/SEOHead';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Folder, Package, Utensils, Smartphone, Shirt, Box } from 'lucide-react';
@@ -86,6 +88,7 @@ export default function AllCategoriesPage() {
     return (
       <div className="min-h-screen bg-background dark:bg-black">
         <SEOHead seo={seoMetaTags} />
+        <ModernHeader />
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="animate-pulse">
@@ -106,6 +109,7 @@ export default function AllCategoriesPage() {
     return (
       <div className="min-h-screen bg-background dark:bg-black">
         <SEOHead seo={seoMetaTags} />
+        <ModernHeader />
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
@@ -127,7 +131,7 @@ export default function AllCategoriesPage() {
   return (
     <div className="min-h-screen bg-background dark:bg-black">
       <SEOHead seo={seoMetaTags} />
-      
+      <ModernHeader />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Page Header */}

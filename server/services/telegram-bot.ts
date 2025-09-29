@@ -362,3 +362,64 @@ export async function getBotInfo(): Promise<{
     return null;
   }
 }
+
+// Mahsulotni kanalga yuborish
+export async function sendProductToChannel(product: any): Promise<boolean> {
+  if (!bot) {
+    console.log('Telegram bot ishlamayapti');
+    return false;
+  }
+
+  try {
+    const message = `🆕 *YANGI MAHSULOT!*
+
+📦 *${product.nameUz}*
+
+💰 Narx: ${Number(product.wholesalePrice).toLocaleString()} so'm
+📏 Birlik: ${product.unit}
+📦 Minimal miqdor: ${product.minQuantity} ${product.unit}
+
+${product.descriptionUz ? `📝 ${product.descriptionUz.substring(0, 200)}...` : ''}
+
+🔗 Batafsil: https://optommarket.uz/products/${product.slug}
+🛒 Buyurtma berish: https://optommarket.uz
+
+#yangi_mahsulot #optom #OptomMarket`;
+
+    const channelId = process.env.TELEGRAM_CHANNEL_ID || '';
+    
+    if (channelId) {
+      await bot.sendMessage(channelId, message, { parse_mode: 'Markdown' });
+      return true;
+    } else {
+      console.log('TELEGRAM_CHANNEL_ID o\'rnatilmagan');
+      return false;
+    }
+  } catch (error) {
+    console.error('Mahsulotni kanalga yuborishda xatolik:', error);
+    return false;
+  }
+}
+
+// Marketing xabari yuborish
+export async function sendMarketingMessage(message: string): Promise<boolean> {
+  if (!bot) {
+    console.log('Telegram bot ishlamayapti');
+    return false;
+  }
+
+  try {
+    const channelId = process.env.TELEGRAM_CHANNEL_ID || '';
+    
+    if (channelId) {
+      await bot.sendMessage(channelId, message, { parse_mode: 'Markdown' });
+      return true;
+    } else {
+      console.log('TELEGRAM_CHANNEL_ID o\'rnatilmagan');
+      return false;
+    }
+  } catch (error) {
+    console.error('Marketing xabari yuborishda xatolik:', error);
+    return false;
+  }
+}

@@ -21,7 +21,6 @@ router.get("/", requireAuth, requireRole("admin"), async (req, res) => {
     res.status(500).json({ message: "Server xatoligi" });
   }
 });
-
 // Yangi chegirma yaratish (faqat admin uchun)
 router.post("/", requireAuth, requireRole("admin"), async (req, res) => {
   try {
@@ -29,7 +28,7 @@ router.post("/", requireAuth, requireRole("admin"), async (req, res) => {
     
     const newDiscount = await db
       .insert(discounts)
-      .values([validatedData])
+      .values(validatedData)
       .returning();
 
     res.status(201).json(newDiscount[0]);

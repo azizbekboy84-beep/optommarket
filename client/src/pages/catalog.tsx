@@ -3,6 +3,7 @@ import { useCategories } from '@/hooks/useCategories';
 import { useProducts } from '@/hooks/useProducts';
 import { useLanguage } from '@/components/language-provider';
 
+import { ModernHeader } from '@/components/modern/ModernHeader';
 import { Footer } from '@/components/footer';
 import { SEOHead } from '@/components/SEOHead';
 import { generateCatalogMetaTags } from '@shared/seo';
@@ -38,6 +39,7 @@ export default function Catalog() {
   return (
     <div className="min-h-screen bg-gray-50">
       <SEOHead seo={catalogSEO} />
+      <ModernHeader />
       
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

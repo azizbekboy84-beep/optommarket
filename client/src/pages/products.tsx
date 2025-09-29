@@ -2,14 +2,15 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/components/language-provider';
 
+import { ModernHeader } from '@/components/modern/ModernHeader';
 import { Footer } from '@/components/footer';
+import { SEOHead } from '@/components/SEOHead';
 import { ProductCard } from '@/components/product-card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Product, Category } from '@shared/schema';
 import { Search } from 'lucide-react';
-
 export default function Products() {
   const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
@@ -62,7 +63,7 @@ export default function Products() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      
+      <ModernHeader />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">

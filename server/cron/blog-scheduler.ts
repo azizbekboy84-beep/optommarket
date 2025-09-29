@@ -31,7 +31,12 @@ async function createAndSaveBlogPost(storage: IStorage, language: 'uz' | 'ru' = 
 
     // Telegram kanaliga yuborish
     try {
-      await sendBlogPostToChannel(blogPost);
+      await sendBlogPostToChannel({
+        title: blogPost.title,
+        content: blogPost.content,
+        imageUrl: blogPost.imageUrl || undefined,
+        url: `https://optommarket.uz/blog/${blogPost.slug}`
+      });
       console.log('Blog post Telegram kanaliga yuborildi');
     } catch (telegramError) {
       console.error('Telegram kanaliga yuborishda xatolik:', telegramError);
@@ -226,7 +231,7 @@ export function startBlogScheduler(storage: IStorage): void {
     
     try {
       const { sendWeeklyReport } = await import('../services/telegram-bot');
-      await sendWeeklyReport(storage);
+      await sendWeeklyReport();
     } catch (error) {
       console.error('Haftalik hisorot yuborishda xatolik:', error);
     }

@@ -14,7 +14,7 @@ import {
   MessageCircle, Settings, Menu, X
 } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
-import logoImage from '@assets/optombazar logo_1755690917356.png';
+import { Logo } from './Logo';
 
 interface Category {
   id: string;
@@ -124,11 +124,7 @@ export function Header() {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <img 
-                src={logoImage} 
-                alt="OptomMarket.uz" 
-                className="h-10 w-auto"
-              />
+              <Logo size="md" variant="full" />
             </Link>
           </div>
 

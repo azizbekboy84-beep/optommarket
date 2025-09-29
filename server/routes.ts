@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import bcrypt from "bcrypt";
 import { storage } from "./storage";
-import { SitemapGenerator } from "./services/sitemap-generator";
+import { generateSitemap } from "./services/sitemap-generator";
 import { DatabaseStorage } from "./database-storage";
 import { insertProductSchema, insertCategorySchema, insertOrderSchema, insertCartItemSchema, insertUserSchema, insertBlogPostSchema, insertChatMessageSchema, type Product, type Category } from "@shared/schema";
 import { adminAuth } from "./middleware/adminAuth";
@@ -1102,22 +1102,44 @@ ${email ? `📧 <b>Email:</b> ${email}\n` : ''}${company ? `🏢 <b>Kompaniya:</
   });
 
   // Sitemap va SEO routes
-  const sitemapGenerator = new SitemapGenerator(activeStorage as DatabaseStorage);
-
   app.get("/sitemap.xml", async (req, res) => {
     try {
-      const sitemap = await sitemapGenerator.generateSitemap();
+      const sitemap = await generateSitemap();
       res.set('Content-Type', 'application/xml');
       res.send(sitemap);
     } catch (error) {
-      console.error('Sitemap generatsiya xatoligi:', error);
-      res.status(500).send('Sitemap generatsiya qilib bo\'lmadi');
+      console.error('Sitemap generation error:', error);
+      res.status(500).send('Internal Server Error');
     }
   });
 
   app.get("/robots.txt", (req, res) => {
     try {
-      const robotsTxt = sitemapGenerator.generateRobotsTxt();
+      const robotsTxt = `User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://optommarket.uz/sitemap.xml
+
+# Disallow admin pages
+Disallow: /admin/
+Disallow: /api/
+Disallow: /login
+Disallow: /register
+
+# Allow important pages
+Allow: /
+Allow: /catalog
+Allow: /categories
+Allow: /products/
+Allow: /category/
+Allow: /blog/
+Allow: /contact
+Allow: /about
+
+# Crawl-delay for better server performance
+Crawl-delay: 1`;
+
       res.set('Content-Type', 'text/plain');
       res.send(robotsTxt);
     } catch (error) {
@@ -1128,19 +1150,25 @@ ${email ? `📧 <b>Email:</b> ${email}\n` : ''}${company ? `🏢 <b>Kompaniya:</
 
   app.get("/sitemap-index.xml", async (req, res) => {
     try {
-      const sitemapIndex = await sitemapGenerator.generateSitemapIndex();
+      const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://optommarket.uz/sitemap.xml</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+  </sitemap>
+</sitemapindex>`;
       res.set('Content-Type', 'application/xml');
       res.send(sitemapIndex);
     } catch (error) {
-      console.error('Sitemap index generatsiya xatoligi:', error);
-      res.status(500).send('Sitemap index generatsiya qilib bo\'lmadi');
+      console.error('Sitemap index generation error:', error);
+      res.status(500).send('Sitemap index generation error');
     }
   });
 
   // Test Telegram notification
   app.get("/api/test-telegram", async (req, res) => {
     try {
-      await sendTelegramNotification("🧪 Test notification from Optombazar.uz");
+      await sendTelegramNotification("🧪 Test notification from OptomMarket.uz");
       res.json({ success: true, message: "Telegram test sent" });
     } catch (error) {
       res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });

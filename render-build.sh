@@ -11,14 +11,9 @@ NODE_ENV=development npm install --legacy-peer-deps
 echo "🎨 Building frontend..."
 npx vite build
 
-# Build backend using production entry point (NO VITE DEPENDENCIES)
+# Build backend using production entry point with alias support
 echo "⚙️  Building backend (Vite-free)..."
-npx esbuild server/index.production.ts \
-  --platform=node \
-  --packages=external \
-  --bundle \
-  --format=esm \
-  --outfile=dist/index.js
+node build-server.js
 
 echo "✅ Vite-free build completed for Render!"
 echo "📁 Files ready in dist/ directory"

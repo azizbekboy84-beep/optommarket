@@ -263,6 +263,9 @@ export default function ProductDetailsPage() {
       await addToCart(product.id, quantity);
     } catch (error) {
       console.error('Failed to add to cart:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background dark:bg-black">
       <SEOHead seo={seoMetaTags} />

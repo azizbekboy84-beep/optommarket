@@ -65,10 +65,10 @@ export default function FavoritesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-red-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <ModernHeader />
       {/* Header */}
-      <div className="bg-white border-b">
+      <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -80,13 +80,13 @@ export default function FavoritesPage() {
               </Link>
               <div className="flex items-center space-x-2">
                 <Heart className="h-6 w-6 text-red-500" />
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                   {language === 'uz' ? 'Sevimlilar' : 'Избранное'}
                 </h1>
               </div>
             </div>
             {favorites && favorites.length > 0 && (
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-300">
                 {language === 'uz' 
                   ? `${favorites.length} ta mahsulot`
                   : `${favorites.length} товаров`
@@ -102,12 +102,12 @@ export default function FavoritesPage() {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[...Array(8)].map((_, i) => (
-              <div key={i} className="bg-white border border-gray-200 rounded-xl animate-pulse">
-                <div className="h-48 bg-gray-200 rounded-t-xl"></div>
+              <div key={i} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl animate-pulse">
+                <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded-t-xl"></div>
                 <div className="p-6 space-y-3">
-                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                  <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-                  <div className="h-8 bg-gray-200 rounded"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                  <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
                 </div>
               </div>
             ))}
@@ -124,10 +124,10 @@ export default function FavoritesPage() {
         ) : (
           <div className="text-center py-16">
             <Heart className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
               {language === 'uz' ? 'Sevimlilar ro\'yxati bo\'sh' : 'Список избранного пуст'}
             </h2>
-            <p className="text-gray-600 mb-8">
+            <p className="text-gray-600 dark:text-gray-300 mb-8">
               {language === 'uz' 
                 ? 'Mahsulotlarni sevimlilar ro\'yxatiga qo\'shing va keyinroq ularni bu yerda ko\'ring'
                 : 'Добавляйте товары в избранное и просматривайте их здесь позже'

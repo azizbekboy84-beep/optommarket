@@ -2,7 +2,6 @@ import { Link } from 'wouter';
 import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/components/language-provider';
 import { ModernHeader } from '@/components/modern/ModernHeader';
-import { ModernHeader } from '@/components/modern/ModernHeader';
 import { Footer } from '@/components/footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

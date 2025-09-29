@@ -9,6 +9,7 @@ import { ModernProductCard } from './ModernProductCard';
 import { ModernCategoryCard } from './ModernCategoryCard';
 import { ModernFooter } from './ModernFooter';
 import { Button } from '../ui/button';
+import { ProductCardSkeleton, CompactCategoryCardSkeleton } from '../SkeletonLoader';
 // Local interfaces to handle null vs undefined differences
 interface LocalCategory {
   id: string;
@@ -55,9 +56,9 @@ export default function ModernHomePage() {
 
   const { data: featuredProducts = [], isLoading: productsLoading } = useQuery<LocalProduct[]>({
     queryKey: ['/api/products/featured'],
-    staleTime: 0,
-    refetchOnWindowFocus: true,
-    refetchInterval: 30000,
+    // Override defaults for featured products
+    staleTime: 2 * 60 * 1000, // 2 minutes - featured products change often
+    gcTime: 5 * 60 * 1000, // 5 minutes in cache
   });
 
   const features = [
@@ -92,19 +93,19 @@ export default function ModernHomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-red-100 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <SEOOptimizer seo={DEFAULT_SEO} />
       
       {/* Header */}
       <ModernHeader />
 
-      {/* Hero Section */}
+      {/* Hero Section - Reduced height */}
       <ModernHero />
 
       {/* Featured Categories - Compact */}
-      <section className="py-12 bg-white dark:bg-gray-800">
+      <section className="py-8 bg-white/80 backdrop-blur-sm dark:bg-gray-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
               {language === 'uz' ? 'Ommabop Kategoriyalar' : 'Популярные Категории'}
             </h2>
@@ -119,7 +120,7 @@ export default function ModernHomePage() {
           {categoriesLoading ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {[...Array(12)].map((_, i) => (
-                <div key={i} className="bg-gray-200 dark:bg-gray-700 rounded-xl h-32 animate-pulse" />
+                <CompactCategoryCardSkeleton key={i} />
               ))}
             </div>
           ) : (
@@ -147,7 +148,7 @@ export default function ModernHomePage() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-12 bg-gray-50 dark:bg-gray-900">
+      <section className="py-8 bg-gradient-to-r from-blue-50/50 to-red-50/50 dark:bg-gradient-to-r dark:from-gray-900/50 dark:to-gray-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
             <div>
@@ -172,12 +173,7 @@ export default function ModernHomePage() {
           {productsLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[...Array(8)].map((_, i) => (
-                <div key={i} className="bg-white dark:bg-gray-800 rounded-2xl p-6 animate-pulse">
-                  <div className="aspect-square bg-gray-200 dark:bg-gray-700 rounded-xl mb-4" />
-                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded mb-2" />
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-4" />
-                  <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded" />
-                </div>
+                <ProductCardSkeleton key={i} />
               ))}
             </div>
           ) : featuredProducts.length > 0 ? (
@@ -219,9 +215,9 @@ export default function ModernHomePage() {
       </section>
 
       {/* Why Choose Us */}
-      <section className="py-12 bg-white dark:bg-gray-800">
+      <section className="py-8 bg-white/90 backdrop-blur-sm dark:bg-gray-800/90">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
+          <div className="text-center mb-6">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
               {language === 'uz' ? 'Nima uchun OptomMarket.uz?' : 'Почему OptomMarket.uz?'}
             </h2>
@@ -255,7 +251,7 @@ export default function ModernHomePage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 bg-gradient-to-r from-blue-600 to-red-500 text-white">
+      <section className="py-8 bg-gradient-to-r from-blue-600 to-red-500 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="group">
@@ -282,7 +278,7 @@ export default function ModernHomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gray-900 text-white">
+      <section className="py-10 bg-gray-900 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-4">
             {language === 'uz' ? 'Biznesingizni Rivojlantiring' : 'Развивайте Свой Бизнес'}

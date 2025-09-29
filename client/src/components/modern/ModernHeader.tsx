@@ -2,16 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '../language-provider';
-import { useAuth } from '@/context/AuthContext';
-import { useCart } from '@/context/CartContext';
+import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Badge } from '../ui/badge';
 import { Logo } from '../Logo';
 import { ThemeToggle } from '../theme-toggle';
+import { UzbekistanFlag, RussiaFlag } from '../ui/flag-icons';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
 import { 
   Search, ShoppingCart, User, Heart, Menu, X, ChevronDown,
-  MapPin, Phone, Mail, Clock, Truck, Shield, Award
+  MapPin, Phone, Mail, Clock, Truck, Shield, Award, Languages
 } from 'lucide-react';
 
 interface Category {
@@ -24,7 +31,7 @@ interface Category {
 
 export function ModernHeader() {
   const [, setLocation] = useLocation();
-  const { language, t } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const { user, logout } = useAuth();
   const { cartItems = [] } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
@@ -33,6 +40,14 @@ export function ModernHeader() {
 
   const isAuthenticated = !!user;
   const cartItemsCount = cartItems.reduce((sum: number, item: any) => sum + item.quantity, 0);
+
+  // Fetch favorites count
+  const { data: favoritesData } = useQuery<any[]>({
+    queryKey: ['/api/favorites'],
+    enabled: !!user,
+    staleTime: 2 * 60 * 1000,
+  });
+  const favoritesCount = Array.isArray(favoritesData) ? favoritesData.length : 0;
 
   // Scroll effect
   useEffect(() => {
@@ -153,12 +168,16 @@ export function ModernHeader() {
               </Button>
 
               {/* Wishlist */}
-              <Button variant="ghost" size="sm" className="relative p-2 hidden sm:flex">
-                <Heart className="w-5 h-5" />
-                <Badge className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 min-w-[18px] h-[18px] rounded-full flex items-center justify-center">
-                  0
-                </Badge>
-              </Button>
+              <Link href="/favorites">
+                <Button variant="ghost" size="sm" className="relative p-2 hidden sm:flex">
+                  <Heart className="w-5 h-5" />
+                  {favoritesCount > 0 && (
+                    <Badge className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 min-w-[18px] h-[18px] rounded-full flex items-center justify-center">
+                      {favoritesCount}
+                    </Badge>
+                  )}
+                </Button>
+              </Link>
 
               {/* Cart */}
               <Link href="/cart">
@@ -207,6 +226,32 @@ export function ModernHeader() {
                   </Button>
                 </Link>
               )}
+
+              {/* Language Switcher */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="p-2">
+                    <Languages className="w-5 h-5" />
+                    <span className="hidden lg:inline ml-2">{language === 'uz' ? 'O\'zbek' : 'Русский'}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem 
+                    onClick={() => setLanguage('uz')} 
+                    className="gap-2 cursor-pointer"
+                  >
+                    <UzbekistanFlag className="w-5 h-5" />
+                    O'zbek
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => setLanguage('ru')} 
+                    className="gap-2 cursor-pointer"
+                  >
+                    <RussiaFlag className="w-5 h-5" />
+                    Русский
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
               {/* Theme Toggle */}
               <ThemeToggle />
@@ -334,9 +379,35 @@ export function ModernHeader() {
 
               {/* Mobile User Actions */}
               <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                
+                {/* Language Selector */}
+                <div className="mb-4">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                    {language === 'uz' ? 'Til' : 'Язык'}
+                  </p>
+                  <div className="flex gap-2">
+                    <Button
+                      variant={language === 'uz' ? 'default' : 'outline'}
+                      onClick={() => setLanguage('uz')}
+                      className="flex-1 gap-2"
+                    >
+                      <UzbekistanFlag className="w-4 h-4" />
+                      O'zbek
+                    </Button>
+                    <Button
+                      variant={language === 'ru' ? 'default' : 'outline'}
+                      onClick={() => setLanguage('ru')}
+                      className="flex-1 gap-2"
+                    >
+                      <RussiaFlag className="w-4 h-4" />
+                      Русский
+                    </Button>
+                  </div>
+                </div>
+
                 {!isAuthenticated && (
                   <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Button className="w-full mb-4">
+                    <Button className="w-full">
                       {language === 'uz' ? 'Kirish' : 'Войти'}
                     </Button>
                   </Link>

@@ -1,4 +1,4 @@
-import ModernHomePage from '@/components/modern/ModernHomePage';
+import ModernHomePage from '../components/modern/ModernHomePage';
 
 export default function Home() {
   return <ModernHomePage />;

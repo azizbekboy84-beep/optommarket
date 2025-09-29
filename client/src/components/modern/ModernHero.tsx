@@ -48,7 +48,7 @@ export function ModernHero() {
   const currentHero = heroSlides[currentSlide];
 
   return (
-    <section className="relative min-h-[600px] lg:min-h-[700px] overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-red-800">
+    <section className="relative min-h-[450px] lg:min-h-[550px] overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-red-800">
       {/* Background with overlay */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/90 via-blue-800/90 to-red-800/90 z-10" />
@@ -65,7 +65,7 @@ export function ModernHero() {
 
       {/* Main content */}
       <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center w-full py-12 lg:py-16">
           
           {/* Left content */}
           <div className="text-white space-y-8">

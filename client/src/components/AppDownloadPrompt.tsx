@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Button } from './ui/button';
+import { Card, CardContent } from './ui/card';
 import { useLanguage } from './language-provider';
 
 export function AppDownloadPrompt() {
   const [showPrompt, setShowPrompt] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
   const { language } = useLanguage();
-
   useEffect(() => {
     // Agar avval dismiss qilingan bo'lsa, ko'rsatmaslik
     const dismissed = localStorage.getItem('appDownloadPromptDismissed');

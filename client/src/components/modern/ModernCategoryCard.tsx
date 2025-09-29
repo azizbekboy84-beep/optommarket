@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'wouter';
 import { useLanguage } from '../language-provider';
+import { OptimizedImage } from '../OptimizedImage';
 import { Badge } from '../ui/badge';
 import { 
   ArrowRight, Package, TrendingUp, Star, Users,
@@ -69,10 +70,10 @@ export function ModernCategoryCard({
   const colorScheme = colorSchemes[colorIndex];
 
   const cardVariants = {
-    default: "group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700 overflow-hidden",
-    large: "group relative bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border border-gray-100 dark:border-gray-700 overflow-hidden",
-    compact: "group relative bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700 overflow-hidden",
-    featured: "group relative bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-gray-900 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-4 border-2 border-blue-200 dark:border-blue-800 overflow-hidden"
+    default: "group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700 overflow-hidden h-full",
+    large: "group relative bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border border-gray-100 dark:border-gray-700 overflow-hidden h-full",
+    compact: "group relative bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700 overflow-hidden h-full flex flex-col",
+    featured: "group relative bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-gray-900 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-4 border-2 border-blue-200 dark:border-blue-800 overflow-hidden h-full"
   };
 
   const paddingVariants = {
@@ -107,10 +108,11 @@ export function ModernCategoryCard({
           <div className="relative overflow-hidden">
             {category.image ? (
               <div className="aspect-video relative">
-                <img
+                <OptimizedImage
                   src={category.image}
                   alt={categoryName}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  priority={variant === 'featured'}
                   onError={(e) => {
                     e.currentTarget.src = '/placeholder-category.jpg';
                   }}
@@ -142,10 +144,10 @@ export function ModernCategoryCard({
         )}
 
         {/* Content section */}
-        <div className={paddingVariants[variant]}>
+        <div className={`${paddingVariants[variant]} ${variant === 'compact' ? 'flex-1 flex flex-col' : ''}`}>
           {/* Icon for compact variant */}
           {variant === 'compact' && (
-            <div className={`w-12 h-12 bg-gradient-to-br ${colorScheme} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+            <div className={`w-12 h-12 bg-gradient-to-br ${colorScheme} rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300`}>
               <IconComponent className="w-6 h-6 text-white" />
             </div>
           )}
@@ -153,7 +155,7 @@ export function ModernCategoryCard({
           {/* Category name */}
           <h3 className={`font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 ${
             variant === 'large' ? 'text-2xl mb-3' : 
-            variant === 'compact' ? 'text-lg mb-2' : 
+            variant === 'compact' ? 'text-sm mb-2 line-clamp-2 min-h-[2.5rem]' : 
             'text-xl mb-3'
           }`}>
             {categoryName}
@@ -188,7 +190,7 @@ export function ModernCategoryCard({
           </div>
 
           {/* Action area */}
-          <div className="flex items-center justify-between">
+          <div className={`flex items-center justify-between ${variant === 'compact' ? 'mt-auto' : ''}`}>
             <div className="flex items-center gap-2">
               {variant !== 'compact' && (
                 <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
@@ -199,14 +201,14 @@ export function ModernCategoryCard({
             </div>
 
             {/* Arrow indicator */}
-            <div className={`flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium transition-all duration-300 ${
+            <div className={`flex items-center gap-1 text-blue-600 dark:text-blue-400 font-medium transition-all duration-300 ${
               isHovered ? 'translate-x-1' : 'translate-x-0'
             }`}>
-              <span className={variant === 'compact' ? 'text-sm' : 'text-base'}>
+              <span className={variant === 'compact' ? 'text-xs' : 'text-base'}>
                 {language === 'uz' ? 'Ko\'rish' : 'Смотреть'}
               </span>
               <ArrowRight className={`transition-transform duration-300 ${
-                variant === 'compact' ? 'w-4 h-4' : 'w-5 h-5'
+                variant === 'compact' ? 'w-3 h-3' : 'w-5 h-5'
               } ${isHovered ? 'translate-x-1' : ''}`} />
             </div>
           </div>

@@ -119,7 +119,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
 
   return (
     <Link href={`/products/${product.slug}`}>
-      <div className="bg-card border border-border rounded-xl hover:shadow-lg transition-all group cursor-pointer relative" data-testid={`card-product-${product.id}`}>
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:shadow-lg transition-all group cursor-pointer relative" data-testid={`card-product-${product.id}`}>
         {/* Favorites Button */}
         {user && (
           <Button
@@ -148,20 +148,20 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           />
         )}
         <div className="p-6">
-          <h3 className="font-semibold text-card-foreground mb-2 group-hover:text-primary transition-colors" data-testid={`text-product-name-${product.id}`}>
+          <h3 className="font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" data-testid={`text-product-name-${product.id}`}>
             {name}
           </h3>
         {description && (
-          <p className="text-sm text-muted-foreground mb-3" data-testid={`text-product-description-${product.id}`}>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3" data-testid={`text-product-description-${product.id}`}>
             {description}
           </p>
         )}
         <div className="flex items-center justify-between mb-4">
           <div>
-            <span className="text-lg font-bold text-primary" data-testid={`text-product-price-${product.id}`}>
+            <span className="text-lg font-bold text-blue-600 dark:text-blue-400" data-testid={`text-product-price-${product.id}`}>
               {Number(product.price).toLocaleString()} so'm
             </span>
-            <span className="text-sm text-muted-foreground ml-1">
+            <span className="text-sm text-gray-500 dark:text-gray-400 ml-1">
               / {product.minQuantity} {product.unit}
             </span>
           </div>
@@ -170,7 +170,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           </span>
         </div>
         <Button 
-          className="w-full bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground" 
+          className="w-full bg-gradient-to-r from-blue-600 to-red-500 hover:from-blue-700 hover:to-red-600 text-white" 
           onClick={handleAddToCart}
           disabled={(product.stockQuantity || 0) === 0}
           data-testid={`button-add-to-cart-${product.id}`}

@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'wouter';
 import { Home, Grid3X3, ShoppingCart, Heart, User, Download } from 'lucide-react';
 import { useLanguage } from './language-provider';
-import { useCart } from '@/context/CartContext';
+import { useCart } from '../context/CartContext';
 import { useEffect, useState } from 'react';
 
 interface BeforeInstallPromptEvent extends Event {
@@ -117,8 +117,8 @@ export function MobileBottomNav() {
     : navItems;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-black dark:bg-black border-t border-gray-800 shadow-lg md:hidden">
-      <div className="flex items-center justify-around py-2">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-lg md:hidden">
+      <div className="flex items-center justify-around py-2 px-1">
         {finalNavItems.map((item) => {
           const Icon = item.icon;
           const isActive = location === item.href;
@@ -130,13 +130,13 @@ export function MobileBottomNav() {
               <button
                 key={item.href}
                 onClick={handleInstallClick}
-                className="flex flex-col items-center justify-center px-2 py-2 rounded-lg transition-colors text-green-400 hover:text-green-300 hover:bg-green-900/30"
+                className="flex flex-col items-center justify-center px-2 py-2 rounded-lg transition-colors text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/30"
                 data-testid="button-install-mobile"
               >
                 <div className="relative">
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-6 w-6" />
                 </div>
-                <span className="text-xs mt-1 leading-none">{label}</span>
+                <span className="text-xs mt-1 leading-none font-medium">{label}</span>
               </button>
             );
           }
@@ -144,21 +144,21 @@ export function MobileBottomNav() {
           return (
             <Link key={item.href} href={item.href}>
               <button
-                className={`flex flex-col items-center justify-center px-2 py-2 rounded-lg transition-colors ${
+                className={`flex flex-col items-center justify-center px-2 py-2 rounded-lg transition-all duration-200 ${
                   isActive
-                    ? 'text-blue-400 bg-blue-900/30'
-                    : 'text-white hover:text-blue-300'
+                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 shadow-sm'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800/50'
                 }`}
               >
                 <div className="relative">
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-6 w-6" />
                   {'badge' in item && item.badge && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full min-w-[20px] h-5 px-1 flex items-center justify-center font-bold shadow-md">
                       {item.badge > 99 ? '99+' : item.badge}
                     </span>
                   )}
                 </div>
-                <span className="text-xs mt-1 leading-none">{label}</span>
+                <span className="text-xs mt-1 leading-none font-medium">{label}</span>
               </button>
             </Link>
           );

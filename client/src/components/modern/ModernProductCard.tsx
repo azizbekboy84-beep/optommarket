@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'wouter';
 import { useLanguage } from '../language-provider';
+import { OptimizedImage } from '../OptimizedImage';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { 
@@ -100,10 +101,11 @@ export function ModernProductCard({
         {/* Image container */}
         <div className="relative overflow-hidden">
           <div className="aspect-square relative">
-            <img
+            <OptimizedImage
               src={images[currentImageIndex]}
               alt={productName}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              priority={variant === 'featured'}
               onError={(e) => {
                 e.currentTarget.src = '/placeholder-product.jpg';
               }}
@@ -119,6 +121,7 @@ export function ModernProductCard({
                 variant="secondary"
                 className="w-10 h-10 rounded-full bg-white/90 hover:bg-white shadow-lg"
                 onClick={handleWishlist}
+                aria-label={language === 'uz' ? 'Sevimlilarga qo\'shish' : 'Добавить в избранное'}
               >
                 <Heart className={`w-4 h-4 ${isWishlisted ? 'text-red-500 fill-current' : 'text-gray-600'}`} />
               </Button>
@@ -219,6 +222,7 @@ export function ModernProductCard({
             <Button
               onClick={handleAddToCart}
               className="flex-1 bg-gradient-to-r from-blue-600 to-red-500 hover:from-blue-700 hover:to-red-600 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg group"
+              aria-label={`${productName} ${language === 'uz' ? 'savatga qo\'shish' : 'добавить в корзину'}`}
             >
               <ShoppingCart className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
               {language === 'uz' ? 'Savatga' : 'В корзину'}

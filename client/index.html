@@ -44,21 +44,33 @@
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-CONTAINER-ID"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript>
+      <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-CONTAINER-ID" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
     <!-- End Google Tag Manager (noscript) -->
     
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     
-    <!-- PWA Service Worker Registration -->
+    <!-- PWA Service Worker Registration (disabled in dev) -->
     <script>
-      if ('serviceWorker' in navigator) {
+      (function () {
+        if (!('serviceWorker' in navigator)) return;
+        const isDevHost = ['localhost', '127.0.0.1'].includes(location.hostname);
+        if (isDevHost) {
+          // Unregister any existing SWs in development to avoid stale cache / blank screens
+          navigator.serviceWorker.getRegistrations().then((regs) => {
+            regs.forEach((r) => r.unregister());
+            console.log('[DEV] Unregistered existing service workers');
+          });
+          return;
+        }
+
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
+          navigator.serviceWorker
+            .register('/sw.js')
             .then((registration) => {
               console.log('SW registered: ', registration);
-              
               // Request notification permission
               if ('Notification' in window && navigator.serviceWorker) {
                 if (Notification.permission === 'default') {
@@ -72,15 +84,16 @@
               console.log('SW registration failed: ', registrationError);
             });
         });
-      }
-      
-      // Install prompt
+      })();
+    </script>
+
+    <!-- Install prompt button (dev/prod) -->
+    <script>
       let deferredPrompt;
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        
-        // Show install button or banner
+
         const installButton = document.createElement('button');
         installButton.textContent = 'Ilovani o\'rnatish';
         installButton.style.cssText = `
@@ -97,7 +110,7 @@
           z-index: 1000;
           box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         `;
-        
+
         installButton.addEventListener('click', () => {
           if (deferredPrompt) {
             deferredPrompt.prompt();
@@ -110,9 +123,9 @@
             });
           }
         });
-        
+
         document.body.appendChild(installButton);
-        
+
         // Auto-hide after 10 seconds
         setTimeout(() => {
           if (installButton.parentNode) {

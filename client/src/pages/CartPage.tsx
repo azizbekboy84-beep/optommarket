@@ -1,6 +1,8 @@
 import { Link } from 'wouter';
 import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/components/language-provider';
+import { ModernHeader } from '@/components/modern/ModernHeader';
+import { ModernHeader } from '@/components/modern/ModernHeader';
 import { Footer } from '@/components/footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,6 +25,7 @@ export default function CartPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background dark:bg-black">
+        <ModernHeader />
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="animate-pulse space-y-6">
@@ -48,6 +51,7 @@ export default function CartPage() {
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-background dark:bg-black">
+        <ModernHeader />
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">

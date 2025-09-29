@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Footer } from '../components/footer';
-import { Header } from '../components/header';
+import { ModernHeader } from '../components/modern/ModernHeader';
 import { SEOHead } from '../components/SEOHead';
 import { generateBlogMetaTags } from '@shared/seo';
 import { Link } from 'wouter';
@@ -21,20 +21,18 @@ export default function BlogPage() {
       return response.json();
     },
   });
-
   // Blog sahifasi uchun SEO meta-teglar
   const blogSEO = generateBlogMetaTags();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
       <SEOHead seo={blogSEO} />
-      
+      <ModernHeader />
       <div className="py-12">
         <div className="max-w-7xl mx-auto px-4">
           {/* Hero Section */}
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              OptomBazar Blog
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Optom savdo sohasidagi yangiliklar, maslahatlar va eng so'nggi trendlar haqida bilib oling

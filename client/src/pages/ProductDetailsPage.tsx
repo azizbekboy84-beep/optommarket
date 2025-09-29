@@ -7,6 +7,7 @@ import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { SEOHead } from '@/components/SEOHead';
 import { generateProductMetaTags } from '@shared/seo';
+import { ModernHeader } from '@/components/modern/ModernHeader';
 import { Footer } from '@/components/footer';
 import { ProductCard } from '@/components/product-card';
 import { Button } from '@/components/ui/button';
@@ -121,6 +122,7 @@ export default function ProductDetailsPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background dark:bg-black">
+        <ModernHeader />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="animate-pulse">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -149,6 +151,7 @@ export default function ProductDetailsPage() {
   if (error || !product) {
     return (
       <div className="min-h-screen bg-background dark:bg-black">
+        <ModernHeader />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-foreground mb-4" data-testid="text-error-title">
@@ -260,19 +263,17 @@ export default function ProductDetailsPage() {
       await addToCart(product.id, quantity);
     } catch (error) {
       console.error('Failed to add to cart:', error);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-background dark:bg-black">
       <SEOHead seo={seoMetaTags} />
-      
+      <ModernHeader />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Navigation */}
         <nav className="flex items-center space-x-2 mb-8" data-testid="breadcrumb-nav">
           <Link href="/catalog" className="flex items-center text-primary hover:text-primary/80 font-medium transition-colors">
             <ArrowLeft className="w-4 h-4 mr-2" />
+            <span className="text-foreground">{language === 'uz' ? 'Katalogga qaytish' : 'Вернуться в каталог'}</span>
             <span className="text-foreground">← {language === 'uz' ? 'Katalogga qaytish' : 'Вернуться в каталог'}</span>
           </Link>
         </nav>

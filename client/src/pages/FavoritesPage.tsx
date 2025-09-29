@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/components/language-provider';
 import { ProductCard } from '@/components/product-card';
+import { ModernHeader } from '@/components/modern/ModernHeader';
 import { Footer } from '@/components/footer';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Heart, ShoppingCart } from 'lucide-react';
@@ -30,6 +31,7 @@ export default function FavoritesPage() {
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-50">
+        <ModernHeader />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <Heart className="h-16 w-16 text-gray-300 mx-auto mb-4" />
@@ -64,6 +66,7 @@ export default function FavoritesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <ModernHeader />
       {/* Header */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

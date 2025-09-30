@@ -32,34 +32,54 @@ export function Logo({
     xl: 'w-16 h-16'
   };
 
-  // Logo icon - Modern geometric design
+  // Logo icon - Modern 3D design with Uzbekistan colors
   const LogoIcon = () => (
     <div className={`${iconSizeClasses[size]} relative flex items-center justify-center`}>
-      {/* Main container with gradient background */}
-      <div className="w-full h-full bg-gradient-to-br from-blue-600 via-blue-500 to-red-500 rounded-xl shadow-lg relative overflow-hidden">
-        {/* Inner geometric pattern */}
-        <div className="absolute inset-1 bg-white/20 rounded-lg">
-          {/* Letter "O" stylized */}
+      {/* 3D effect shadow layers */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-700 to-red-700 rounded-2xl transform translate-x-0.5 translate-y-0.5 opacity-40 blur-sm"></div>
+      
+      {/* Main container with gradient background - Uzbekistan flag colors */}
+      <div className="relative w-full h-full bg-gradient-to-br from-blue-600 via-green-500 to-red-600 rounded-2xl shadow-2xl overflow-hidden transform hover:scale-105 transition-transform duration-300">
+        
+        {/* Inner content with glass effect */}
+        <div className="absolute inset-1.5 bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-sm rounded-xl">
+          
+          {/* Letter "O" - Shopping cart style */}
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <div className="w-4 h-4 border-2 border-white rounded-full"></div>
+            {/* Outer circle */}
+            <div className="w-6 h-6 border-[3px] border-white rounded-full relative shadow-lg">
+              {/* Inner dot */}
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full"></div>
+            </div>
           </div>
-          {/* Letter "M" stylized */}
-          <div className="absolute bottom-1 left-1 right-1 h-1 bg-white rounded-full"></div>
-          <div className="absolute bottom-1 left-1 w-1 h-3 bg-white rounded-full"></div>
-          <div className="absolute bottom-1 right-1 w-1 h-3 bg-white rounded-full"></div>
-          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-1 h-2 bg-white rounded-full"></div>
+          
+          {/* Shopping cart handle */}
+          <div className="absolute top-2 right-2 w-1.5 h-3 bg-white rounded-full shadow-md"></div>
+          <div className="absolute top-2 right-1.5 w-3 h-1.5 bg-white rounded-full shadow-md"></div>
+          
+          {/* Bottom accent line */}
+          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-white rounded-full shadow-md"></div>
         </div>
-        {/* Shine effect */}
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/30 via-transparent to-transparent rounded-xl"></div>
+        
+        {/* Animated shine effect */}
+        <div className="absolute -top-full left-0 w-full h-full bg-gradient-to-b from-white/40 via-white/10 to-transparent animate-shine"></div>
+        
+        {/* Corner accent */}
+        <div className="absolute top-0 right-0 w-3 h-3 bg-white/20 rounded-bl-full"></div>
       </div>
     </div>
   );
 
-  // Logo text
+  // Logo text - Modern styling
   const LogoText = () => (
-    <span className={`${textSizeClasses[size]} font-bold bg-gradient-to-r from-blue-600 to-red-500 bg-clip-text text-transparent`}>
-      OptomMarket.uz
-    </span>
+    <div className="flex flex-col leading-tight">
+      <span className={`${textSizeClasses[size]} font-black bg-gradient-to-r from-blue-600 via-green-600 to-red-600 bg-clip-text text-transparent tracking-tight hover:tracking-wide transition-all duration-300`}>
+        OptomMarket
+      </span>
+      <span className={`text-xs ${size === 'lg' ? 'text-sm' : ''} ${size === 'xl' ? 'text-base' : ''} font-semibold text-gray-500 dark:text-gray-400 -mt-1`}>
+        .uz
+      </span>
+    </div>
   );
 
   if (variant === 'icon') {

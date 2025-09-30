@@ -141,6 +141,11 @@
   .animate-bounce-slow {
     animation: bounce 3s infinite;
   }
+  
+  /* Logo shine animation */
+  .animate-shine {
+    animation: shine 3s ease-in-out infinite;
+  }
 }
 
 /* Custom utility classes for the design */
@@ -214,6 +219,20 @@
   }
   50% {
     transform: translateY(-15px);
+  }
+}
+
+@keyframes shine {
+  0% {
+    top: -100%;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
   }
 }
 

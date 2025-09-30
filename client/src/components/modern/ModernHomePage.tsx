@@ -92,7 +92,7 @@ export default function ModernHomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 overflow-x-hidden max-w-full">
       <SEOOptimizer seo={DEFAULT_SEO} />
       
       {/* Header */}
@@ -102,8 +102,8 @@ export default function ModernHomePage() {
       <ModernHero />
 
       {/* Featured Categories - Compact */}
-      <section className="py-6 md:py-8 bg-white/80 backdrop-blur-sm dark:bg-gray-800/80">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+      <section className="py-6 md:py-8 bg-white/80 backdrop-blur-sm dark:bg-gray-800/80 w-full overflow-hidden">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 w-full">
           <div className="text-center mb-4 md:mb-6">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2 md:mb-4">
               {language === 'uz' ? 'Ommabop Kategoriyalar' : 'Популярные Категории'}
@@ -147,8 +147,8 @@ export default function ModernHomePage() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-6 md:py-8 bg-gradient-to-r from-blue-50/50 to-red-50/50 dark:bg-gradient-to-r dark:from-gray-900/50 dark:to-gray-800/50">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+      <section className="py-6 md:py-8 bg-gradient-to-r from-blue-50/50 to-red-50/50 dark:bg-gradient-to-r dark:from-gray-900/50 dark:to-gray-800/50 w-full overflow-hidden">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 w-full">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 gap-4">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
@@ -214,8 +214,8 @@ export default function ModernHomePage() {
       </section>
 
       {/* Why Choose Us */}
-      <section className="py-6 md:py-8 bg-white/90 backdrop-blur-sm dark:bg-gray-800/90">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+      <section className="py-6 md:py-8 bg-white/90 backdrop-blur-sm dark:bg-gray-800/90 w-full overflow-hidden">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 w-full">
           <div className="text-center mb-4 md:mb-6">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2 md:mb-4">
               {language === 'uz' ? 'Nima uchun OptomMarket.uz?' : 'Почему OptomMarket.uz?'}
@@ -250,8 +250,8 @@ export default function ModernHomePage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-6 md:py-8 bg-gradient-to-r from-blue-600 to-red-500 text-white">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+      <section className="py-6 md:py-8 bg-gradient-to-r from-blue-600 to-red-500 text-white w-full overflow-hidden">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 w-full">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 text-center">
             <div className="group">
               <div className="text-2xl md:text-4xl font-black mb-1 md:mb-2 group-hover:scale-110 transition-transform duration-300">10K+</div>
@@ -277,8 +277,8 @@ export default function ModernHomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-8 md:py-10 bg-gray-900 text-white">
-        <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 text-center">
+      <section className="py-8 md:py-10 bg-gray-900 text-white w-full overflow-hidden">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 text-center w-full">
           <h2 className="text-2xl md:text-4xl font-bold mb-3 md:mb-4">
             {language === 'uz' ? 'Biznesingizni Rivojlantiring' : 'Развивайте Свой Бизнес'}
           </h2>

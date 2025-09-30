@@ -48,7 +48,7 @@ export function ModernHero() {
   const currentHero = heroSlides[currentSlide];
 
   return (
-    <section className="relative min-h-[500px] md:min-h-[450px] lg:min-h-[550px] overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-red-800">
+    <section className="relative min-h-[500px] md:min-h-[450px] lg:min-h-[550px] overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-red-800 w-full max-w-full">
       {/* Background with overlay */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/90 via-blue-800/90 to-red-800/90 z-10" />

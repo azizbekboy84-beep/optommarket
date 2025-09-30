@@ -1,5 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import session from "express-session";
+import path from "path";
+import fs from "fs";
 import { registerRoutes } from "./routes";
 import { MemStorage } from "./storage";
 import { db } from "./db";
@@ -9,7 +11,6 @@ import { getBotInfo } from "./services/telegram-bot";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
 // Session configuration
 app.use(session({
   secret: process.env.SESSION_SECRET || 'fallback-secret-key-for-development',
@@ -68,8 +69,16 @@ app.use((req, res, next) => {
   });
 
   // Production da faqat static files serve qilish
-  const { serveStatic } = await import("./static");
-  serveStatic(app);
+  const distPath = path.resolve("dist/public");
+  if (!fs.existsSync(distPath)) {
+    console.error(`Build directory not found: ${distPath}`);
+    process.exit(1);
+  }
+  console.log(`Serving static files from: ${distPath}`);
+  app.use(express.static(distPath));
+  app.use("*", (_req, res) => {
+    res.sendFile(path.join(distPath, "index.html"));
+  });
 
   const port = parseInt(process.env.PORT || '5000', 10);
   server.listen({

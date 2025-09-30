@@ -162,8 +162,13 @@ export function ModernHeader() {
             {/* Right Side Actions */}
             <div className="flex items-center space-x-2 lg:space-x-4">
               
-              {/* Search - Mobile */}
-              <Button variant="ghost" size="sm" className="lg:hidden p-2">
+              {/* Search - Mobile (opens mobile menu with search) */}
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="lg:hidden p-2"
+                onClick={() => setIsMobileMenuOpen(true)}
+              >
                 <Search className="w-5 h-5" />
               </Button>
 

@@ -102,36 +102,16 @@ export function LogoText({ className = '', size = 'md' }: Omit<LogoProps, 'varia
   return <Logo variant="text" size={size} className={className} />;
 }
 
-// Hero logo with special styling
+// Hero logo with special styling - text only version
 export function HeroLogo({ className = '' }: { className?: string }) {
   return (
-    <div className={`inline-flex items-center gap-4 ${className}`}>
-      {/* Large icon with enhanced effects */}
-      <div className="w-20 h-20 relative flex items-center justify-center">
-        <div className="w-full h-full bg-gradient-to-br from-blue-600 via-blue-500 to-red-500 rounded-2xl shadow-2xl relative overflow-hidden animate-pulse-slow">
-          {/* Enhanced inner pattern */}
-          <div className="absolute inset-2 bg-white/25 rounded-xl backdrop-blur-sm">
-            {/* Stylized "OM" */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              <div className="w-6 h-6 border-3 border-white rounded-full"></div>
-            </div>
-            <div className="absolute bottom-2 left-2 right-2 h-1.5 bg-white rounded-full"></div>
-            <div className="absolute bottom-2 left-2 w-1.5 h-4 bg-white rounded-full"></div>
-            <div className="absolute bottom-2 right-2 w-1.5 h-4 bg-white rounded-full"></div>
-            <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 w-1.5 h-3 bg-white rounded-full"></div>
-          </div>
-          {/* Multiple shine effects */}
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/40 via-transparent to-transparent rounded-2xl"></div>
-          <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-gradient-to-tl from-white/20 via-transparent to-transparent rounded-2xl"></div>
-        </div>
-      </div>
-      
-      {/* Large text with gradient */}
+    <div className={`inline-flex items-center ${className}`}>
+      {/* Large text with gradient - No icon */}
       <div className="flex flex-col">
-        <span className="text-4xl lg:text-5xl font-black bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent drop-shadow-lg">
+        <span className="text-3xl md:text-4xl lg:text-5xl font-black bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent drop-shadow-lg">
           OptomMarket
         </span>
-        <span className="text-lg lg:text-xl font-medium text-blue-100 opacity-90 -mt-1">
+        <span className="text-base md:text-lg lg:text-xl font-medium text-blue-100 opacity-90 -mt-1">
           .uz
         </span>
       </div>

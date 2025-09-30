@@ -48,7 +48,7 @@ export function ModernHero() {
   const currentHero = heroSlides[currentSlide];
 
   return (
-    <section className="relative min-h-[450px] lg:min-h-[550px] overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-red-800">
+    <section className="relative min-h-[500px] md:min-h-[450px] lg:min-h-[550px] overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-red-800">
       {/* Background with overlay */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/90 via-blue-800/90 to-red-800/90 z-10" />
@@ -64,92 +64,92 @@ export function ModernHero() {
       </div>
 
       {/* Main content */}
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center w-full py-12 lg:py-16">
+      <div className="relative z-20 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 h-full flex items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 items-center w-full py-8 md:py-12 lg:py-16">
           
           {/* Left content */}
-          <div className="text-white space-y-8">
+          <div className="text-white space-y-4 md:space-y-6 lg:space-y-8">
             {/* Logo */}
-            <div className="mb-8">
+            <div className="mb-4 md:mb-6 lg:mb-8">
               <HeroLogo />
             </div>
 
             {/* Main heading */}
-            <div className="space-y-4">
-              <h1 className="text-4xl lg:text-6xl font-black leading-tight">
+            <div className="space-y-2 md:space-y-4">
+              <h1 className="text-2xl md:text-4xl lg:text-6xl font-black leading-tight">
                 <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
                   {currentHero.title}
                 </span>
               </h1>
-              <p className="text-xl lg:text-2xl text-blue-100 font-light leading-relaxed">
+              <p className="text-base md:text-xl lg:text-2xl text-blue-100 font-light leading-relaxed">
                 {currentHero.subtitle}
               </p>
             </div>
 
             {/* Features */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-4">
               {currentHero.features.map((feature, index) => (
-                <div key={index} className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-red-500 rounded-lg flex items-center justify-center">
-                    <feature.icon className="w-5 h-5 text-white" />
+                <div key={index} className="flex items-center gap-2 md:gap-3 bg-white/10 backdrop-blur-sm rounded-lg p-3 md:p-4 border border-white/20">
+                  <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-blue-500 to-red-500 rounded-lg flex items-center justify-center">
+                    <feature.icon className="w-4 h-4 md:w-5 md:h-5 text-white" />
                   </div>
-                  <span className="text-sm font-medium text-blue-50">{feature.text}</span>
+                  <span className="text-xs md:text-sm font-medium text-blue-50">{feature.text}</span>
                 </div>
               ))}
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/catalog">
-                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-red-500 hover:from-blue-700 hover:to-red-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl group">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+              <Link href="/catalog" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-red-500 hover:from-blue-700 hover:to-red-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold text-base md:text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl group">
                   {currentHero.cta}
                   <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
-              <Button variant="outline" size="lg" className="border-2 border-white/60 text-white hover:bg-white hover:text-blue-900 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 backdrop-blur-sm group">
-                <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
+              <Button variant="outline" size="lg" className="w-full sm:w-auto border-2 border-white/60 text-white hover:bg-white hover:text-blue-900 px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold text-base md:text-lg transition-all duration-300 backdrop-blur-sm group">
+                <Play className="w-4 h-4 md:w-5 md:h-5 mr-2 group-hover:scale-110 transition-transform" />
                 {language === 'uz' ? 'Video Ko\'rish' : 'Смотреть Видео'}
               </Button>
             </div>
 
             {/* Trust indicators */}
-            <div className="flex items-center gap-6 pt-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 md:gap-6 pt-2 md:pt-4">
               <div className="flex items-center gap-2">
                 <div className="flex">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                    <Star key={i} className="w-3 h-3 md:w-4 md:h-4 text-yellow-400 fill-current" />
                   ))}
                 </div>
-                <span className="text-sm text-blue-100">4.9/5 (1,200+ sharh)</span>
+                <span className="text-xs md:text-sm text-blue-100">4.9/5 (1,200+ sharh)</span>
               </div>
               <div className="flex items-center gap-2">
-                <Zap className="w-4 h-4 text-yellow-400" />
-                <span className="text-sm text-blue-100">{language === 'uz' ? 'Tez Xizmat' : 'Быстрый Сервис'}</span>
+                <Zap className="w-3 h-3 md:w-4 md:h-4 text-yellow-400" />
+                <span className="text-xs md:text-sm text-blue-100">{language === 'uz' ? 'Tez Xizmat' : 'Быстрый Сервис'}</span>
               </div>
             </div>
           </div>
 
           {/* Right content - Stats Dashboard */}
-          <div className="relative">
-            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl">
+          <div className="relative hidden lg:block">
+            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-white/20 shadow-2xl">
               
               {/* Stats Grid */}
-              <div className="grid grid-cols-2 gap-6 mb-8">
-                <div className="bg-gradient-to-br from-blue-500/40 to-blue-600/40 rounded-2xl p-6 text-center border border-white/30">
-                  <div className="text-3xl font-black text-white mb-2">10K+</div>
-                  <div className="text-sm text-blue-100">{language === 'uz' ? 'Mahsulotlar' : 'Товары'}</div>
+              <div className="grid grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
+                <div className="bg-gradient-to-br from-blue-500/40 to-blue-600/40 rounded-2xl p-4 md:p-6 text-center border border-white/30">
+                  <div className="text-2xl md:text-3xl font-black text-white mb-1 md:mb-2">10K+</div>
+                  <div className="text-xs md:text-sm text-blue-100">{language === 'uz' ? 'Mahsulotlar' : 'Товары'}</div>
                 </div>
-                <div className="bg-gradient-to-br from-red-500/40 to-red-600/40 rounded-2xl p-6 text-center border border-white/30">
-                  <div className="text-3xl font-black text-white mb-2">1K+</div>
-                  <div className="text-sm text-red-100">{language === 'uz' ? 'Mijozlar' : 'Клиенты'}</div>
+                <div className="bg-gradient-to-br from-red-500/40 to-red-600/40 rounded-2xl p-4 md:p-6 text-center border border-white/30">
+                  <div className="text-2xl md:text-3xl font-black text-white mb-1 md:mb-2">1K+</div>
+                  <div className="text-xs md:text-sm text-red-100">{language === 'uz' ? 'Mijozlar' : 'Клиенты'}</div>
                 </div>
-                <div className="bg-gradient-to-br from-green-500/40 to-green-600/40 rounded-2xl p-6 text-center border border-white/30">
-                  <div className="text-3xl font-black text-white mb-2">50+</div>
-                  <div className="text-sm text-green-100">{language === 'uz' ? 'Hamkorlar' : 'Партнеры'}</div>
+                <div className="bg-gradient-to-br from-green-500/40 to-green-600/40 rounded-2xl p-4 md:p-6 text-center border border-white/30">
+                  <div className="text-2xl md:text-3xl font-black text-white mb-1 md:mb-2">50+</div>
+                  <div className="text-xs md:text-sm text-green-100">{language === 'uz' ? 'Hamkorlar' : 'Партнеры'}</div>
                 </div>
-                <div className="bg-gradient-to-br from-purple-500/40 to-purple-600/40 rounded-2xl p-6 text-center border border-white/30">
-                  <div className="text-3xl font-black text-white mb-2">24/7</div>
-                  <div className="text-sm text-purple-100">{language === 'uz' ? 'Qo\'llab-quvvatlash' : 'Поддержка'}</div>
+                <div className="bg-gradient-to-br from-purple-500/40 to-purple-600/40 rounded-2xl p-4 md:p-6 text-center border border-white/30">
+                  <div className="text-2xl md:text-3xl font-black text-white mb-1 md:mb-2">24/7</div>
+                  <div className="text-xs md:text-sm text-purple-100">{language === 'uz' ? 'Qo\'llab-quvvatlash' : 'Поддержка'}</div>
                 </div>
               </div>
 
@@ -184,7 +184,7 @@ export function ModernHero() {
       </div>
 
       {/* Slide indicators */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30">
+      <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 z-30">
         <div className="flex space-x-2">
           {heroSlides.map((_, index) => (
             <button
@@ -201,7 +201,7 @@ export function ModernHero() {
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 right-8 z-30">
+      <div className="absolute bottom-4 md:bottom-8 right-4 md:right-8 z-30 hidden md:flex">
         <div className="flex flex-col items-center text-white/70">
           <span className="text-xs mb-2 rotate-90 origin-center">
             {language === 'uz' ? 'Pastga' : 'Вниз'}

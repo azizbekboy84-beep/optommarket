@@ -28,37 +28,37 @@ export default function BlogPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
       <SEOHead seo={blogSEO} />
       <ModernHeader />
-      <div className="py-12">
-        <div className="max-w-7xl mx-auto px-4">
+      <div className="py-6 md:py-12">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
           {/* Hero Section */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-8 md:mb-12">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 md:mb-4 px-2">
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto px-2">
               Optom savdo sohasidagi yangiliklar, maslahatlar va eng so'nggi trendlar haqida bilib oling
             </p>
           </div>
 
           {/* Blog Posts Grid */}
           {isLoading ? (
-            <div className="text-center py-16">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="mt-4 text-gray-500">Blog postlari yuklanmoqda...</p>
+            <div className="text-center py-12 md:py-16">
+              <div className="animate-spin rounded-full h-10 w-10 md:h-12 md:w-12 border-b-2 border-blue-600 mx-auto"></div>
+              <p className="mt-4 text-sm md:text-base text-gray-500">Blog postlari yuklanmoqda...</p>
             </div>
           ) : posts.length === 0 ? (
-            <div className="text-center py-16">
+            <div className="text-center py-12 md:py-16">
               <div className="text-gray-400 mb-4">
-                <Calendar className="h-16 w-16 mx-auto" />
+                <Calendar className="h-12 w-12 md:h-16 md:w-16 mx-auto" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">
                 Hozircha blog postlari yo'q
               </h3>
-              <p className="text-gray-500">
+              <p className="text-sm md:text-base text-gray-500">
                 Tez orada qiziqarli maqolalar bilan qaytamiz!
               </p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
               {posts.map((post) => (
                 <Link key={post.id} href={`/blog/${post.slug}`}>
                   <Card className="h-full hover:shadow-xl transition-shadow duration-300 group cursor-pointer overflow-hidden">
@@ -67,13 +67,13 @@ export default function BlogPage() {
                         <img 
                           src={post.imageUrl} 
                           alt={post.title}
-                          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-40 sm:h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
                       </div>
                     )}
-                    <CardHeader>
-                      <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
+                    <CardHeader className="p-4 md:p-6">
+                      <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500 mb-2">
                         <Calendar className="h-4 w-4" />
                         <span>{new Date(post.createdAt!).toLocaleDateString('uz-UZ')}</span>
                         <div className="flex items-center gap-2 ml-auto">
@@ -90,12 +90,12 @@ export default function BlogPage() {
                           )}
                         </div>
                       </div>
-                      <CardTitle className="group-hover:text-blue-600 transition-colors duration-300">
+                      <CardTitle className="text-base md:text-lg group-hover:text-blue-600 transition-colors duration-300">
                         {post.title}
                       </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-600 line-clamp-3 mb-4">
+                    <CardContent className="p-4 md:p-6 pt-0">
+                      <p className="text-sm md:text-base text-gray-600 line-clamp-3 mb-4">
                         {post.excerpt || post.content.substring(0, 150) + '...'}
                       </p>
                       
@@ -116,7 +116,7 @@ export default function BlogPage() {
                       )}
                       
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500">
                           {post.isAutoGenerated ? (
                             <>
                               <Bot className="h-4 w-4" />
@@ -129,7 +129,7 @@ export default function BlogPage() {
                             </>
                           )}
                         </div>
-                        <div className="flex items-center gap-1 text-blue-600 font-medium group-hover:gap-2 transition-all duration-300">
+                        <div className="flex items-center gap-1 text-blue-600 text-sm md:text-base font-medium group-hover:gap-2 transition-all duration-300">
                           <span>Batafsil</span>
                           <ArrowRight className="h-4 w-4" />
                         </div>

@@ -2,14 +2,13 @@ import { useState, useEffect } from 'react';
 import { Link } from 'wouter';
 import { useLanguage } from '../language-provider';
 import { Button } from '../ui/button';
-import { HeroLogo } from '../Logo';
 import { 
   ArrowRight, Play, Star, Users, Package, Truck, 
   Shield, Award, TrendingUp, Zap
 } from 'lucide-react';
 
 export function ModernHero() {
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const heroSlides = [
@@ -69,11 +68,6 @@ export function ModernHero() {
           
           {/* Left content */}
           <div className="text-white space-y-4 md:space-y-6 lg:space-y-8">
-            {/* Logo */}
-            <div className="mb-4 md:mb-6 lg:mb-8">
-              <HeroLogo />
-            </div>
-
             {/* Main heading */}
             <div className="space-y-2 md:space-y-4">
               <h1 className="text-2xl md:text-4xl lg:text-6xl font-black leading-tight">

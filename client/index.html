@@ -58,34 +58,39 @@
     <script>
       (function () {
         if (!('serviceWorker' in navigator)) return;
+        
+        // ALWAYS unregister service workers on load to prevent blank screens
+        navigator.serviceWorker.getRegistrations().then((regs) => {
+          regs.forEach((r) => r.unregister());
+          console.log('[CLEARED] Service workers unregistered');
+        });
+        
         const isDevHost = ['localhost', '127.0.0.1'].includes(location.hostname);
         if (isDevHost) {
-          // Unregister any existing SWs in development to avoid stale cache / blank screens
-          navigator.serviceWorker.getRegistrations().then((regs) => {
-            regs.forEach((r) => r.unregister());
-            console.log('[DEV] Unregistered existing service workers');
-          });
           return;
         }
 
-        window.addEventListener('load', () => {
-          navigator.serviceWorker
-            .register('/sw.js')
-            .then((registration) => {
-              console.log('SW registered: ', registration);
-              // Request notification permission
-              if ('Notification' in window && navigator.serviceWorker) {
-                if (Notification.permission === 'default') {
-                  Notification.requestPermission().then((permission) => {
-                    console.log('Notification permission:', permission);
-                  });
+        // Re-register after clearing (production only)
+        setTimeout(() => {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker
+              .register('/sw.js')
+              .then((registration) => {
+                console.log('SW registered: ', registration);
+                // Request notification permission
+                if ('Notification' in window && navigator.serviceWorker) {
+                  if (Notification.permission === 'default') {
+                    Notification.requestPermission().then((permission) => {
+                      console.log('Notification permission:', permission);
+                    });
+                  }
                 }
-              }
-            })
-            .catch((registrationError) => {
-              console.log('SW registration failed: ', registrationError);
-            });
-        });
+              })
+              .catch((registrationError) => {
+                console.log('SW registration failed: ', registrationError);
+              });
+          });
+        }, 1000);
       })();
     </script>
 

@@ -273,11 +273,11 @@ export function AppInstallButton({ variant = "outline" }: { variant?: "outline" 
       variant={variant} 
       size="sm" 
       onClick={handleClick}
-      className="flex items-center gap-2"
+      className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-red-500 hover:from-blue-700 hover:to-red-600 text-white border-0"
       data-testid="button-install-app-mini"
     >
       <Download className="h-4 w-4" />
-      <span className="hidden sm:inline">{buttonText}</span>
+      <span>{buttonText}</span>
     </Button>
   );
 }

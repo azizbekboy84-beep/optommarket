@@ -4,6 +4,8 @@ import session from "express-session";
 import connectPgSimple from 'connect-pg-simple';
 import pkg from 'pg';
 const { Pool } = pkg;
+import path from "path";
+import fs from "fs";
 import { registerRoutes } from "./routes";
 import { DatabaseStorage } from "./database-storage";
 import { startBlogScheduler } from "./cron/blog-scheduler";
@@ -97,8 +99,17 @@ app.use((req, res, next) => {
     const { setupVite } = await import('./vite');
     await setupVite(app, server);
   } else {
-    const { serveStatic } = await import('./static');
-    serveStatic(app);
+    // Production: serve static files from dist/public
+    const distPath = path.resolve("dist/public");
+    if (!fs.existsSync(distPath)) {
+      console.error(`Build directory not found: ${distPath}`);
+      process.exit(1);
+    }
+    console.log(`Serving static files from: ${distPath}`);
+    app.use(express.static(distPath));
+    app.use("*", (_req, res) => {
+      res.sendFile(path.join(distPath, "index.html"));
+    });
   }
 
   const port = parseInt(process.env.PORT || '5000', 10);
